@@ -116,7 +116,7 @@ const AppSidebar = () => {
 									size="lg"
 								>
 									{sidebarItem.icon}
-									<Link href={sidebarItem.href} className="text-lg">
+									<Link href={sidebarItem.href} className="text-base">
 										{sidebarItem.label}
 									</Link>
 								</SidebarMenuButton>

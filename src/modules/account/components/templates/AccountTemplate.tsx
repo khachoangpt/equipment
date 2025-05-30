@@ -14,7 +14,7 @@ const AccountTemplate = () => {
 
 	return (
 		<div className="h-full">
-			<Card className="gap-0 px-5">
+			<Card className="gap-0 gap-y-2 px-5">
 				<h3 className="font-bold text-2xl">Tài khoản</h3>
 				<DataTable
 					columns={columns}

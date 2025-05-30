@@ -9,6 +9,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table'
+import { cn } from '@/lib/utils'
 import {
 	type ColumnDef,
 	type OnChangeFn,
@@ -54,9 +55,13 @@ function DataTable<TData, TValue>({
 				<TableHeader className="sticky top-0 z-10 bg-white">
 					{table.getHeaderGroups().map((headerGroup) => (
 						<TableRow key={headerGroup.id}>
-							{headerGroup.headers.map((header) => (
+							{headerGroup.headers.map((header, index) => (
 								<TableHead
 									key={header.id}
+									className={cn({
+										'rounded-tl-sm': index === 0,
+										'rounded-tr-sm': index === headerGroup.headers.length - 1,
+									})}
 									style={{
 										width: header.getSize(),
 									}}
@@ -72,15 +77,22 @@ function DataTable<TData, TValue>({
 						</TableRow>
 					))}
 				</TableHeader>
-				<TableBody>
+				<TableBody className="border-b">
 					{table.getRowModel().rows?.length ? (
 						table.getRowModel().rows.map((row) => (
 							<TableRow
 								key={row.id}
 								data-state={row.getIsSelected() && 'selected'}
 							>
-								{row.getVisibleCells().map((cell) => (
-									<TableCell key={cell.id}>
+								{row.getVisibleCells().map((cell, cellIndex) => (
+									<TableCell
+										key={cell.id}
+										className={cn({
+											'border-l': cellIndex === 0,
+											'border-r':
+												cellIndex === row.getVisibleCells().length - 1,
+										})}
+									>
 										{flexRender(cell.column.columnDef.cell, cell.getContext())}
 									</TableCell>
 								))}

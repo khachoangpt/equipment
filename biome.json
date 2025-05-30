@@ -37,6 +37,9 @@
 				"noUndeclaredVariables": "error",
 				"useExhaustiveDependencies": "off"
 			},
+			"a11y": {
+				"useKeyWithClickEvents": "off"
+			},
 			"style": {
 				"useImportType": "error"
 			}

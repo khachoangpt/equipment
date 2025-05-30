@@ -43,7 +43,7 @@ const CollapsibleSidebar = ({ sidebarItem }: Props) => {
 						size="lg"
 					>
 						{sidebarItem.icon}
-						<div className="text-lg">{sidebarItem.label}</div>
+						<div className="text-base">{sidebarItem.label}</div>
 					</SidebarMenuButton>
 				</CollapsibleTrigger>
 				<CollapsibleContent className="transition-all data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down duration-300">
