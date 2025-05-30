@@ -1,24 +1,22 @@
-import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger,
-} from '@/components/ui/collapsible'
+'use client'
+
+import {} from '@/components/ui/collapsible'
 import {
 	Sidebar,
 	SidebarContent,
-	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	SidebarMenuSub,
-	SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
 import { pageList } from '@/configs/routes'
+import type { SidebarItem } from '@/types'
 import { BriefcaseBusiness, Home, Users, Wrench } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import CollapsibleSidebar from './CollapsibleSidebar'
 
 const AppSidebar = () => {
-	const sidebarItems = [
+	const sidebarItems: SidebarItem[] = [
 		{
 			id: 'home',
 			label: 'Trang chủ',
@@ -40,7 +38,7 @@ const AppSidebar = () => {
 				{
 					id: 'trang-bi-trang-bi-dong-bo',
 					label: 'Trang bị',
-					href: '#',
+					href: pageList.equipmentSet.href,
 				},
 				{
 					label: 'Bàn giao trang bị',
@@ -83,68 +81,42 @@ const AppSidebar = () => {
 				{
 					id: 'xay-dung-cau-hinh',
 					label: 'Xây dựng cấu hình',
-					href: '#',
+					href: pageList.assembledEquipment.href,
 				},
 			],
 		},
 		{
 			id: 'tai-khoan',
 			label: 'Tài khoản',
-			href: pageList.home.href,
+			href: pageList.account.href,
 			icon: <Users />,
 			items: [],
 		},
 	]
+	const pathname = usePathname()
 
 	return (
 		<Sidebar>
-			<SidebarHeader className="h-16 bg-teal-500" />
 			<SidebarContent className="py-3">
 				<SidebarMenu>
 					{sidebarItems.map((sidebarItem) => {
 						if (sidebarItem.items.length > 0) {
 							return (
-								<Collapsible
+								<CollapsibleSidebar
 									key={sidebarItem.id}
-									defaultOpen={false}
-									className="group/collapsible"
-								>
-									<SidebarMenuItem className="px-2">
-										<CollapsibleTrigger asChild>
-											<SidebarMenuButton
-												className="hover:text-primary active:text-primary rounded-full"
-												size="lg"
-											>
-												{sidebarItem.icon}
-												<div className="text-lg">{sidebarItem.label}</div>
-											</SidebarMenuButton>
-										</CollapsibleTrigger>
-										<CollapsibleContent>
-											<SidebarMenuSub className="space-y-2">
-												{sidebarItem.items.map((item) => {
-													return (
-														<SidebarMenuSubItem
-															className="hover:text-primary active:text-primary"
-															key={item.id}
-														>
-															<Link href={item.href}>{item.label}</Link>
-														</SidebarMenuSubItem>
-													)
-												})}
-											</SidebarMenuSub>
-										</CollapsibleContent>
-									</SidebarMenuItem>
-								</Collapsible>
+									sidebarItem={sidebarItem}
+								/>
 							)
 						}
 						return (
 							<SidebarMenuItem key={sidebarItem.id} className="px-2">
 								<SidebarMenuButton
-									className="hover:text-primary active:text-primary rounded-full"
+									isActive={sidebarItem.href === pathname}
+									className="hover:text-primary data-[active=true]:text-primary active:text-primary rounded-full"
 									size="lg"
 								>
 									{sidebarItem.icon}
-									<Link href={pageList.home.href} className="text-lg">
+									<Link href={sidebarItem.href} className="text-lg">
 										{sidebarItem.label}
 									</Link>
 								</SidebarMenuButton>

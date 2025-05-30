@@ -12,9 +12,9 @@ const MainLayout = ({ children }: Props) => {
 		<div className="flex h-screen overflow-hidden bg-gray-100">
 			<SidebarProvider>
 				<AppSidebar />
-				<div className="w-full">
+				<div className="w-full h-screen flex flex-col">
 					<Header />
-					<div>{children}</div>
+					<div className="p-5 flex-1">{children}</div>
 				</div>
 			</SidebarProvider>
 		</div>

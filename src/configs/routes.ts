@@ -22,6 +22,24 @@ export const pageList = {
 		isAuth: false,
 		pattern: ['maintenance'],
 	},
+	account: {
+		title: 'Account',
+		href: '/account',
+		isAuth: true,
+		pattern: ['account'],
+	},
+	equipmentSet: {
+		title: 'Equipment Set',
+		href: '/equipment-set',
+		isAuth: true,
+		pattern: ['equipment-set'],
+	},
+	assembledEquipment: {
+		title: 'Assembled Equipment',
+		href: '/assembled-equipment',
+		isAuth: true,
+		pattern: ['assembled-equipment'],
+	},
 	home: {
 		title: 'Home',
 		href: '/',
