@@ -1,7 +1,11 @@
 import AccountTemplate from '@/modules/account/components/templates/AccountTemplate'
 
 const AccountPage = () => {
-	return <AccountTemplate />
+	return (
+		<div className="h-full">
+			<AccountTemplate />
+		</div>
+	)
 }
 
 export default AccountPage

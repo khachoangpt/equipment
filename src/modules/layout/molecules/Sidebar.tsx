@@ -31,14 +31,14 @@ const AppSidebar = () => {
 			icon: <BriefcaseBusiness />,
 			items: [
 				{
-					id: 'danh-muc-trang-bi-dong-bo',
-					label: 'Danh mục',
-					href: '#',
-				},
-				{
 					id: 'trang-bi-trang-bi-dong-bo',
 					label: 'Trang bị',
 					href: pageList.equipmentSet.href,
+				},
+				{
+					id: 'danh-muc-trang-bi-dong-bo',
+					label: 'Danh mục',
+					href: '#',
 				},
 				{
 					label: 'Bàn giao trang bị',
@@ -74,14 +74,14 @@ const AppSidebar = () => {
 			icon: <Wrench />,
 			items: [
 				{
-					id: 'danh-muc-trang-bi-lap-ghep',
-					label: 'Danh mục',
-					href: '#',
-				},
-				{
 					id: 'xay-dung-cau-hinh',
 					label: 'Xây dựng cấu hình',
 					href: pageList.assembledEquipment.href,
+				},
+				{
+					id: 'danh-muc-trang-bi-lap-ghep',
+					label: 'Danh mục',
+					href: '#',
 				},
 			],
 		},
@@ -97,7 +97,7 @@ const AppSidebar = () => {
 
 	return (
 		<Sidebar>
-			<SidebarContent className="py-3">
+			<SidebarContent className="py-3 bg-white">
 				<SidebarMenu>
 					{sidebarItems.map((sidebarItem) => {
 						if (sidebarItem.items.length > 0) {

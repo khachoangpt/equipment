@@ -39,7 +39,7 @@ const CollapsibleSidebar = ({ sidebarItem }: Props) => {
 				<CollapsibleTrigger asChild>
 					<SidebarMenuButton
 						isActive={sidebarItem.items.some((item) => item.href === pathname)}
-						className="hover:text-primary active:text-primary rounded-full"
+						className="hover:text-primary cursor-pointer active:text-primary rounded-full"
 						size="lg"
 					>
 						{sidebarItem.icon}
@@ -51,7 +51,7 @@ const CollapsibleSidebar = ({ sidebarItem }: Props) => {
 						{sidebarItem.items.map((item) => {
 							return (
 								<SidebarMenuSubItem
-									className="hover:text-primary active:text-primary"
+									className="hover:text-primary cursor-pointer active:text-primary"
 									key={item.id}
 								>
 									<Link

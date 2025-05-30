@@ -14,7 +14,7 @@ const MainLayout = ({ children }: Props) => {
 				<AppSidebar />
 				<div className="w-full h-screen flex flex-col">
 					<Header />
-					<div className="p-5 flex-1">{children}</div>
+					<div className="p-5 flex-1 overflow-hidden">{children}</div>
 				</div>
 			</SidebarProvider>
 		</div>
