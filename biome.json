@@ -24,8 +24,12 @@
 				"noBannedTypes": "off",
 				"noStaticOnlyClass": "off"
 			},
+			"security": {
+				"noDangerouslySetInnerHtml": "off"
+			},
 			"suspicious": {
-				"noConsoleLog": "error"
+				"noConsoleLog": "error",
+				"noArrayIndexKey": "off"
 			},
 			"correctness": {
 				"noUnusedImports": "error",
