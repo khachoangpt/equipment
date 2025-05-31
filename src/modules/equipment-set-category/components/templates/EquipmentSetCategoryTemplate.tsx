@@ -4,7 +4,7 @@ import EquipmentSetTypeGroup from '../organisms/EquipmentSetTypeGroup'
 
 const EquipmentSetCategoryTemplate = () => {
 	return (
-		<div className="space-y-5">
+		<div className="grid grid-cols-2 gap-5">
 			<EquipmentSetTypeGroup />
 			<EquipmentSetQuality />
 			<EquipmentSetCategory />

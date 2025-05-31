@@ -1,11 +1,11 @@
 'use client'
-
-import { pageList } from '@/configs/routes'
+import type { TypeGroupDetailSchema } from '@/configs/schema'
 import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
 import type { EquipmentSetTypeGroup } from '@/types/equipment-set.types'
 import type { ColumnDef } from '@tanstack/react-table'
-import Link from 'next/link'
 import { useState } from 'react'
+import type { SubmitHandler } from 'react-hook-form'
+import DialogAddTypeGroup from './DialogAddTypeGroup'
 
 export const columns: ColumnDef<EquipmentSetTypeGroup>[] = [
 	{
@@ -27,44 +27,49 @@ export const columns: ColumnDef<EquipmentSetTypeGroup>[] = [
 		header: 'Ghi chú',
 	},
 	{
-		accessorKey: 'createdAt',
-		header: 'Ngày tạo',
-	},
-	{
-		accessorKey: 'updatedAt',
-		header: 'Ngày cập nhật',
-	},
-	{
 		id: 'actions',
 		enableResizing: false,
 		size: 1,
 		cell: ({ row }) => {
-			const [open, setOpen] = useState<boolean>(false)
+			const [openDelete, setOpenDelete] = useState<boolean>(false)
+			const [openDetail, setOpenDetail] = useState<boolean>(false)
 
 			const handleDelete = () => {
-				setOpen(false)
+				setOpenDelete(false)
+			}
+
+			const handleConfirmDetailDialog: SubmitHandler<
+				TypeGroupDetailSchema
+			> = () => {
+				setOpenDetail(false)
 			}
 
 			return (
 				<div className="flex items-center justify-end gap-x-3">
-					<Link
-						href={pageList.accountDetail({ id: row.original.id }).href}
-						className="text-blue-600"
+					<p
+						className="text-blue-600 cursor-pointer"
+						onClick={() => setOpenDetail(true)}
 					>
 						Chỉnh sửa
-					</Link>
+					</p>
 					<p
 						className="text-red-600 cursor-pointer"
-						onClick={() => setOpen(true)}
+						onClick={() => setOpenDelete(true)}
 					>
 						Xoá
 					</p>
 					<DialogConfirmDelete
 						description="Bạn chắc chắn muốn xoá danh mục này?"
 						title="Xác nhận xóa danh mục"
-						open={open}
-						onOpenChange={setOpen}
+						open={openDelete}
+						onOpenChange={setOpenDelete}
 						onConfirm={handleDelete}
+					/>
+					<DialogAddTypeGroup
+						id={row.original.id}
+						open={openDetail}
+						onOpenChange={setOpenDetail}
+						onConfirm={handleConfirmDetailDialog}
 					/>
 				</div>
 			)

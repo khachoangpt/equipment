@@ -2,10 +2,12 @@
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import type { TypeGroupDetailSchema } from '@/configs/schema'
 import { equipmentSetQuality } from '@/mocks/equipment.mock'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
+import type { SubmitHandler } from 'react-hook-form'
 import DialogAddQuality from './DialogAddQuality'
 import { columns } from './EquipmentSetQualityTableColumns'
 
@@ -13,15 +15,17 @@ const EquipmentSetQuality = () => {
 	const [open, setOpen] = useState<boolean>(false)
 	const [paginationState, setPaginationState] = useState({
 		pageIndex: 0,
-		pageSize: 10,
+		pageSize: 5,
 	})
+
+	const handleConfirmAdd: SubmitHandler<TypeGroupDetailSchema> = () => {
+		setOpen(false)
+	}
 
 	return (
 		<Card>
 			<div className="flex items-center justify-between">
-				<h3 className="font-bold text-2xl">
-					Danh mục phân cấp chất lượng trang bị
-				</h3>
+				<h3 className="font-bold text-2xl">Phân cấp chất lượng trang bị</h3>
 				<Button onClick={() => setOpen(true)}>
 					<Plus />
 					Thêm
@@ -38,7 +42,7 @@ const EquipmentSetQuality = () => {
 			<DialogAddQuality
 				open={open}
 				onOpenChange={setOpen}
-				onConfirm={() => setOpen(false)}
+				onConfirm={handleConfirmAdd}
 			/>
 		</Card>
 	)

@@ -16,8 +16,12 @@ const EquipmentSetCategory = () => {
 		pageSize: 10,
 	})
 
+	const handleConfirmAdd = () => {
+		setOpen(false)
+	}
+
 	return (
-		<Card>
+		<Card className="col-span-2">
 			<div className="flex items-center justify-between">
 				<h3 className="font-bold text-2xl">Danh mục trang bị</h3>
 				<Button onClick={() => setOpen(true)}>
@@ -36,7 +40,7 @@ const EquipmentSetCategory = () => {
 			<DialogAddCategoryEquipmentSet
 				open={open}
 				onOpenChange={setOpen}
-				onConfirm={() => setOpen(false)}
+				onConfirm={handleConfirmAdd}
 			/>
 		</Card>
 	)

@@ -1,4 +1,3 @@
-import {} from '@mui/material'
 import LoginForm from '../organisms/LoginForm'
 
 const LoginTemplate = () => {

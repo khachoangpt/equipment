@@ -39,6 +39,42 @@ const accountSchema = z
 
 type AccountSchema = z.infer<typeof accountSchema>
 
-export { loginSchema, accountSchema }
+const typeGroupDetailSchema = z.object({
+	name: z
+		.string({ required_error: 'Chưa nhập tên nhóm' })
+		.trim()
+		.min(1, 'Chưa nhập tên nhóm'),
+	code: z
+		.string({ required_error: 'Chưa nhập mã nhóm' })
+		.trim()
+		.min(1, 'Chưa nhập mã nhóm'),
+	note: z.string().optional(),
+})
+type TypeGroupDetailSchema = z.infer<typeof typeGroupDetailSchema>
 
-export type { LoginSchema, AccountSchema }
+const qualityDetailSchema = z.object({
+	name: z
+		.string({ required_error: 'Chưa nhập tên phân cấp' })
+		.trim()
+		.min(1, 'Chưa nhập tên phân cấp'),
+	code: z
+		.string({ required_error: 'Chưa nhập mã phân cấp' })
+		.trim()
+		.min(1, 'Chưa nhập mã phân cấp'),
+	note: z.string().optional(),
+})
+type QualityDetailSchema = z.infer<typeof qualityDetailSchema>
+
+export {
+	loginSchema,
+	accountSchema,
+	typeGroupDetailSchema,
+	qualityDetailSchema,
+}
+
+export type {
+	LoginSchema,
+	AccountSchema,
+	TypeGroupDetailSchema,
+	QualityDetailSchema,
+}

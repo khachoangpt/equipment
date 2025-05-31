@@ -17,7 +17,7 @@ const DialogAddCategoryEquipmentSet = ({ onOpenChange, open }: Props) => {
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Thêm danh trang bị</DialogTitle>
+					<DialogTitle>Thêm danh mục trang bị</DialogTitle>
 					<DialogDescription className="hidden" />
 				</DialogHeader>
 				<div className="mt-5">Content</div>

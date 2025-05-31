@@ -40,14 +40,6 @@ export const columns: ColumnDef<EquipmentSetCategory>[] = [
 		header: 'Ghi chú',
 	},
 	{
-		accessorKey: 'createdAt',
-		header: 'Ngày tạo',
-	},
-	{
-		accessorKey: 'updatedAt',
-		header: 'Ngày cập nhật',
-	},
-	{
 		id: 'actions',
 		enableResizing: false,
 		size: 1,
