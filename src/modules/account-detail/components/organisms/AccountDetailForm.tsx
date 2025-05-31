@@ -127,7 +127,7 @@ const EditAccountForm = ({ id }: Props) => {
 						>
 							Quay lại
 						</Button>
-						<Button type="submit">Cập nhật</Button>
+						<Button type="submit">{id ? 'Cập nhật' : 'Thêm'}</Button>
 					</div>
 				</Form>
 			</form>

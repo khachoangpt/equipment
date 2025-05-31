@@ -6,7 +6,7 @@ type Props = {
 }
 
 const AccountDetailTemplate = ({ id }: Props) => {
-	const pageTitle = id ? 'Chỉnh sửa tài khoản' : 'Tạo tài khoản'
+	const pageTitle = id ? 'Chỉnh sửa tài khoản' : 'Thêm tài khoản'
 
 	return (
 		<div>

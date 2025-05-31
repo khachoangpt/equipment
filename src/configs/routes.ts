@@ -34,6 +34,12 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['account', ''],
 	}),
+	accountCreate: {
+		title: 'Account Create',
+		href: '/account/create',
+		isAuth: true,
+		pattern: ['account', 'create'],
+	},
 	equipmentSet: {
 		title: 'Equipment Set',
 		href: '/equipment-set',

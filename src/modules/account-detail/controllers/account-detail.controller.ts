@@ -10,6 +10,7 @@ type Props = {
 
 const useAccountDetailController = ({ id }: Props) => {
 	const defaultValues: AccountSchema = {
+		mode: id ? 'edit' : 'create',
 		name: '',
 		username: '',
 		password: '',
@@ -24,6 +25,7 @@ const useAccountDetailController = ({ id }: Props) => {
 			const accountFound = accounts.find((account) => account.id === id)
 			if (accountFound) {
 				accountDetailForm.reset({
+					mode: 'edit',
 					name: accountFound.name,
 					username: accountFound.username,
 					password: undefined,

@@ -1,12 +1,17 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { pageList } from '@/configs/routes'
 import { accounts } from '@/mocks/account.mock'
 import DataTable from '@/modules/common/components/organisms/DataTable'
+import { Plus } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { columns } from '../organisms/AccountTableColumns'
 
 const AccountTemplate = () => {
+	const router = useRouter()
 	const [paginationState, setPaginationState] = useState({
 		pageIndex: 0,
 		pageSize: 10,
@@ -15,7 +20,13 @@ const AccountTemplate = () => {
 	return (
 		<div className="h-full">
 			<Card className="gap-0 gap-y-2 px-5">
-				<h3 className="font-bold text-2xl">Tài khoản</h3>
+				<div className="flex items-center justify-between">
+					<h3 className="font-bold text-2xl">Tài khoản</h3>
+					<Button onClick={() => router.push(pageList.accountCreate.href)}>
+						<Plus />
+						Thêm tài khoản
+					</Button>
+				</div>
 				<DataTable
 					columns={columns}
 					data={accounts}
