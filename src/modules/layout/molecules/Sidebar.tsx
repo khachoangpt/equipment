@@ -38,7 +38,7 @@ const AppSidebar = () => {
 				{
 					id: 'danh-muc-trang-bi-dong-bo',
 					label: 'Danh mục',
-					href: '#',
+					href: pageList.equipmentSetCategory.href,
 				},
 				{
 					label: 'Bàn giao trang bị',

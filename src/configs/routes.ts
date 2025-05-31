@@ -46,6 +46,12 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['equipment-set'],
 	},
+	equipmentSetCategory: {
+		title: 'Equipment Set Category',
+		href: '/equipment-set/category',
+		isAuth: true,
+		pattern: ['equipment-set', 'category'],
+	},
 	assembledEquipment: {
 		title: 'Assembled Equipment',
 		href: '/assembled-equipment',

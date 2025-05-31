@@ -19,7 +19,7 @@ const AccountTemplate = () => {
 
 	return (
 		<div className="h-full">
-			<Card className="gap-0 gap-y-2 px-5">
+			<Card>
 				<div className="flex items-center justify-between">
 					<h3 className="font-bold text-2xl">Tài khoản</h3>
 					<Button onClick={() => router.push(pageList.accountCreate.href)}>
