@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card'
 import { accounts } from '@/mocks/account.mock'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useState } from 'react'
-import { columns } from '../molecules/AccountTableColumns'
+import { columns } from '../organisms/AccountTableColumns'
 
 const AccountTemplate = () => {
 	const [paginationState, setPaginationState] = useState({

@@ -28,6 +28,12 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['account'],
 	},
+	accountDetail: (config?: { id?: string }) => ({
+		title: 'Account Detail',
+		href: `/account/${config?.id}`,
+		isAuth: true,
+		pattern: ['account', ''],
+	}),
 	equipmentSet: {
 		title: 'Equipment Set',
 		href: '/equipment-set',

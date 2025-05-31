@@ -1,11 +1,11 @@
 'use client'
 
+import { pageList } from '@/configs/routes'
 import type { Account } from '@/types/account.types'
 import type { ColumnDef } from '@tanstack/react-table'
-import {} from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
-import DialogConfirmDeleteAccount from '../organisms/DialogConfirmDeleteAccount'
+import DialogConfirmDeleteAccount from './DialogConfirmDeleteAccount'
 
 export const columns: ColumnDef<Account>[] = [
 	{
@@ -30,7 +30,7 @@ export const columns: ColumnDef<Account>[] = [
 		id: 'actions',
 		enableResizing: false,
 		size: 1,
-		cell: () => {
+		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
 
 			const handleDelete = () => {
@@ -39,14 +39,17 @@ export const columns: ColumnDef<Account>[] = [
 
 			return (
 				<div className="flex items-center justify-end gap-x-3">
-					<Link href={'/account/1/edit'} className="text-blue-600">
-						Edit
+					<Link
+						href={pageList.accountDetail({ id: row.original.id }).href}
+						className="text-blue-600"
+					>
+						Chỉnh sửa
 					</Link>
 					<p
 						className="text-red-600 cursor-pointer"
 						onClick={() => setOpen(true)}
 					>
-						Delete
+						Xoá
 					</p>
 					<DialogConfirmDeleteAccount
 						open={open}
