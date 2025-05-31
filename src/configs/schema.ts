@@ -65,11 +65,37 @@ const qualityDetailSchema = z.object({
 })
 type QualityDetailSchema = z.infer<typeof qualityDetailSchema>
 
+const categoryEquipmentSetDetailSchema = z.object({
+	name: z
+		.string({ required_error: 'Chưa nhập tên danh mục' })
+		.trim()
+		.min(1, 'Chưa nhập tên danh mục'),
+	type: z
+		.string({ required_error: 'Chưa chọn nhóm loại' })
+		.trim()
+		.min(1, 'Chưa chọn nhóm loại'),
+	field: z
+		.string({ required_error: 'Chưa chọn lĩnh vực' })
+		.trim()
+		.min(1, 'Chưa chọn lĩnh vực'),
+	defaultAmount: z
+		.number({
+			required_error: 'Chưa nhập số tiền ban đầu',
+			invalid_type_error: 'Chưa nhập số tiền ban đầu',
+		})
+		.min(0, 'Số tiền phải lớn hơn 0'),
+	note: z.string().optional(),
+})
+type CategoryEquipmentSetDetailSchema = z.infer<
+	typeof categoryEquipmentSetDetailSchema
+>
+
 export {
 	loginSchema,
 	accountSchema,
 	typeGroupDetailSchema,
 	qualityDetailSchema,
+	categoryEquipmentSetDetailSchema,
 }
 
 export type {
@@ -77,4 +103,5 @@ export type {
 	AccountSchema,
 	TypeGroupDetailSchema,
 	QualityDetailSchema,
+	CategoryEquipmentSetDetailSchema,
 }

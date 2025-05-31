@@ -13,7 +13,7 @@ const EquipmentSetCategory = () => {
 	const [open, setOpen] = useState<boolean>(false)
 	const [paginationState, setPaginationState] = useState({
 		pageIndex: 0,
-		pageSize: 10,
+		pageSize: 5,
 	})
 
 	const handleConfirmAdd = () => {

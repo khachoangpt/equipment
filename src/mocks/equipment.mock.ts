@@ -150,7 +150,7 @@ const equipmentSetCategories: EquipmentSetCategory[] = [
 	{
 		id: '1',
 		name: 'Nhóm trang bị 1',
-		type: 'Nhóm 1',
+		type: '1',
 		field: 'Lĩnh vực 1',
 		defaultAmount: 1000000,
 		note: 'Ghi chú 1',
@@ -160,7 +160,7 @@ const equipmentSetCategories: EquipmentSetCategory[] = [
 	{
 		id: '2',
 		name: 'Nhóm trang bị 2',
-		type: 'Nhóm 2',
+		type: '2',
 		field: 'Lĩnh vực 2',
 		defaultAmount: 2000000,
 		note: 'Ghi chú 2',
@@ -170,7 +170,7 @@ const equipmentSetCategories: EquipmentSetCategory[] = [
 	{
 		id: '3',
 		name: 'Nhóm trang bị 3',
-		type: 'Nhóm 3',
+		type: '3',
 		field: 'Lĩnh vực 3',
 		defaultAmount: 3000000,
 		note: 'Ghi chú 3',
@@ -180,7 +180,7 @@ const equipmentSetCategories: EquipmentSetCategory[] = [
 	{
 		id: '4',
 		name: 'Nhóm trang bị 4',
-		type: 'Nhóm 4',
+		type: '4',
 		field: 'Lĩnh vực 4',
 		defaultAmount: 4000000,
 		note: 'Ghi chú 4',
@@ -190,7 +190,7 @@ const equipmentSetCategories: EquipmentSetCategory[] = [
 	{
 		id: '5',
 		name: 'Nhóm trang bị 5',
-		type: 'Nhóm 5',
+		type: '5',
 		field: 'Lĩnh vực 5',
 		defaultAmount: 5000000,
 		note: 'Ghi chú 5',
@@ -200,7 +200,7 @@ const equipmentSetCategories: EquipmentSetCategory[] = [
 	{
 		id: '6',
 		name: 'Nhóm trang bị 6',
-		type: 'Nhóm 6',
+		type: '6',
 		field: 'Lĩnh vực 6',
 		defaultAmount: 6000000,
 		note: 'Ghi chú 6',
