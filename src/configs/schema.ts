@@ -149,6 +149,23 @@ const equipmentSetDetailSchema = z.object({
 })
 type EquipmentSetDetailSchema = z.infer<typeof equipmentSetDetailSchema>
 
+const searchEquipmentSetSchema = z.object({
+	name: z.string().optional(),
+	serial: z.string().optional(),
+	importDate: z.string().optional(),
+	importPlanNumber: z.number().optional(),
+	quality: z.string().optional(),
+	status: z.string().optional(),
+	unit: z.string().optional(),
+	typeGroup: z.string().optional(),
+	origin: z.string().optional(),
+	featureConfig: z.string().optional(),
+	specs: z.string().optional(),
+	country: z.string().optional(),
+	syncComponent: z.string().optional(),
+})
+type SearchEquipmentSetSchema = z.infer<typeof searchEquipmentSetSchema>
+
 export {
 	loginSchema,
 	accountSchema,
@@ -156,6 +173,7 @@ export {
 	qualityDetailSchema,
 	categoryEquipmentSetDetailSchema,
 	equipmentSetDetailSchema,
+	searchEquipmentSetSchema,
 }
 
 export type {
@@ -165,4 +183,5 @@ export type {
 	QualityDetailSchema,
 	CategoryEquipmentSetDetailSchema,
 	EquipmentSetDetailSchema,
+	SearchEquipmentSetSchema,
 }
