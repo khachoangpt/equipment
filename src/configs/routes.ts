@@ -46,6 +46,18 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['equipment-set'],
 	},
+	equipmentSetDetail: (config?: { id?: string }) => ({
+		title: 'Equipment Set Detail',
+		href: `/equipment-set/${config?.id}`,
+		isAuth: true,
+		pattern: ['equipment-set', ''],
+	}),
+	equipmentSetCreate: {
+		title: 'Equipment Set Create',
+		href: '/equipment-set/create',
+		isAuth: true,
+		pattern: ['equipment-set', 'create'],
+	},
 	equipmentSetCategory: {
 		title: 'Equipment Set Category',
 		href: '/equipment-set/category',

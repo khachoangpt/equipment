@@ -22,6 +22,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import type { CategoryEquipmentSetDetailSchema } from '@/configs/schema'
 import { equipmentSetTypeGroups } from '@/mocks/equipment.mock'
 import { useEffect } from 'react'
@@ -131,7 +132,7 @@ const DialogAddCategoryEquipmentSet = ({
 								<FormItem>
 									<FormLabel>Ghi chú</FormLabel>
 									<FormControl>
-										<Input placeholder="Ghi chú" {...field} />
+										<Textarea placeholder="Ghi chú" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

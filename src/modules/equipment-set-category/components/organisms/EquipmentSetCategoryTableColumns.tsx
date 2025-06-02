@@ -29,9 +29,12 @@ export const columns: ColumnDef<EquipmentSetCategory>[] = [
 	{
 		accessorKey: 'defaultAmount',
 		header: 'Giá tiền ban đầu',
-		cell: (info) => (
-			<span>
-				{Intl.NumberFormat('vi-VN').format(info.row.original.defaultAmount)}
+		cell: ({ row }) => (
+			<span className="text-right">
+				{row.original.defaultAmount.toLocaleString('vi-VN', {
+					style: 'currency',
+					currency: 'VND',
+				})}
 			</span>
 		),
 	},

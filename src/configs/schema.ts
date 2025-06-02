@@ -90,12 +90,72 @@ type CategoryEquipmentSetDetailSchema = z.infer<
 	typeof categoryEquipmentSetDetailSchema
 >
 
+const equipmentSetDetailSchema = z.object({
+	name: z
+		.string({ required_error: 'Chưa nhập tên trang bị' })
+		.trim()
+		.min(1, 'Chưa nhập tên trang bị'),
+	serial: z
+		.string({ required_error: 'Chưa nhập mã hiệu serial' })
+		.trim()
+		.min(1, 'Chưa nhập má hiệu serial'),
+	importDate: z
+		.string({ required_error: 'Chưa nhập ngày nhập' })
+		.trim()
+		.min(1, 'Chưa nhập ngày nhập'),
+	importPlanNumber: z
+		.number({
+			required_error: 'Chưa nhập số kế hoạch nhập',
+			invalid_type_error: 'Chưa nhập số kế hoạch nhập',
+		})
+		.min(0, 'Số kế hoạch nhập phải lớn hơn 0'),
+	origin: z
+		.string({ required_error: 'Chưa nhập nguồn cấp' })
+		.trim()
+		.min(1, 'Chưa nhập nguồn cấp'),
+	amount: z
+		.number({
+			required_error: 'Chưa nhập số tiền',
+			invalid_type_error: 'Chưa nhập số tiền',
+		})
+		.min(0, 'Số tiền phải lớn hơn 0'),
+	manufacturingDate: z
+		.string({ required_error: 'Chưa nhập ngày sản xuất' })
+		.trim()
+		.min(1, 'Chưa nhập ngày sản xuất'),
+	importUnit: z
+		.string({ required_error: 'Chưa nhập đơn vị nhập' })
+		.trim()
+		.min(1, 'Chưa nhập đơn vị nhập'),
+	rateUnit: z
+		.string({ required_error: 'Chưa nhập đơn vị đánh giá' })
+		.trim()
+		.min(1, 'Chưa nhập đơn vị đánh giá'),
+	rateResult: z
+		.string({ required_error: 'Chưa nhập kết 	quả đánh giá' })
+		.trim()
+		.min(1, 'Chưa nhập kết 	quả đánh giá'),
+	usedUnit: z
+		.string({ required_error: 'Chưa nhập đơn vị sử dụng' })
+		.trim()
+		.min(1, 'Chưa nhập đơn vị sử dụng'),
+	quality: z
+		.string({ required_error: 'Chưa nhập phân cấp chất lượng' })
+		.min(1, 'Chưa nhập phân cấp chất lượng'),
+	status: z
+		.string({ required_error: 'Chưa nhập trang thái' })
+		.trim()
+		.min(1, 'Chưa nhập trang thái'),
+})
+type EquipmentSetDetailSchema = z.infer<typeof equipmentSetDetailSchema>
+
 export {
 	loginSchema,
 	accountSchema,
 	typeGroupDetailSchema,
 	qualityDetailSchema,
 	categoryEquipmentSetDetailSchema,
+	equipmentSetDetailSchema,
 }
 
 export type {
@@ -104,4 +164,5 @@ export type {
 	TypeGroupDetailSchema,
 	QualityDetailSchema,
 	CategoryEquipmentSetDetailSchema,
+	EquipmentSetDetailSchema,
 }

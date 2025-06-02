@@ -15,6 +15,7 @@ import {
 	FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import type { TypeGroupDetailSchema } from '@/configs/schema'
 import { useEffect } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
@@ -82,7 +83,7 @@ const DialogAddTypeGroup = ({ onOpenChange, open, id, onConfirm }: Props) => {
 								<FormItem>
 									<FormLabel>Ghi chú</FormLabel>
 									<FormControl>
-										<Input placeholder="Ghi chú" {...field} />
+										<Textarea placeholder="Ghi chú" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
