@@ -1,10 +1,17 @@
 'use client'
 
 import type { UserResponseDto } from '@/client'
+import {
+	usersControllerFindAllQueryKey,
+	usersControllerRemoveMutation,
+} from '@/client/@tanstack/react-query.gen'
+import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
+import { useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import DialogConfirmDeleteAccount from './DialogConfirmDeleteAccount'
 
 export const columns: ColumnDef<UserResponseDto>[] = [
@@ -26,9 +33,27 @@ export const columns: ColumnDef<UserResponseDto>[] = [
 		size: 1,
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
+			const { mutate: remove } = useMutation({
+				...usersControllerRemoveMutation(),
+			})
 
 			const handleDelete = () => {
-				setOpen(false)
+				remove(
+					{ path: { id: row.original._id } },
+					{
+						onSuccess: () => {
+							setOpen(false)
+							toast.success('Xóa tài khoản thành công')
+							queryClient.invalidateQueries({
+								queryKey: usersControllerFindAllQueryKey(),
+							})
+						},
+						onError: () => {
+							toast.error('Xóa tài khoản không thành công')
+							setOpen(false)
+						},
+					},
+				)
 			}
 
 			return (

@@ -2,7 +2,7 @@
 
 import type { OptionsLegacyParser } from '@hey-api/client-axios';
 import { queryOptions, type UseMutationOptions } from '@tanstack/react-query';
-import type { AuthControllerSignInData, AuthControllerSignInError, AuthControllerSignInResponse, UsersControllerCreateData, UsersControllerCreateError, UsersControllerCreateResponse, UsersControllerFindOneData } from '../types.gen';
+import type { AuthControllerSignInData, AuthControllerSignInError, AuthControllerSignInResponse, UsersControllerCreateData, UsersControllerCreateError, UsersControllerCreateResponse, UsersControllerFindOneData, UsersControllerUpdateData, UsersControllerUpdateError, UsersControllerUpdateResponse, UsersControllerRemoveData, UsersControllerRemoveError, UsersControllerRemoveResponse } from '../types.gen';
 import type { AxiosError } from 'axios';
 import { client, AuthService, UsersService } from '../sdk.gen';
 
@@ -135,4 +135,32 @@ export const usersControllerFindOneOptions = (options: OptionsLegacyParser<Users
         },
         queryKey: usersControllerFindOneQueryKey(options)
     });
+};
+
+export const usersControllerUpdateMutation = (options?: Partial<OptionsLegacyParser<UsersControllerUpdateData>>) => {
+    const mutationOptions: UseMutationOptions<UsersControllerUpdateResponse, AxiosError<UsersControllerUpdateError>, OptionsLegacyParser<UsersControllerUpdateData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await UsersService.usersControllerUpdate({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const usersControllerRemoveMutation = (options?: Partial<OptionsLegacyParser<UsersControllerRemoveData>>) => {
+    const mutationOptions: UseMutationOptions<UsersControllerRemoveResponse, AxiosError<UsersControllerRemoveError>, OptionsLegacyParser<UsersControllerRemoveData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await UsersService.usersControllerRemove({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
 };

@@ -31,8 +31,8 @@ const accountSchema = z
 			.min(1, 'Chưa chọn vai trò'),
 	})
 	.refine(
-		({ mode }) => {
-			return mode === 'edit'
+		({ mode, password }) => {
+			return mode === 'edit' || (mode === 'create' && password)
 		},
 		{ path: ['password'], message: 'Chưa nhập mật khẩu' },
 	)

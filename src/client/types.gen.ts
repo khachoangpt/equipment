@@ -27,6 +27,16 @@ export type LoginResponseDto = {
     access_token: string;
 };
 
+export type UpdateUserDto = {
+    fullName?: string;
+    password?: string;
+    username?: string;
+    /**
+     * Chỉ Admin mới có thể thay đổi
+     */
+    role?: 'admin' | 'manager' | 'user';
+};
+
 export type UserResponseDto = {
     /**
      * ID của người dùng
@@ -71,3 +81,30 @@ export type UsersControllerFindOneData = {
 export type UsersControllerFindOneResponse = (UserResponseDto);
 
 export type UsersControllerFindOneError = (unknown);
+
+export type UsersControllerUpdateData = {
+    body: UpdateUserDto;
+    path: {
+        /**
+         * ID của người dùng cần sửa
+         */
+        id: string;
+    };
+};
+
+export type UsersControllerUpdateResponse = (UserResponseDto);
+
+export type UsersControllerUpdateError = (unknown);
+
+export type UsersControllerRemoveData = {
+    path: {
+        /**
+         * ID của người dùng cần xoá
+         */
+        id: string;
+    };
+};
+
+export type UsersControllerRemoveResponse = (void);
+
+export type UsersControllerRemoveError = (unknown);

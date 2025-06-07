@@ -1,14 +1,26 @@
+import {
+	usersControllerCreateMutation,
+	usersControllerFindAllQueryKey,
+	usersControllerFindOneOptions,
+	usersControllerFindOneQueryKey,
+	usersControllerUpdateMutation,
+} from '@/client/@tanstack/react-query.gen'
+import { queryClient } from '@/configs/query-client'
+import { pageList } from '@/configs/routes'
 import { type AccountSchema, accountSchema } from '@/configs/schema'
-import { accounts } from '@/mocks/account.mock'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 type Props = {
 	id?: string
 }
 
 const useAccountDetailController = ({ id }: Props) => {
+	const router = useRouter()
 	const defaultValues: AccountSchema = {
 		mode: id ? 'edit' : 'create',
 		name: '',
@@ -20,24 +32,80 @@ const useAccountDetailController = ({ id }: Props) => {
 		defaultValues,
 		resolver: zodResolver(accountSchema),
 	})
+	const { mutate: create } = useMutation({ ...usersControllerCreateMutation() })
+	const { mutate: update } = useMutation({ ...usersControllerUpdateMutation() })
+	const { data: account, isPending } = useQuery({
+		...usersControllerFindOneOptions({ path: { id: id ?? '' } }),
+		enabled: !!id,
+	})
+
 	useEffect(() => {
 		if (id) {
-			const accountFound = accounts.find((account) => account.id === id)
-			if (accountFound) {
+			if (account) {
 				accountDetailForm.reset({
 					mode: 'edit',
-					name: accountFound.name,
-					username: accountFound.username,
+					name: account.fullName,
+					username: account.username,
 					password: undefined,
-					role: accountFound.role,
+					role: account.role,
 				})
 			}
 		}
-	}, [id])
+	}, [id, isPending])
 
 	const onSubmit: SubmitHandler<AccountSchema> = (data: AccountSchema) => {
-		// biome-ignore lint/suspicious/noConsoleLog: <explanation>
-		console.log(data)
+		if (!id) {
+			create(
+				{
+					body: {
+						password: data.password ?? '',
+						role: data.role as 'admin' | 'manager' | 'user',
+						username: data.username,
+						fullName: data.name,
+					},
+				},
+				{
+					onError: () => {
+						toast.error('Tạo tài khoản khônng thành công')
+					},
+					onSuccess: () => {
+						toast.success('Tạo tài khoản thành công')
+						accountDetailForm.reset()
+						router.push(pageList.account.href)
+					},
+				},
+			)
+		} else {
+			update(
+				{
+					path: { id: id },
+					body: {
+						password: data.password ?? '',
+						role: data.role as 'admin' | 'manager' | 'user',
+						username: data.username,
+						fullName: data.name,
+					},
+				},
+				{
+					onError: () => {
+						toast.error('Lỗi sửa tài khoản')
+					},
+					onSuccess: () => {
+						toast.success('Sửa tài khoản thành công')
+						accountDetailForm.reset()
+						queryClient.invalidateQueries({
+							queryKey: usersControllerFindAllQueryKey(),
+						})
+						queryClient.invalidateQueries({
+							queryKey: usersControllerFindOneQueryKey({
+								path: { id: id ?? '' },
+							}),
+						})
+						router.push(pageList.account.href)
+					},
+				},
+			)
+		}
 	}
 
 	return { accountDetailForm, onSubmit }

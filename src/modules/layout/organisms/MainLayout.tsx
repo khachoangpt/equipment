@@ -7,7 +7,7 @@ type Props = {
 	children: ReactNode
 }
 
-const MainLayout = ({ children }: Props) => {
+const MainLayout = async ({ children }: Props) => {
 	return (
 		<div className="flex h-screen overflow-hidden bg-gray-100">
 			<SidebarProvider>
