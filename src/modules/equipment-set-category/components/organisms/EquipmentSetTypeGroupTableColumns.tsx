@@ -1,19 +1,21 @@
 'use client'
+import type { EquipmentGroupResponseDto } from '@/client'
+import {
+	equipmentGroupsControllerFindAllQueryKey,
+	equipmentGroupsControllerRemoveMutation,
+	equipmentGroupsControllerUpdateMutation,
+} from '@/client/@tanstack/react-query.gen'
+import { queryClient } from '@/configs/query-client'
 import type { TypeGroupDetailSchema } from '@/configs/schema'
 import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
-import type { EquipmentSetTypeGroup } from '@/types/equipment-set.types'
+import { useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useState } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
+import { toast } from 'sonner'
 import DialogAddTypeGroup from './DialogAddTypeGroup'
 
-export const columns: ColumnDef<EquipmentSetTypeGroup>[] = [
-	{
-		accessorKey: 'id',
-		header: 'ID',
-		enableResizing: false,
-		size: 1,
-	},
+export const columns: ColumnDef<EquipmentGroupResponseDto>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Tên',
@@ -23,7 +25,7 @@ export const columns: ColumnDef<EquipmentSetTypeGroup>[] = [
 		header: 'Mã nhóm',
 	},
 	{
-		accessorKey: 'note',
+		accessorKey: 'notes',
 		header: 'Ghi chú',
 	},
 	{
@@ -33,15 +35,54 @@ export const columns: ColumnDef<EquipmentSetTypeGroup>[] = [
 		cell: ({ row }) => {
 			const [openDelete, setOpenDelete] = useState<boolean>(false)
 			const [openDetail, setOpenDetail] = useState<boolean>(false)
+			const { mutate: remove } = useMutation({
+				...equipmentGroupsControllerRemoveMutation(),
+			})
+			const { mutate: update } = useMutation({
+				...equipmentGroupsControllerUpdateMutation(),
+			})
 
 			const handleDelete = () => {
-				setOpenDelete(false)
+				remove(
+					{ path: { id: row.original._id } },
+					{
+						onSuccess: () => {
+							setOpenDelete(false)
+							toast.success('Xóa thành công')
+							queryClient.invalidateQueries({
+								queryKey: equipmentGroupsControllerFindAllQueryKey(),
+							})
+						},
+						onError: () => {
+							toast.error('Xóa không thành công')
+							setOpenDelete(false)
+						},
+					},
+				)
 			}
 
-			const handleConfirmDetailDialog: SubmitHandler<
-				TypeGroupDetailSchema
-			> = () => {
-				setOpenDetail(false)
+			const handleConfirmEdit: SubmitHandler<TypeGroupDetailSchema> = (
+				data,
+			) => {
+				update(
+					{
+						body: { code: data.code, name: data.name, notes: data.note },
+						path: { id: row.original._id },
+					},
+					{
+						onError: () => {
+							toast.error('Chỉnh sửa khônng thành công')
+							setOpenDetail(false)
+						},
+						onSuccess: () => {
+							toast.success('Chình sửa thành công')
+							queryClient.invalidateQueries({
+								queryKey: equipmentGroupsControllerFindAllQueryKey(),
+							})
+							setOpenDetail(false)
+						},
+					},
+				)
 			}
 
 			return (
@@ -65,12 +106,15 @@ export const columns: ColumnDef<EquipmentSetTypeGroup>[] = [
 						onOpenChange={setOpenDelete}
 						onConfirm={handleDelete}
 					/>
-					<DialogAddTypeGroup
-						id={row.original.id}
-						open={openDetail}
-						onOpenChange={setOpenDetail}
-						onConfirm={handleConfirmDetailDialog}
-					/>
+
+					{row.original._id && openDetail && (
+						<DialogAddTypeGroup
+							id={row.original._id}
+							open={openDetail}
+							onOpenChange={setOpenDetail}
+							onConfirm={handleConfirmEdit}
+						/>
+					)}
 				</div>
 			)
 		},

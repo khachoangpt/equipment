@@ -1,21 +1,48 @@
 'use client'
 
+import {
+	equipmentGroupsControllerCreateMutation,
+	equipmentGroupsControllerFindAllOptions,
+} from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { queryClient } from '@/configs/query-client'
 import type { TypeGroupDetailSchema } from '@/configs/schema'
-import { equipmentSetTypeGroups } from '@/mocks/equipment.mock'
 import DataTable from '@/modules/common/components/organisms/DataTable'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
+import { toast } from 'sonner'
 import DialogAddTypeGroup from './DialogAddTypeGroup'
 import { columns } from './EquipmentSetTypeGroupTableColumns'
 
 const EquipmentSetTypeGroup = () => {
 	const [open, setOpen] = useState<boolean>(false)
+	const { data: equipmentSetTypeGroups } = useQuery({
+		...equipmentGroupsControllerFindAllOptions(),
+	})
+	const { mutate: create } = useMutation({
+		...equipmentGroupsControllerCreateMutation(),
+	})
 
-	const handleConfirmAdd: SubmitHandler<TypeGroupDetailSchema> = () => {
-		setOpen(false)
+	const handleConfirmAdd: SubmitHandler<TypeGroupDetailSchema> = (data) => {
+		create(
+			{ body: { code: data.code, name: data.name, notes: data.note } },
+			{
+				onError: () => {
+					toast.error('Tạo nhóm loại trang bị khônng thành công')
+					setOpen(false)
+				},
+				onSuccess: () => {
+					toast.success('Tạo nhóm loại trang bị thành công')
+					queryClient.invalidateQueries({
+						queryKey: equipmentGroupsControllerFindAllOptions().queryKey,
+					})
+					setOpen(false)
+				},
+			},
+		)
 	}
 
 	return (
@@ -27,7 +54,7 @@ const EquipmentSetTypeGroup = () => {
 					Thêm
 				</Button>
 			</div>
-			<DataTable columns={columns} data={equipmentSetTypeGroups} />
+			<DataTable columns={columns} data={equipmentSetTypeGroups || []} />
 			<DialogAddTypeGroup
 				open={open}
 				onOpenChange={setOpen}

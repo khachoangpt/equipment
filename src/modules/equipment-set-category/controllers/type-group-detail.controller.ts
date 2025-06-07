@@ -1,9 +1,10 @@
+import { equipmentGroupsControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
 import {
 	type TypeGroupDetailSchema,
 	typeGroupDetailSchema,
 } from '@/configs/schema'
-import { equipmentSetTypeGroups } from '@/mocks/equipment.mock'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -21,21 +22,22 @@ const useTypeGroupDetailController = ({ id }: Props) => {
 		defaultValues,
 		resolver: zodResolver(typeGroupDetailSchema),
 	})
+	const { data: typeGroupFound, isPending } = useQuery({
+		...equipmentGroupsControllerFindOneOptions({ path: { id: id ?? '' } }),
+		enabled: !!id,
+	})
 
 	useEffect(() => {
 		if (!id) return
 
-		const typeGroupFound = equipmentSetTypeGroups.find(
-			(typeGroup) => typeGroup.id === id,
-		)
 		if (typeGroupFound) {
 			typeGroupDetailForm.reset({
 				code: typeGroupFound.code,
 				name: typeGroupFound.name,
-				note: typeGroupFound.note,
+				note: typeGroupFound.notes,
 			})
 		}
-	}, [id])
+	}, [id, isPending])
 
 	return {
 		typeGroupDetailForm,
