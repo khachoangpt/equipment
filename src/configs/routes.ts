@@ -64,6 +64,24 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['equipment-set', 'category'],
 	},
+	equipmentSetHandover: {
+		title: 'Equipment Set Handover',
+		href: '/equipment-set/handover',
+		isAuth: true,
+		pattern: ['equipment-set', 'handover'],
+	},
+	createEquipmentSetHandover: {
+		title: 'Create Equipment Set Handover',
+		href: '/equipment-set/handover/create',
+		isAuth: true,
+		pattern: ['equipment-set', 'handover', 'create'],
+	},
+	equipmentSetHandoverDetail: (config?: { id?: string }) => ({
+		title: 'Create Equipment Set Handover',
+		href: `/equipment-set/handover/${config?.id}`,
+		isAuth: true,
+		pattern: ['equipment-set', 'handover', ''],
+	}),
 	assembledEquipment: {
 		title: 'Assembled Equipment',
 		href: '/assembled-equipment',

@@ -166,6 +166,21 @@ const searchEquipmentSetSchema = z.object({
 })
 type SearchEquipmentSetSchema = z.infer<typeof searchEquipmentSetSchema>
 
+const createEquipmentSetHandoverSchema = z.object({
+	code: z.string({ required_error: 'Chưa nhập số biên bản' }),
+	handoverPerson: z.string({ required_error: 'Chưa nhập người giao' }),
+	handoverUnit: z.string({ required_error: 'Chưa nhập đơn vị giao' }),
+	receiverPerson: z.string({ required_error: 'Chưa nhập người nhận' }),
+	receiverUnit: z.string({ required_error: 'Chưa nhập đơn vị nhận' }),
+	handoverDate: z.string({ required_error: 'Chưa nhập ngày giao' }),
+	returnDate: z.string({ required_error: 'Chưa nhập ngày nhận' }),
+	equipmentName: z.string({ required_error: 'Chưa nhập tên trang bị' }),
+	note: z.string().optional(),
+})
+type CreateEquipmentSetHandoverSchema = z.infer<
+	typeof createEquipmentSetHandoverSchema
+>
+
 export {
 	loginSchema,
 	accountSchema,
@@ -174,6 +189,7 @@ export {
 	categoryEquipmentSetDetailSchema,
 	equipmentSetDetailSchema,
 	searchEquipmentSetSchema,
+	createEquipmentSetHandoverSchema,
 }
 
 export type {
@@ -184,4 +200,5 @@ export type {
 	CategoryEquipmentSetDetailSchema,
 	EquipmentSetDetailSchema,
 	SearchEquipmentSetSchema,
+	CreateEquipmentSetHandoverSchema,
 }

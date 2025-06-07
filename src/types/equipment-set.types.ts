@@ -46,9 +46,26 @@ type EquipmentSet = {
 	updatedAt: string
 }
 
+type Handover = {
+	id: string
+	code: string
+	handoverPerson: string
+	handoverUnit: string
+	receiverPerson: string
+	receiverUnit: string
+	handoverDate: string
+	returnDate: string
+	equipmentName: string
+	equipmentSerial: string
+	equipmentQuantity: number
+	equipmentStatus: string
+	note: string
+}
+
 export type {
 	EquipmentSetTypeGroup,
 	EquipmentSetQuality,
 	EquipmentSetCategory,
 	EquipmentSet,
+	Handover,
 }

@@ -43,7 +43,7 @@ const AppSidebar = () => {
 				{
 					label: 'Bàn giao trang bị',
 					id: 'ban-giao-trang-bi',
-					href: '#',
+					href: pageList.equipmentSetHandover.href,
 				},
 				{
 					label: 'Bảo dưỡng / Sửa chữa',

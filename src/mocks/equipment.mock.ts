@@ -3,6 +3,7 @@ import type {
 	EquipmentSetCategory,
 	EquipmentSetQuality,
 	EquipmentSetTypeGroup,
+	Handover,
 } from '@/types/equipment-set.types'
 
 const equipmentSetTypeGroups: EquipmentSetTypeGroup[] = [
@@ -483,9 +484,73 @@ const equipmentSets: EquipmentSet[] = [
 	},
 ]
 
+const equipmentHandovers: Handover[] = [
+	{
+		id: '1',
+		code: 'H1',
+		equipmentSerial: 'S1',
+		handoverPerson: 'P1',
+		handoverUnit: 'U1',
+		receiverPerson: 'R1',
+		receiverUnit: 'U1',
+		handoverDate: '2025-01-01',
+		returnDate: '2025-01-01',
+		equipmentName: 'T1',
+		equipmentQuantity: 1,
+		equipmentStatus: 'S1',
+		note: 'N1',
+	},
+	{
+		id: '2',
+		code: 'H2',
+		equipmentSerial: 'S2',
+		handoverPerson: 'P2',
+		handoverUnit: 'U2',
+		receiverPerson: 'R2',
+		receiverUnit: 'U2',
+		handoverDate: '2025-01-02',
+		returnDate: '2025-01-02',
+		equipmentName: 'T2',
+		equipmentQuantity: 2,
+		equipmentStatus: 'S2',
+		note: 'N2',
+	},
+	{
+		id: '3',
+		code: 'H3',
+		equipmentSerial: 'S3',
+		handoverPerson: 'P3',
+		handoverUnit: 'U3',
+		receiverPerson: 'R3',
+		receiverUnit: 'U3',
+		handoverDate: '2025-01-03',
+		returnDate: '2025-01-03',
+		equipmentName: 'T3',
+		equipmentQuantity: 3,
+		equipmentStatus: 'S3',
+		note: 'N3',
+	},
+	{
+		id: '4',
+		code: 'H4',
+		equipmentSerial: 'S4',
+		handoverPerson: 'P4',
+		handoverUnit: 'U4',
+		receiverPerson: 'R4',
+		receiverUnit: 'U4',
+		handoverDate: '2025-01-04',
+		returnDate: '2025-01-04',
+		equipmentName: 'T4',
+		equipmentQuantity: 4,
+		equipmentStatus: 'S4',
+		note: 'N4',
+	},
+]
+
 export {
 	equipmentSetTypeGroups,
 	equipmentSetQuality,
 	equipmentSetCategories,
 	equipmentSets,
+	equipmentHandovers,
 }
