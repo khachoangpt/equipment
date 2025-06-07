@@ -1,6 +1,7 @@
+import { qualityLevelsControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
 import { type QualityDetailSchema, qualityDetailSchema } from '@/configs/schema'
-import { equipmentSetQuality } from '@/mocks/equipment.mock'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -18,21 +19,22 @@ const useQualityDetailController = ({ id }: Props) => {
 		defaultValues,
 		resolver: zodResolver(qualityDetailSchema),
 	})
+	const { data: qualityFound, isPending } = useQuery({
+		...qualityLevelsControllerFindOneOptions({ path: { id: id ?? '' } }),
+		enabled: !!id,
+	})
 
 	useEffect(() => {
 		if (!id) return
 
-		const qualityFound = equipmentSetQuality.find(
-			(quality) => quality.id === id,
-		)
 		if (qualityFound) {
 			qualityDetailForm.reset({
 				code: qualityFound.code,
 				name: qualityFound.name,
-				note: qualityFound.note,
+				note: qualityFound.notes,
 			})
 		}
-	}, [id])
+	}, [id, isPending])
 
 	return { qualityDetailForm }
 }

@@ -2,9 +2,9 @@
 
 import type { OptionsLegacyParser } from '@hey-api/client-axios';
 import { queryOptions, type UseMutationOptions } from '@tanstack/react-query';
-import type { AuthControllerSignInData, AuthControllerSignInError, AuthControllerSignInResponse, EquipmentGroupsControllerCreateData, EquipmentGroupsControllerCreateError, EquipmentGroupsControllerCreateResponse, EquipmentGroupsControllerFindOneData, EquipmentGroupsControllerUpdateData, EquipmentGroupsControllerUpdateError, EquipmentGroupsControllerUpdateResponse, EquipmentGroupsControllerRemoveData, EquipmentGroupsControllerRemoveError, EquipmentGroupsControllerRemoveResponse, UnitsControllerCreateData, UnitsControllerCreateError, UnitsControllerCreateResponse, UnitsControllerFindOneData, UnitsControllerUpdateData, UnitsControllerUpdateError, UnitsControllerUpdateResponse, UnitsControllerRemoveData, UnitsControllerRemoveError, UnitsControllerRemoveResponse, UsersControllerCreateData, UsersControllerCreateError, UsersControllerCreateResponse, UsersControllerFindOneData, UsersControllerUpdateData, UsersControllerUpdateError, UsersControllerUpdateResponse, UsersControllerRemoveData, UsersControllerRemoveError, UsersControllerRemoveResponse } from '../types.gen';
+import type { AuthControllerSignInData, AuthControllerSignInError, AuthControllerSignInResponse, EquipmentGroupsControllerCreateData, EquipmentGroupsControllerCreateError, EquipmentGroupsControllerCreateResponse, EquipmentGroupsControllerFindOneData, EquipmentGroupsControllerUpdateData, EquipmentGroupsControllerUpdateError, EquipmentGroupsControllerUpdateResponse, EquipmentGroupsControllerRemoveData, EquipmentGroupsControllerRemoveError, EquipmentGroupsControllerRemoveResponse, QualityLevelsControllerCreateData, QualityLevelsControllerCreateError, QualityLevelsControllerCreateResponse, QualityLevelsControllerFindOneData, QualityLevelsControllerUpdateData, QualityLevelsControllerUpdateError, QualityLevelsControllerUpdateResponse, QualityLevelsControllerRemoveData, QualityLevelsControllerRemoveError, QualityLevelsControllerRemoveResponse, UnitsControllerCreateData, UnitsControllerCreateError, UnitsControllerCreateResponse, UnitsControllerFindOneData, UnitsControllerUpdateData, UnitsControllerUpdateError, UnitsControllerUpdateResponse, UnitsControllerRemoveData, UnitsControllerRemoveError, UnitsControllerRemoveResponse, UsersControllerCreateData, UsersControllerCreateError, UsersControllerCreateResponse, UsersControllerFindOneData, UsersControllerUpdateData, UsersControllerUpdateError, UsersControllerUpdateResponse, UsersControllerRemoveData, UsersControllerRemoveError, UsersControllerRemoveResponse } from '../types.gen';
 import type { AxiosError } from 'axios';
-import { client, AuthService, CategoriesEquipmentGroupsService, CategoriesUnitsService, UsersService } from '../sdk.gen';
+import { client, AuthService, CategoriesEquipmentGroupsService, CategoriesQualityLevelsService, CategoriesUnitsService, UsersService } from '../sdk.gen';
 
 type QueryKey<TOptions extends OptionsLegacyParser> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -155,6 +155,105 @@ export const equipmentGroupsControllerRemoveMutation = (options?: Partial<Option
     const mutationOptions: UseMutationOptions<EquipmentGroupsControllerRemoveResponse, AxiosError<EquipmentGroupsControllerRemoveError>, OptionsLegacyParser<EquipmentGroupsControllerRemoveData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await CategoriesEquipmentGroupsService.equipmentGroupsControllerRemove({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const qualityLevelsControllerCreateQueryKey = (options: OptionsLegacyParser<QualityLevelsControllerCreateData>) => [
+    createQueryKey('qualityLevelsControllerCreate', options)
+];
+
+export const qualityLevelsControllerCreateOptions = (options: OptionsLegacyParser<QualityLevelsControllerCreateData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await CategoriesQualityLevelsService.qualityLevelsControllerCreate({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: qualityLevelsControllerCreateQueryKey(options)
+    });
+};
+
+export const qualityLevelsControllerCreateMutation = (options?: Partial<OptionsLegacyParser<QualityLevelsControllerCreateData>>) => {
+    const mutationOptions: UseMutationOptions<QualityLevelsControllerCreateResponse, AxiosError<QualityLevelsControllerCreateError>, OptionsLegacyParser<QualityLevelsControllerCreateData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await CategoriesQualityLevelsService.qualityLevelsControllerCreate({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const qualityLevelsControllerFindAllQueryKey = (options?: OptionsLegacyParser) => [
+    createQueryKey('qualityLevelsControllerFindAll', options)
+];
+
+export const qualityLevelsControllerFindAllOptions = (options?: OptionsLegacyParser) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await CategoriesQualityLevelsService.qualityLevelsControllerFindAll({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: qualityLevelsControllerFindAllQueryKey(options)
+    });
+};
+
+export const qualityLevelsControllerFindOneQueryKey = (options: OptionsLegacyParser<QualityLevelsControllerFindOneData>) => [
+    createQueryKey('qualityLevelsControllerFindOne', options)
+];
+
+export const qualityLevelsControllerFindOneOptions = (options: OptionsLegacyParser<QualityLevelsControllerFindOneData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await CategoriesQualityLevelsService.qualityLevelsControllerFindOne({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: qualityLevelsControllerFindOneQueryKey(options)
+    });
+};
+
+export const qualityLevelsControllerUpdateMutation = (options?: Partial<OptionsLegacyParser<QualityLevelsControllerUpdateData>>) => {
+    const mutationOptions: UseMutationOptions<QualityLevelsControllerUpdateResponse, AxiosError<QualityLevelsControllerUpdateError>, OptionsLegacyParser<QualityLevelsControllerUpdateData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await CategoriesQualityLevelsService.qualityLevelsControllerUpdate({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const qualityLevelsControllerRemoveMutation = (options?: Partial<OptionsLegacyParser<QualityLevelsControllerRemoveData>>) => {
+    const mutationOptions: UseMutationOptions<QualityLevelsControllerRemoveResponse, AxiosError<QualityLevelsControllerRemoveError>, OptionsLegacyParser<QualityLevelsControllerRemoveData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await CategoriesQualityLevelsService.qualityLevelsControllerRemove({
                 ...options,
                 ...localOptions,
                 throwOnError: true

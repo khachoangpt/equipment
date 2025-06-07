@@ -12,6 +12,18 @@ export type CreateEquipmentGroupDto = {
     notes?: string;
 };
 
+export type CreateQualityLevelDto = {
+    /**
+     * Tên của phân cấp chất lượng
+     */
+    name: string;
+    /**
+     * Mã định danh duy nhất cho phân cấp
+     */
+    code: string;
+    notes?: string;
+};
+
 export type CreateUnitDto = {
     /**
      * Tên đầy đủ của đơn vị
@@ -64,6 +76,15 @@ export type LoginResponseDto = {
     access_token: string;
 };
 
+export type QualityLevelResponseDto = {
+    _id: string;
+    name: string;
+    code: string;
+    notes?: string;
+    createdAt: string;
+    updatedAt: string;
+};
+
 export type UnitResponseDto = {
     _id: string;
     name: string;
@@ -81,6 +102,18 @@ export type UpdateEquipmentGroupDto = {
     name?: string;
     /**
      * Mã định danh duy nhất cho nhóm
+     */
+    code?: string;
+    notes?: string;
+};
+
+export type UpdateQualityLevelDto = {
+    /**
+     * Tên của phân cấp chất lượng
+     */
+    name?: string;
+    /**
+     * Mã định danh duy nhất cho phân cấp
      */
     code?: string;
     notes?: string;
@@ -183,6 +216,58 @@ export type EquipmentGroupsControllerRemoveData = {
 export type EquipmentGroupsControllerRemoveResponse = (void);
 
 export type EquipmentGroupsControllerRemoveError = (unknown);
+
+export type QualityLevelsControllerCreateData = {
+    body: CreateQualityLevelDto;
+};
+
+export type QualityLevelsControllerCreateResponse = (QualityLevelResponseDto);
+
+export type QualityLevelsControllerCreateError = (unknown);
+
+export type QualityLevelsControllerFindAllResponse = (Array<QualityLevelResponseDto>);
+
+export type QualityLevelsControllerFindAllError = unknown;
+
+export type QualityLevelsControllerFindOneData = {
+    path: {
+        /**
+         * ID của phân cấp
+         */
+        id: string;
+    };
+};
+
+export type QualityLevelsControllerFindOneResponse = (QualityLevelResponseDto);
+
+export type QualityLevelsControllerFindOneError = (unknown);
+
+export type QualityLevelsControllerUpdateData = {
+    body: UpdateQualityLevelDto;
+    path: {
+        /**
+         * ID của phân cấp
+         */
+        id: string;
+    };
+};
+
+export type QualityLevelsControllerUpdateResponse = (QualityLevelResponseDto);
+
+export type QualityLevelsControllerUpdateError = (unknown);
+
+export type QualityLevelsControllerRemoveData = {
+    path: {
+        /**
+         * ID của phân cấp
+         */
+        id: string;
+    };
+};
+
+export type QualityLevelsControllerRemoveResponse = (void);
+
+export type QualityLevelsControllerRemoveError = (unknown);
 
 export type UnitsControllerCreateData = {
     body: CreateUnitDto;

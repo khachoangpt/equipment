@@ -1,21 +1,48 @@
 'use client'
 
+import {
+	qualityLevelsControllerCreateMutation,
+	qualityLevelsControllerFindAllOptions,
+} from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import type { TypeGroupDetailSchema } from '@/configs/schema'
-import { equipmentSetQuality } from '@/mocks/equipment.mock'
+import { queryClient } from '@/configs/query-client'
+import type { QualityDetailSchema } from '@/configs/schema'
 import DataTable from '@/modules/common/components/organisms/DataTable'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
+import { toast } from 'sonner'
 import DialogAddQuality from './DialogAddQuality'
 import { columns } from './EquipmentSetQualityTableColumns'
 
 const EquipmentSetQuality = () => {
 	const [open, setOpen] = useState<boolean>(false)
+	const { data: equipmentSetQuality } = useQuery({
+		...qualityLevelsControllerFindAllOptions(),
+	})
+	const { mutate: create } = useMutation({
+		...qualityLevelsControllerCreateMutation(),
+	})
 
-	const handleConfirmAdd: SubmitHandler<TypeGroupDetailSchema> = () => {
-		setOpen(false)
+	const handleConfirmAdd: SubmitHandler<QualityDetailSchema> = (data) => {
+		create(
+			{ body: { code: data.code, name: data.name, notes: data.note } },
+			{
+				onError: () => {
+					toast.error('Tạo khônng thành công')
+					setOpen(false)
+				},
+				onSuccess: () => {
+					toast.success('Tạo thành công')
+					queryClient.invalidateQueries({
+						queryKey: qualityLevelsControllerFindAllOptions().queryKey,
+					})
+					setOpen(false)
+				},
+			},
+		)
 	}
 
 	return (
@@ -27,7 +54,7 @@ const EquipmentSetQuality = () => {
 					Thêm
 				</Button>
 			</div>
-			<DataTable columns={columns} data={equipmentSetQuality} />
+			<DataTable columns={columns} data={equipmentSetQuality || []} />
 			<DialogAddQuality
 				open={open}
 				onOpenChange={setOpen}

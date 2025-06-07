@@ -1,19 +1,21 @@
 'use client'
+import type { QualityLevelResponseDto } from '@/client'
+import {
+	qualityLevelsControllerFindAllQueryKey,
+	qualityLevelsControllerRemoveMutation,
+	qualityLevelsControllerUpdateMutation,
+} from '@/client/@tanstack/react-query.gen'
+import { queryClient } from '@/configs/query-client'
 import type { QualityDetailSchema } from '@/configs/schema'
 import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
-import type { EquipmentSetQuality } from '@/types/equipment-set.types'
+import { useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useState } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
+import { toast } from 'sonner'
 import DialogAddQuality from './DialogAddQuality'
 
-export const columns: ColumnDef<EquipmentSetQuality>[] = [
-	{
-		accessorKey: 'id',
-		header: 'ID',
-		enableResizing: false,
-		size: 1,
-	},
+export const columns: ColumnDef<QualityLevelResponseDto>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Tên phân cấp',
@@ -23,7 +25,7 @@ export const columns: ColumnDef<EquipmentSetQuality>[] = [
 		header: 'Mã phân cấp',
 	},
 	{
-		accessorKey: 'note',
+		accessorKey: 'notes',
 		header: 'Ghi chú',
 	},
 	{
@@ -33,13 +35,52 @@ export const columns: ColumnDef<EquipmentSetQuality>[] = [
 		cell: ({ row }) => {
 			const [openDelete, setOpenDelete] = useState<boolean>(false)
 			const [openDetail, setOpenDetail] = useState<boolean>(false)
+			const { mutate: remove } = useMutation({
+				...qualityLevelsControllerRemoveMutation(),
+			})
+			const { mutate: update } = useMutation({
+				...qualityLevelsControllerUpdateMutation(),
+			})
 
 			const handleDelete = () => {
-				setOpenDelete(false)
+				remove(
+					{ path: { id: row.original._id } },
+					{
+						onSuccess: () => {
+							setOpenDelete(false)
+							toast.success('Xóa thành công')
+							queryClient.invalidateQueries({
+								queryKey: qualityLevelsControllerFindAllQueryKey(),
+							})
+						},
+						onError: () => {
+							toast.error('Xóa không thành công')
+							setOpenDelete(false)
+						},
+					},
+				)
 			}
 
-			const handleEdit: SubmitHandler<QualityDetailSchema> = () => {
-				setOpenDetail(false)
+			const handleConfirmEdit: SubmitHandler<QualityDetailSchema> = (data) => {
+				update(
+					{
+						body: { code: data.code, name: data.name, notes: data.note },
+						path: { id: row.original._id },
+					},
+					{
+						onError: () => {
+							toast.error('Chỉnh sửa khônng thành công')
+							setOpenDetail(false)
+						},
+						onSuccess: () => {
+							toast.success('Chình sửa thành công')
+							queryClient.invalidateQueries({
+								queryKey: qualityLevelsControllerFindAllQueryKey(),
+							})
+							setOpenDetail(false)
+						},
+					},
+				)
 			}
 
 			return (
@@ -63,12 +104,14 @@ export const columns: ColumnDef<EquipmentSetQuality>[] = [
 						onOpenChange={setOpenDelete}
 						onConfirm={handleDelete}
 					/>
-					<DialogAddQuality
-						open={openDetail}
-						onOpenChange={setOpenDetail}
-						id={row.original.id}
-						onConfirm={handleEdit}
-					/>
+					{row.original._id && openDetail && (
+						<DialogAddQuality
+							open={openDetail}
+							onOpenChange={setOpenDetail}
+							id={row.original._id}
+							onConfirm={handleConfirmEdit}
+						/>
+					)}
 				</div>
 			)
 		},

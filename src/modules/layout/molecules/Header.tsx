@@ -19,6 +19,7 @@ const Header = async () => {
 		path: { id: jwtPayload?.sub },
 		baseURL: process.env.NEXT_PUBLIC_API_URL,
 		headers: { Authorization: `Bearer ${jwt}` },
+		throwOnError: false,
 	})
 
 	return (
