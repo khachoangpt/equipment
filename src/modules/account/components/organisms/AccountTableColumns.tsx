@@ -1,21 +1,15 @@
 'use client'
 
+import type { UserResponseDto } from '@/client'
 import { pageList } from '@/configs/routes'
-import type { Account } from '@/types/account.types'
 import type { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useState } from 'react'
 import DialogConfirmDeleteAccount from './DialogConfirmDeleteAccount'
 
-export const columns: ColumnDef<Account>[] = [
+export const columns: ColumnDef<UserResponseDto>[] = [
 	{
-		accessorKey: 'id',
-		header: 'ID',
-		enableResizing: false,
-		size: 1,
-	},
-	{
-		accessorKey: 'name',
+		accessorKey: 'fullName',
 		header: 'Tên',
 	},
 	{
@@ -40,7 +34,7 @@ export const columns: ColumnDef<Account>[] = [
 			return (
 				<div className="flex items-center justify-end gap-x-3">
 					<Link
-						href={pageList.accountDetail({ id: row.original.id }).href}
+						href={pageList.accountDetail({ id: row.original._id }).href}
 						className="text-blue-600"
 					>
 						Chỉnh sửa

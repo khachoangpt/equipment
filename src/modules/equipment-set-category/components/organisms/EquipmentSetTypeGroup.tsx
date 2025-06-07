@@ -13,10 +13,6 @@ import { columns } from './EquipmentSetTypeGroupTableColumns'
 
 const EquipmentSetTypeGroup = () => {
 	const [open, setOpen] = useState<boolean>(false)
-	const [paginationState, setPaginationState] = useState({
-		pageIndex: 0,
-		pageSize: 5,
-	})
 
 	const handleConfirmAdd: SubmitHandler<TypeGroupDetailSchema> = () => {
 		setOpen(false)
@@ -31,14 +27,7 @@ const EquipmentSetTypeGroup = () => {
 					Thêm
 				</Button>
 			</div>
-			<DataTable
-				columns={columns}
-				data={equipmentSetTypeGroups}
-				onPaginationChange={setPaginationState}
-				pageIndex={paginationState.pageIndex}
-				pageSize={paginationState.pageSize}
-				rowCount={equipmentSetTypeGroups.length}
-			/>
+			<DataTable columns={columns} data={equipmentSetTypeGroups} />
 			<DialogAddTypeGroup
 				open={open}
 				onOpenChange={setOpen}

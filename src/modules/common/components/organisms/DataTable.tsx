@@ -1,6 +1,4 @@
 'use client'
-
-import { Pagination } from '@/components/custom/pagination'
 import {
 	Table,
 	TableBody,
@@ -12,8 +10,6 @@ import {
 import { cn } from '@/lib/utils'
 import {
 	type ColumnDef,
-	type OnChangeFn,
-	type PaginationState,
 	flexRender,
 	getCoreRowModel,
 	getPaginationRowModel,
@@ -23,30 +19,14 @@ import {
 type Props<TData, TValue> = {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
-	rowCount: number
-	pageIndex: number
-	pageSize: number
-	onPaginationChange: OnChangeFn<PaginationState> | undefined
 }
 
-function DataTable<TData, TValue>({
-	columns,
-	data,
-	pageIndex,
-	pageSize,
-	rowCount,
-	onPaginationChange,
-}: Props<TData, TValue>) {
+function DataTable<TData, TValue>({ columns, data }: Props<TData, TValue>) {
 	const table = useReactTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
-		rowCount,
-		onPaginationChange,
-		state: {
-			pagination: { pageIndex, pageSize },
-		},
 	})
 
 	return (
@@ -107,12 +87,6 @@ function DataTable<TData, TValue>({
 					)}
 				</TableBody>
 			</Table>
-			<Pagination
-				onChange={(page) => table.setPageIndex(page - 1)}
-				page={pageIndex + 1}
-				pageSize={pageSize}
-				totalCount={rowCount}
-			/>
 		</>
 	)
 }

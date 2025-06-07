@@ -13,10 +13,6 @@ import SearchEquipmentSet from '../organisms/SearchEquipmentSet'
 
 const EquipmentSetTemplate = () => {
 	const [open, setOpen] = useState<boolean>(false)
-	const [paginationState, setPaginationState] = useState({
-		pageIndex: 0,
-		pageSize: 10,
-	})
 
 	return (
 		<div className="h-full">
@@ -41,14 +37,7 @@ const EquipmentSetTemplate = () => {
 					</Link>
 				</div>
 				<SearchEquipmentSet onOpenChange={setOpen} open={open} />
-				<DataTable
-					columns={columns}
-					data={equipmentSets}
-					pageIndex={paginationState.pageIndex}
-					pageSize={paginationState.pageSize}
-					rowCount={equipmentSets.length}
-					onPaginationChange={setPaginationState}
-				/>
+				<DataTable columns={columns} data={equipmentSets} />
 			</Card>
 		</div>
 	)

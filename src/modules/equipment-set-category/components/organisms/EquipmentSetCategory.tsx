@@ -11,10 +11,6 @@ import { columns } from './EquipmentSetCategoryTableColumns'
 
 const EquipmentSetCategory = () => {
 	const [open, setOpen] = useState<boolean>(false)
-	const [paginationState, setPaginationState] = useState({
-		pageIndex: 0,
-		pageSize: 5,
-	})
 
 	const handleConfirmAdd = () => {
 		setOpen(false)
@@ -29,14 +25,7 @@ const EquipmentSetCategory = () => {
 					Thêm
 				</Button>
 			</div>
-			<DataTable
-				columns={columns}
-				data={equipmentSetCategories}
-				onPaginationChange={setPaginationState}
-				pageIndex={paginationState.pageIndex}
-				pageSize={paginationState.pageSize}
-				rowCount={equipmentSetCategories.length}
-			/>
+			<DataTable columns={columns} data={equipmentSetCategories} />
 			<DialogAddCategoryEquipmentSet
 				open={open}
 				onOpenChange={setOpen}

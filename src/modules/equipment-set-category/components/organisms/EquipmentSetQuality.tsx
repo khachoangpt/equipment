@@ -13,10 +13,6 @@ import { columns } from './EquipmentSetQualityTableColumns'
 
 const EquipmentSetQuality = () => {
 	const [open, setOpen] = useState<boolean>(false)
-	const [paginationState, setPaginationState] = useState({
-		pageIndex: 0,
-		pageSize: 5,
-	})
 
 	const handleConfirmAdd: SubmitHandler<TypeGroupDetailSchema> = () => {
 		setOpen(false)
@@ -31,14 +27,7 @@ const EquipmentSetQuality = () => {
 					Thêm
 				</Button>
 			</div>
-			<DataTable
-				columns={columns}
-				data={equipmentSetQuality}
-				onPaginationChange={setPaginationState}
-				pageIndex={paginationState.pageIndex}
-				pageSize={paginationState.pageSize}
-				rowCount={equipmentSetQuality.length}
-			/>
+			<DataTable columns={columns} data={equipmentSetQuality} />
 			<DialogAddQuality
 				open={open}
 				onOpenChange={setOpen}
