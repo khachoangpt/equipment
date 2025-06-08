@@ -48,22 +48,12 @@ const AppSidebar = () => {
 				{
 					label: 'Bảo dưỡng / Sửa chữa',
 					id: 'bao-dung-sua-chua',
-					href: '#',
+					href: pageList.equipmentSetMaintenance.href,
 				},
 				{
 					label: 'Thanh lý',
 					id: 'thanh-ly',
-					href: '#',
-				},
-				{
-					label: 'Kiểm kê',
-					id: 'kiem-ke',
-					href: '#',
-				},
-				{
-					label: 'Thống kê kho',
-					id: 'thong-ke-kho',
-					href: '#',
+					href: pageList.equipmentSetLiquidation.href,
 				},
 			],
 		},
@@ -74,13 +64,13 @@ const AppSidebar = () => {
 			icon: <Wrench />,
 			items: [
 				{
-					id: 'xay-dung-cau-hinh',
-					label: 'Xây dựng cấu hình',
+					id: 'trang-bi-lap-ghep',
+					label: 'Trang bị',
 					href: pageList.assembledEquipment.href,
 				},
 				{
 					id: 'danh-muc-trang-bi-lap-ghep',
-					label: 'Danh mục',
+					label: 'Vật tư/ linh kiện',
 					href: '#',
 				},
 			],

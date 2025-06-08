@@ -29,7 +29,8 @@
 			},
 			"suspicious": {
 				"noConsoleLog": "error",
-				"noArrayIndexKey": "off"
+				"noArrayIndexKey": "off",
+				"noExplicitAny": "off"
 			},
 			"correctness": {
 				"noUnusedImports": "error",
