@@ -1,9 +1,9 @@
 'use client'
-import type { QualityLevelResponseDto } from '@/client'
+
 import {
-	qualityLevelsControllerFindAllQueryKey,
-	qualityLevelsControllerRemoveMutation,
-	qualityLevelsControllerUpdateMutation,
+	categoriesControllerFindAllQueryKey,
+	categoriesControllerRemoveMutation,
+	categoriesControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import type { QualityDetailSchema } from '@/configs/schema'
@@ -15,7 +15,7 @@ import type { SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import DialogAddQuality from './DialogAddQuality'
 
-export const columns: ColumnDef<QualityLevelResponseDto>[] = [
+export const columns: ColumnDef<any>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Tên phân cấp',
@@ -36,10 +36,10 @@ export const columns: ColumnDef<QualityLevelResponseDto>[] = [
 			const [openDelete, setOpenDelete] = useState<boolean>(false)
 			const [openDetail, setOpenDetail] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...qualityLevelsControllerRemoveMutation(),
+				...categoriesControllerRemoveMutation(),
 			})
 			const { mutate: update } = useMutation({
-				...qualityLevelsControllerUpdateMutation(),
+				...categoriesControllerUpdateMutation(),
 			})
 
 			const handleDelete = () => {
@@ -50,7 +50,9 @@ export const columns: ColumnDef<QualityLevelResponseDto>[] = [
 							setOpenDelete(false)
 							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
-								queryKey: qualityLevelsControllerFindAllQueryKey(),
+								queryKey: categoriesControllerFindAllQueryKey({
+									query: { type: 'QUALITY_LEVEL' },
+								}),
 							})
 						},
 						onError: () => {
@@ -75,7 +77,9 @@ export const columns: ColumnDef<QualityLevelResponseDto>[] = [
 						onSuccess: () => {
 							toast.success('Chình sửa thành công')
 							queryClient.invalidateQueries({
-								queryKey: qualityLevelsControllerFindAllQueryKey(),
+								queryKey: categoriesControllerFindAllQueryKey({
+									query: { type: 'QUALITY_LEVEL' },
+								}),
 							})
 							setOpenDetail(false)
 						},

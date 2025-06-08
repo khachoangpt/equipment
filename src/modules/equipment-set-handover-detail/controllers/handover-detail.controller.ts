@@ -1,7 +1,4 @@
-import {
-	type CreateEquipmentSetHandoverSchema,
-	createEquipmentSetHandoverSchema,
-} from '@/configs/schema'
+import { createEquipmentSetHandoverSchema } from '@/configs/schema'
 import { equipmentHandovers } from '@/mocks/equipment.mock'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
@@ -12,18 +9,19 @@ type Props = {
 }
 
 const useHandoverDetailController = ({ id }: Props) => {
-	const defaultValues: CreateEquipmentSetHandoverSchema = {
+	const defaultValues: any = {
 		code: '',
 		handoverPerson: '',
 		handoverUnit: '',
 		receiverPerson: '',
 		receiverUnit: '',
-		handoverDate: '',
+		handoverDate: new Date().toString(),
 		returnDate: '',
 		equipmentName: '',
+		equipments: [],
 		note: '',
 	}
-	const form = useForm<CreateEquipmentSetHandoverSchema>({
+	const form = useForm<any>({
 		defaultValues,
 		resolver: zodResolver(createEquipmentSetHandoverSchema),
 	})

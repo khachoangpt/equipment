@@ -1,15 +1,19 @@
 'use client'
 
+import { syncEquipmentControllerGetHandoverLogsOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
-import { equipmentHandovers } from '@/mocks/equipment.mock'
 import DataTable from '@/modules/common/components/organisms/DataTable'
+import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { columns } from '../organisms/HandOverColumns'
 
 const HandOverTemplate = () => {
+	const { data: equipmentHandovers } = useQuery({
+		...syncEquipmentControllerGetHandoverLogsOptions(),
+	})
 	return (
 		<div className="h-full">
 			<Card>
@@ -24,7 +28,7 @@ const HandOverTemplate = () => {
 						</Button>
 					</Link>
 				</div>
-				<DataTable columns={columns} data={equipmentHandovers} />
+				<DataTable columns={columns} data={(equipmentHandovers as any) ?? []} />
 			</Card>
 		</div>
 	)

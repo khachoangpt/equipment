@@ -1,8 +1,9 @@
 'use client'
 
 import {
-	qualityLevelsControllerCreateMutation,
-	qualityLevelsControllerFindAllOptions,
+	categoriesControllerCreateMutation,
+	categoriesControllerFindAllOptions,
+	categoriesControllerFindAllQueryKey,
 } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -20,15 +21,22 @@ import { columns } from './EquipmentSetQualityTableColumns'
 const EquipmentSetQuality = () => {
 	const [open, setOpen] = useState<boolean>(false)
 	const { data: equipmentSetQuality } = useQuery({
-		...qualityLevelsControllerFindAllOptions(),
+		...categoriesControllerFindAllOptions({ query: { type: 'QUALITY_LEVEL' } }),
 	})
 	const { mutate: create } = useMutation({
-		...qualityLevelsControllerCreateMutation(),
+		...categoriesControllerCreateMutation(),
 	})
 
 	const handleConfirmAdd: SubmitHandler<QualityDetailSchema> = (data) => {
 		create(
-			{ body: { code: data.code, name: data.name, notes: data.note } },
+			{
+				body: {
+					code: data.code,
+					name: data.name,
+					notes: data.note,
+					type: 'QUALITY_LEVEL',
+				},
+			},
 			{
 				onError: () => {
 					toast.error('Tạo khônng thành công')
@@ -37,7 +45,9 @@ const EquipmentSetQuality = () => {
 				onSuccess: () => {
 					toast.success('Tạo thành công')
 					queryClient.invalidateQueries({
-						queryKey: qualityLevelsControllerFindAllOptions().queryKey,
+						queryKey: categoriesControllerFindAllQueryKey({
+							query: { type: 'QUALITY_LEVEL' },
+						}),
 					})
 					setOpen(false)
 				},
@@ -54,7 +64,7 @@ const EquipmentSetQuality = () => {
 					Thêm
 				</Button>
 			</div>
-			<DataTable columns={columns} data={equipmentSetQuality || []} />
+			<DataTable columns={columns} data={(equipmentSetQuality ?? []) as any} />
 			<DialogAddQuality
 				open={open}
 				onOpenChange={setOpen}

@@ -1,8 +1,8 @@
 'use client'
 
 import {
-	equipmentGroupsControllerCreateMutation,
-	equipmentGroupsControllerFindAllOptions,
+	categoriesControllerCreateMutation,
+	categoriesControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -20,15 +20,24 @@ import { columns } from './EquipmentSetTypeGroupTableColumns'
 const EquipmentSetTypeGroup = () => {
 	const [open, setOpen] = useState<boolean>(false)
 	const { data: equipmentSetTypeGroups } = useQuery({
-		...equipmentGroupsControllerFindAllOptions(),
+		...categoriesControllerFindAllOptions({
+			query: { type: 'EQUIPMENT_GROUP' },
+		}),
 	})
 	const { mutate: create } = useMutation({
-		...equipmentGroupsControllerCreateMutation(),
+		...categoriesControllerCreateMutation(),
 	})
 
 	const handleConfirmAdd: SubmitHandler<TypeGroupDetailSchema> = (data) => {
 		create(
-			{ body: { code: data.code, name: data.name, notes: data.note } },
+			{
+				body: {
+					code: data.code,
+					name: data.name,
+					notes: data.note,
+					type: 'EQUIPMENT_GROUP',
+				},
+			},
 			{
 				onError: () => {
 					toast.error('Tạo nhóm loại trang bị khônng thành công')
@@ -37,7 +46,9 @@ const EquipmentSetTypeGroup = () => {
 				onSuccess: () => {
 					toast.success('Tạo nhóm loại trang bị thành công')
 					queryClient.invalidateQueries({
-						queryKey: equipmentGroupsControllerFindAllOptions().queryKey,
+						queryKey: categoriesControllerFindAllOptions({
+							query: { type: 'EQUIPMENT_GROUP' },
+						}).queryKey,
 					})
 					setOpen(false)
 				},
@@ -54,7 +65,10 @@ const EquipmentSetTypeGroup = () => {
 					Thêm
 				</Button>
 			</div>
-			<DataTable columns={columns} data={equipmentSetTypeGroups || []} />
+			<DataTable
+				columns={columns}
+				data={(equipmentSetTypeGroups ?? []) as any}
+			/>
 			<DialogAddTypeGroup
 				open={open}
 				onOpenChange={setOpen}

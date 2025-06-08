@@ -1,68 +1,74 @@
 'use client'
-import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
-import type { Handover } from '@/types/equipment-set.types'
 import type { ColumnDef } from '@tanstack/react-table'
-import Link from 'next/link'
-import { useState } from 'react'
 
-export const columns: ColumnDef<Handover>[] = [
+export const columns: ColumnDef<any>[] = [
 	{
-		accessorKey: 'id',
-		header: 'ID',
-		enableResizing: false,
-		size: 1,
-	},
-	{
-		accessorKey: 'code',
+		accessorKey: 'voucherNumber',
 		header: 'Số biên bản',
 	},
 	{
-		accessorKey: 'handoverPerson',
-		header: 'Người giao',
-	},
-	{
-		accessorKey: 'handoverUnit',
+		accessorKey: 'fromUnit',
 		header: 'Đơn vị giao',
+		cell: ({ row }) => row.original.fromUnit?.name,
 	},
 	{
-		accessorKey: 'receiverPerson',
+		accessorKey: 'receiver',
 		header: 'Người nhận',
+		cell: ({ row }) => row.original.receiver?.firstName,
 	},
 	{
-		accessorKey: 'receiverUnit',
+		accessorKey: 'toUnit',
 		header: 'Đơn vị nhận',
+		cell: ({ row }) => row.original.toUnit?.name,
 	},
 	{
-		id: 'actions',
-		enableResizing: false,
-		size: 1,
-		cell: () => {
-			const [open, setOpen] = useState<boolean>(false)
-
-			const handleDelete = () => {
-				setOpen(false)
-			}
-
-			return (
-				<div className="flex items-center justify-end gap-x-3">
-					<Link href={'#'} className="text-blue-600">
-						Chỉnh sửa
-					</Link>
-					<p
-						className="text-red-600 cursor-pointer"
-						onClick={() => setOpen(true)}
-					>
-						Xoá
-					</p>
-					<DialogConfirmDelete
-						title="Xoá hoạt động bàn giao"
-						description="Bạn có chắc chắn muốn xoá hoạt động bàn giao này"
-						open={open}
-						onOpenChange={setOpen}
-						onConfirm={handleDelete}
-					/>
-				</div>
-			)
-		},
+		accessorKey: 'handoverDate',
+		header: 'Ngày bàn giao',
+		cell: ({ row }) =>
+			new Date(row.original.handoverDate).toLocaleDateString('vi-VN'),
 	},
+	{
+		accessorKey: 'equipments',
+		header: 'Trang bị',
+		cell: ({ row }) => (
+			<div>
+				{row.original.equipment?.map((e: any) => (
+					<div key={e._id}>{e.name}</div>
+				))}
+			</div>
+		),
+	},
+	// {
+	// 	id: 'actions',
+	// 	enableResizing: false,
+	// 	size: 1,
+	// 	cell: () => {
+	// 		const [open, setOpen] = useState<boolean>(false)
+
+	// 		const handleDelete = () => {
+	// 			setOpen(false)
+	// 		}
+
+	// 		return (
+	// 			<div className="flex items-center justify-end gap-x-3">
+	// 				<Link href={'#'} className="text-blue-600">
+	// 					Chỉnh sửa
+	// 				</Link>
+	// 				<p
+	// 					className="text-red-600 cursor-pointer"
+	// 					onClick={() => setOpen(true)}
+	// 				>
+	// 					Xoá
+	// 				</p>
+	// 				<DialogConfirmDelete
+	// 					title="Xoá hoạt động bàn giao"
+	// 					description="Bạn có chắc chắn muốn xoá hoạt động bàn giao này"
+	// 					open={open}
+	// 					onOpenChange={setOpen}
+	// 					onConfirm={handleDelete}
+	// 				/>
+	// 			</div>
+	// 		)
+	// 	},
+	// },
 ]

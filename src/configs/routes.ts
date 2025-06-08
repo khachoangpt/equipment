@@ -40,6 +40,24 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['account', 'create'],
 	},
+	unit: {
+		title: 'unit',
+		href: '/unit',
+		isAuth: true,
+		pattern: ['unit'],
+	},
+	unitDetail: (config?: { id?: string }) => ({
+		title: 'unit Detail',
+		href: `/unit/${config?.id}`,
+		isAuth: true,
+		pattern: ['unit', ''],
+	}),
+	unitCreate: {
+		title: 'unit Create',
+		href: '/unit/create',
+		isAuth: true,
+		pattern: ['unit', 'create'],
+	},
 	equipmentSet: {
 		title: 'Equipment Set',
 		href: '/equipment-set',
@@ -135,6 +153,24 @@ export const pageList = {
 		href: '/assembled-equipment/create',
 		isAuth: true,
 		pattern: ['assembled-equipment', 'create'],
+	},
+	assembledEquipmentComponent: {
+		title: 'Assembled Equipment Component',
+		href: '/assembled-equipment/component',
+		isAuth: true,
+		pattern: ['assembled-equipment', 'component'],
+	},
+	assembleEquipmentDetailComponent: (config?: { id?: string }) => ({
+		title: 'Assembled Equipment Detail Component',
+		href: `/assembled-equipment/component/${config?.id}`,
+		isAuth: true,
+		pattern: ['assembled-equipment', 'component', ''],
+	}),
+	createAssembledEquipmentComponent: {
+		title: 'Create Assembled Equipment Component',
+		href: '/assembled-equipment/component/create',
+		isAuth: true,
+		pattern: ['assembled-equipment', 'component', 'create'],
 	},
 	home: {
 		title: 'Home',

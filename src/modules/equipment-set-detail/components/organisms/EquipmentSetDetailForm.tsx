@@ -1,13 +1,12 @@
 'use client'
 
 import {
-	equipmentGroupsControllerFindAllOptions,
-	equipmentsControllerCreateMutation,
-	equipmentsControllerFindAllQueryKey,
-	equipmentsControllerUpdateMutation,
-	qualityLevelsControllerFindAllOptions,
+	categoriesControllerFindAllOptions,
+	organizationControllerFindAllUnitsOptions,
+	syncEquipmentControllerCreateMutation,
+	syncEquipmentControllerFindAllQueryKey,
+	syncEquipmentControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
-import { DatePicker } from '@/components/custom/date-picker/DatePicker'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -27,7 +26,6 @@ import {
 } from '@/components/ui/select'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
-import type { EquipmentSetDetailSchema } from '@/configs/schema'
 import { SelectValue } from '@radix-ui/react-select'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
@@ -42,43 +40,34 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 	const router = useRouter()
 	const { form } = useEquipmentSetDetailController({ id })
 	const { mutate: create } = useMutation({
-		...equipmentsControllerCreateMutation(),
+		...syncEquipmentControllerCreateMutation(),
 	})
 	const { mutate: update } = useMutation({
-		...equipmentsControllerUpdateMutation(),
+		...syncEquipmentControllerUpdateMutation(),
+	})
+	const { data: units } = useQuery({
+		...organizationControllerFindAllUnitsOptions(),
 	})
 
-	const onSubmit = (data: EquipmentSetDetailSchema) => {
+	const onSubmit = (data: any) => {
 		if (!id) {
 			create(
 				{
 					body: {
-						code: data?.serial ?? '',
 						name: data?.name ?? '',
-						groupId: data?.typeGroup ?? '',
-						entryDate: data?.importDate ?? '',
-						mainUnitId: '',
+						serialNumber: data?.serialNumber ?? '',
+						currentUnitId: data?.currentUnit ?? '',
+						groupId: data?.group ?? '',
 						qualityLevelId: data?.quality ?? '',
-						serialNumber: data?.serial ?? '',
 						status: data?.status ?? '',
-						accompanyingComponents: [],
-						currentUnitId: data?.usedUnit ?? '',
-						currentValue: data?.amount ?? 0,
-						description: '',
-						entryPlanNumber: data?.importPlanNumber.toString() ?? '',
-						initialValue: 0,
-						originCountry: '',
-						productionDate: data?.manufacturingDate ?? '',
-						supplySource: data?.origin ?? '',
-						evaluatingUnitId: data?.rateUnit ?? '',
-						evaluationResult: data?.rateResult ?? '',
+						initialPrice: data?.initialPrice ?? 0,
 					},
 				},
 				{
 					onSuccess: () => {
 						router.push(pageList.equipmentSet.href)
 						queryClient.invalidateQueries({
-							queryKey: equipmentsControllerFindAllQueryKey(),
+							queryKey: syncEquipmentControllerFindAllQueryKey(),
 						})
 					},
 					onError: () => {
@@ -93,31 +82,19 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 						id: id,
 					},
 					body: {
-						code: data?.serial ?? '',
 						name: data?.name ?? '',
-						groupId: data?.typeGroup ?? '',
-						entryDate: data?.importDate ?? '',
-						mainUnitId: '',
+						serialNumber: data?.serialNumber ?? '',
+						currentUnitId: data?.currentUnit ?? '',
+						groupId: data?.group ?? '',
 						qualityLevelId: data?.quality ?? '',
-						serialNumber: data?.serial ?? '',
 						status: data?.status ?? '',
-						accompanyingComponents: [],
-						currentUnitId: data?.usedUnit ?? '',
-						currentValue: data?.amount ?? 0,
-						description: '',
-						entryPlanNumber: data?.importPlanNumber.toString() ?? '',
-						initialValue: 0,
-						originCountry: '',
-						productionDate: data?.manufacturingDate ?? '',
-						supplySource: data?.origin ?? '',
-						evaluatingUnitId: data?.rateUnit ?? '',
-						evaluationResult: data?.rateResult ?? '',
+						initialPrice: data?.initialPrice ?? 0,
 					},
 				},
 				{
 					onSuccess: () => {
 						queryClient.invalidateQueries({
-							queryKey: equipmentsControllerFindAllQueryKey(),
+							queryKey: syncEquipmentControllerFindAllQueryKey(),
 						})
 						router.push(pageList.equipmentSet.href)
 					},
@@ -129,10 +106,12 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 		}
 	}
 	const { data: quantityList } = useQuery({
-		...qualityLevelsControllerFindAllOptions(),
+		...categoriesControllerFindAllOptions({ query: { type: 'QUALITY_LEVEL' } }),
 	})
 	const { data: equipmentSetTypeGroups } = useQuery({
-		...equipmentGroupsControllerFindAllOptions(),
+		...categoriesControllerFindAllOptions({
+			query: { type: 'EQUIPMENT_GROUP' },
+		}),
 	})
 
 	return (
@@ -155,7 +134,7 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={form.control}
-							name="serial"
+							name="serialNumber"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Mã hiệu serial</FormLabel>
@@ -168,61 +147,14 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={form.control}
-							name="importDate"
+							name="initialPrice"
 							render={({ field: { onChange, value } }) => (
 								<FormItem>
-									<FormLabel>Ngày nhập</FormLabel>
-									<FormControl>
-										<DatePicker
-											onChange={(e) => onChange(e.toString())}
-											value={new Date(value)}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="importPlanNumber"
-							render={({ field: { onChange, value } }) => (
-								<FormItem>
-									<FormLabel>Số kế hoạch nhập</FormLabel>
+									<FormLabel>Giá tiền</FormLabel>
 									<FormControl>
 										<Input
 											type="number"
-											placeholder="Số kế hoạch nhập"
-											onChange={(e) => onChange(Number(e.target.value))}
-											value={value}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="origin"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Nguồn cấp</FormLabel>
-									<FormControl>
-										<Input placeholder="Nguồn cấp" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="amount"
-							render={({ field: { onChange, value } }) => (
-								<FormItem>
-									<FormLabel>Giá tiền hiện tại</FormLabel>
-									<FormControl>
-										<Input
-											type="number"
-											placeholder="Giá tiền hiện tại"
+											placeholder="Giá tiền"
 											value={value}
 											onChange={(e) => onChange(Number(e.target.value))}
 										/>
@@ -233,67 +165,23 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={form.control}
-							name="manufacturingDate"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Ngày sản xuất</FormLabel>
-									<FormControl>
-										<DatePicker
-											onChange={(e) => field.onChange(e.toString())}
-											value={new Date(field.value)}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="importUnit"
-							render={({ field }) => (
+							name="currentUnit"
+							render={({ field: { value, onChange } }) => (
 								<FormItem>
 									<FormLabel>Đơn vị nhập</FormLabel>
 									<FormControl>
-										<Input placeholder="Đơn vị nhập" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="rateUnit"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Đơn vị đánh giá</FormLabel>
-									<FormControl>
-										<Input placeholder="Đơn vị đánh giá" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="rateResult"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Kết quả đánh giá</FormLabel>
-									<FormControl>
-										<Input placeholder="Kết quả đánh giá" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="usedUnit"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Đơn vị sử dụng</FormLabel>
-									<FormControl>
-										<Input placeholder="Đơn vị sử dụng" {...field} />
+										<Select value={value} onValueChange={onChange}>
+											<SelectTrigger className="w-full">
+												<SelectValue />
+											</SelectTrigger>
+											<SelectContent>
+												{((units as any) ?? [])?.map((quantity: any) => (
+													<SelectItem key={quantity._id} value={quantity._id}>
+														{quantity.name}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -311,7 +199,7 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												{(quantityList ?? []).map((quantity) => (
+												{((quantityList as any) ?? [])?.map((quantity: any) => (
 													<SelectItem key={quantity._id} value={quantity._id}>
 														{quantity.name}
 													</SelectItem>
@@ -325,7 +213,7 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={form.control}
-							name="typeGroup"
+							name="group"
 							render={({ field: { value, onChange } }) => (
 								<FormItem key={value}>
 									<FormLabel>Nhóm loại</FormLabel>
@@ -335,11 +223,13 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												{(equipmentSetTypeGroups ?? []).map((type) => (
-													<SelectItem key={type._id} value={type._id}>
-														{type.name}
-													</SelectItem>
-												))}
+												{((equipmentSetTypeGroups as any) ?? []).map(
+													(type: any) => (
+														<SelectItem key={type._id} value={type._id}>
+															{type.name}
+														</SelectItem>
+													),
+												)}
 											</SelectContent>
 										</Select>
 									</FormControl>

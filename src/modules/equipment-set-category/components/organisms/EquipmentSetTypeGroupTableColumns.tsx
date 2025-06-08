@@ -1,9 +1,9 @@
 'use client'
-import type { EquipmentGroupResponseDto } from '@/client'
+
 import {
-	equipmentGroupsControllerFindAllQueryKey,
-	equipmentGroupsControllerRemoveMutation,
-	equipmentGroupsControllerUpdateMutation,
+	categoriesControllerFindAllQueryKey,
+	categoriesControllerRemoveMutation,
+	categoriesControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import type { TypeGroupDetailSchema } from '@/configs/schema'
@@ -15,7 +15,7 @@ import type { SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import DialogAddTypeGroup from './DialogAddTypeGroup'
 
-export const columns: ColumnDef<EquipmentGroupResponseDto>[] = [
+export const columns: ColumnDef<any>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Tên',
@@ -36,10 +36,10 @@ export const columns: ColumnDef<EquipmentGroupResponseDto>[] = [
 			const [openDelete, setOpenDelete] = useState<boolean>(false)
 			const [openDetail, setOpenDetail] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...equipmentGroupsControllerRemoveMutation(),
+				...categoriesControllerRemoveMutation(),
 			})
 			const { mutate: update } = useMutation({
-				...equipmentGroupsControllerUpdateMutation(),
+				...categoriesControllerUpdateMutation(),
 			})
 
 			const handleDelete = () => {
@@ -50,7 +50,9 @@ export const columns: ColumnDef<EquipmentGroupResponseDto>[] = [
 							setOpenDelete(false)
 							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
-								queryKey: equipmentGroupsControllerFindAllQueryKey(),
+								queryKey: categoriesControllerFindAllQueryKey({
+									query: { type: 'EQUIPMENT_GROUP' },
+								}),
 							})
 						},
 						onError: () => {
@@ -77,7 +79,9 @@ export const columns: ColumnDef<EquipmentGroupResponseDto>[] = [
 						onSuccess: () => {
 							toast.success('Chình sửa thành công')
 							queryClient.invalidateQueries({
-								queryKey: equipmentGroupsControllerFindAllQueryKey(),
+								queryKey: categoriesControllerFindAllQueryKey({
+									query: { type: 'EQUIPMENT_GROUP' },
+								}),
 							})
 							setOpenDetail(false)
 						},

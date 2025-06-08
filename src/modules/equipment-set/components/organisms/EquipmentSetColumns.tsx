@@ -1,7 +1,6 @@
-import type { EquipmentResponseDto } from '@/client'
 import {
-	equipmentsControllerFindAllQueryKey,
-	equipmentsControllerRemoveMutation,
+	syncEquipmentControllerFindAllQueryKey,
+	syncEquipmentControllerRemoveMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -12,36 +11,35 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-export const columns: ColumnDef<EquipmentResponseDto>[] = [
+export const columns: ColumnDef<any>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Trang bị',
 	},
 	{
-		accessorKey: 'code',
+		accessorKey: 'serialNumber',
 		header: 'Mã hiệu serial',
 	},
 	{
-		accessorKey: 'entryDate',
-		header: 'Ngày nhập',
+		accessorKey: 'group',
+		header: 'Nhóm/loại',
+		cell: ({ row }) => {
+			return <span className="text-right">{row.original.group?.name}</span>
+		},
 	},
 	{
-		accessorKey: 'currentValue',
-		header: 'Giá tiền hiện tại',
+		accessorKey: 'initialPrice',
+		header: 'Giá tiền',
 		cell: ({ row }) => {
 			return (
 				<span className="text-right">
-					{(row.original.currentValue ?? 0).toLocaleString('vi-VN', {
+					{(row.original.initialPrice ?? 0).toLocaleString('vi-VN', {
 						style: 'currency',
 						currency: 'VND',
 					})}
 				</span>
 			)
 		},
-	},
-	{
-		accessorKey: 'mainUnit',
-		header: 'Đơn vị nhập',
 	},
 	{
 		accessorKey: 'qualityLevel',
@@ -57,13 +55,22 @@ export const columns: ColumnDef<EquipmentResponseDto>[] = [
 		header: 'Tình trạng trang bị',
 	},
 	{
+		accessorKey: 'currentUnit',
+		header: 'Đơn vị hiện tại',
+		cell: ({ row }) => {
+			return (
+				<span className="text-right">{row.original.currentUnit?.name}</span>
+			)
+		},
+	},
+	{
 		id: 'actions',
 		enableResizing: false,
 		size: 1,
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...equipmentsControllerRemoveMutation(),
+				...syncEquipmentControllerRemoveMutation(),
 			})
 
 			const handleDelete = () => {
@@ -74,7 +81,7 @@ export const columns: ColumnDef<EquipmentResponseDto>[] = [
 							setOpen(false)
 							toast.success('Xóa trang bị thành công')
 							queryClient.invalidateQueries({
-								queryKey: equipmentsControllerFindAllQueryKey(),
+								queryKey: syncEquipmentControllerFindAllQueryKey(),
 							})
 						},
 						onError: () => {

@@ -24,7 +24,7 @@ const useLoginController = () => {
 		login(
 			{ body: data },
 			{
-				onSuccess: async (result) => {
+				onSuccess: async (result: any) => {
 					await setCookie(COOKIES.JWT, result.access_token)
 					router.push(pageList.home.href)
 				},

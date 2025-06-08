@@ -1,12 +1,12 @@
 'use client'
 
-import { equipmentsControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
+import { syncEquipmentControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronDown, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { columns } from '../organisms/EquipmentSetColumns'
@@ -15,7 +15,7 @@ import SearchEquipmentSet from '../organisms/SearchEquipmentSet'
 const EquipmentSetTemplate = () => {
 	const [open, setOpen] = useState<boolean>(false)
 	const { data: equipmentSets } = useQuery({
-		...equipmentsControllerFindAllOptions(),
+		...syncEquipmentControllerFindAllOptions(),
 	})
 
 	return (
@@ -24,14 +24,14 @@ const EquipmentSetTemplate = () => {
 				<div className="flex items-center justify-between">
 					<div className="flex items-end gap-x-2">
 						<h3 className="font-bold text-2xl">Trang bị đồng bộ</h3>
-						<Button
+						{/* <Button
 							variant="link"
 							className="p-0 h-fit"
 							onClick={() => setOpen((open) => !open)}
 						>
 							Tìm kiếm
 							<ChevronDown />
-						</Button>
+						</Button> */}
 					</div>
 					<Link href={pageList.equipmentSetCreate.href}>
 						<Button>
@@ -41,7 +41,7 @@ const EquipmentSetTemplate = () => {
 					</Link>
 				</div>
 				<SearchEquipmentSet onOpenChange={setOpen} open={open} />
-				<DataTable columns={columns} data={equipmentSets ?? []} />
+				<DataTable columns={columns} data={(equipmentSets ?? []) as any} />
 			</Card>
 		</div>
 	)

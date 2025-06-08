@@ -1,4 +1,4 @@
-import { equipmentGroupsControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
+import { categoriesControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
 import {
 	type TypeGroupDetailSchema,
 	typeGroupDetailSchema,
@@ -22,14 +22,15 @@ const useTypeGroupDetailController = ({ id }: Props) => {
 		defaultValues,
 		resolver: zodResolver(typeGroupDetailSchema),
 	})
-	const { data: typeGroupFound, isPending } = useQuery({
-		...equipmentGroupsControllerFindOneOptions({ path: { id: id ?? '' } }),
+	const { data, isPending } = useQuery({
+		...categoriesControllerFindOneOptions({ path: { id: id ?? '' } }),
 		enabled: !!id,
 	})
 
 	useEffect(() => {
 		if (!id) return
 
+		const typeGroupFound = data as any
 		if (typeGroupFound) {
 			typeGroupDetailForm.reset({
 				code: typeGroupFound.code,

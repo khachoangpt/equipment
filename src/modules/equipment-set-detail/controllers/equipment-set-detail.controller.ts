@@ -1,9 +1,4 @@
-import { equipmentsControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
-import {
-	type EquipmentSetDetailSchema,
-	equipmentSetDetailSchema,
-} from '@/configs/schema'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { syncEquipmentControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -13,28 +8,20 @@ type Props = {
 }
 
 const useEquipmentSetDetailController = ({ id }: Props) => {
-	const defaultValues: EquipmentSetDetailSchema = {
+	const defaultValues: any = {
 		name: '',
-		amount: 0,
-		typeGroup: '',
-		importDate: new Date().toString(),
-		importPlanNumber: 0,
-		importUnit: '',
-		manufacturingDate: new Date().toString(),
-		origin: '',
-		quality: '',
-		rateResult: '',
-		rateUnit: '',
-		serial: '',
+		serialNumber: '',
+		currentUnitId: '',
+		groupId: '',
+		qualityLevelId: '',
 		status: '',
-		usedUnit: '',
+		initialPrice: 0,
 	}
-	const form = useForm<EquipmentSetDetailSchema>({
+	const form = useForm<any>({
 		defaultValues,
-		resolver: zodResolver(equipmentSetDetailSchema),
 	})
 	const { data, isPending } = useQuery({
-		...equipmentsControllerFindOneOptions({ path: { id: id ?? '' } }),
+		...syncEquipmentControllerFindOneOptions({ path: { id: id ?? '' } }),
 		enabled: !!id,
 	})
 
@@ -42,21 +29,16 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 		if (!id) return
 
 		if (data) {
+			const unit = data as any
+
 			form.reset({
-				name: data.name,
-				typeGroup: data.group?._id,
-				amount: data.currentValue,
-				importDate: data.entryDate,
-				importPlanNumber: Number(data.entryPlanNumber),
-				importUnit: data.mainUnit?.name,
-				manufacturingDate: data.productionDate,
-				origin: data.supplySource,
-				quality: data.qualityLevel?._id,
-				rateResult: data.evaluationResult,
-				rateUnit: data.evaluatingUnit?.name,
-				serial: data.code,
-				status: data.status,
-				usedUnit: data.currentUnit?.name,
+				name: unit?.name ?? '',
+				serialNumber: unit?.serialNumber ?? '',
+				currentUnit: unit?.currentUnit?._id ?? '',
+				group: unit?.group?._id ?? '',
+				quality: unit?.qualityLevel?._id ?? '',
+				status: unit?.status ?? '',
+				initialPrice: unit?.initialPrice ?? 0,
 			})
 		}
 	}, [id, isPending])

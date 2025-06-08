@@ -1,7 +1,7 @@
-import HandOverCreateTemplate from '@/modules/equipment-set-handover-create/components/templates/HandOverCreateTemplate'
+import HandoverDetailTemplate from '@/modules/equipment-set-handover-detail/components/templates/HandOverCreateTemplate'
 
 const HandOverCreatePage = () => {
-	return <HandOverCreateTemplate />
+	return <HandoverDetailTemplate />
 }
 
 export default HandOverCreatePage

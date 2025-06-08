@@ -1,14 +1,20 @@
 'use client'
 
+import { syncEquipmentControllerGetLiquidationLogsOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
 import DataTable from '@/modules/common/components/organisms/DataTable'
+import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { columns } from '../organisms/LiquidationColumns'
 
 const LiquidationTemplate = () => {
+	const { data } = useQuery({
+		...syncEquipmentControllerGetLiquidationLogsOptions(),
+	})
+
 	return (
 		<div className="h-full">
 			<Card>
@@ -23,7 +29,7 @@ const LiquidationTemplate = () => {
 						</Button>
 					</Link>
 				</div>
-				<DataTable columns={columns} data={[]} />
+				<DataTable columns={columns} data={(data as any) ?? []} />
 			</Card>
 		</div>
 	)

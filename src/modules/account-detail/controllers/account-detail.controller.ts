@@ -1,9 +1,9 @@
 import {
-	usersControllerCreateMutation,
-	usersControllerFindAllQueryKey,
-	usersControllerFindOneOptions,
-	usersControllerFindOneQueryKey,
-	usersControllerUpdateMutation,
+	userControllerCreateMutation,
+	userControllerGetAllQueryKey,
+	userControllerGetByIdOptions,
+	userControllerGetByIdQueryKey,
+	userControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -32,19 +32,20 @@ const useAccountDetailController = ({ id }: Props) => {
 		defaultValues,
 		resolver: zodResolver(accountSchema),
 	})
-	const { mutate: create } = useMutation({ ...usersControllerCreateMutation() })
-	const { mutate: update } = useMutation({ ...usersControllerUpdateMutation() })
-	const { data: account, isPending } = useQuery({
-		...usersControllerFindOneOptions({ path: { id: id ?? '' } }),
+	const { mutate: create } = useMutation({ ...userControllerCreateMutation() })
+	const { mutate: update } = useMutation({ ...userControllerUpdateMutation() })
+	const { data, isPending } = useQuery({
+		...userControllerGetByIdOptions({ path: { id: id ?? '' } }),
 		enabled: !!id,
 	})
 
 	useEffect(() => {
 		if (id) {
+			const account = data as any
 			if (account) {
 				accountDetailForm.reset({
 					mode: 'edit',
-					name: account.fullName,
+					name: account.firstName,
 					username: account.username,
 					password: undefined,
 					role: account.role,
@@ -59,9 +60,10 @@ const useAccountDetailController = ({ id }: Props) => {
 				{
 					body: {
 						password: data.password ?? '',
-						role: data.role as 'admin' | 'manager' | 'user',
+						role: data.role as 'admin' | 'user',
 						username: data.username,
-						fullName: data.name,
+						firstName: data.name,
+						lastName: ' ',
 					},
 				},
 				{
@@ -81,9 +83,9 @@ const useAccountDetailController = ({ id }: Props) => {
 					path: { id: id },
 					body: {
 						password: data.password ?? '',
-						role: data.role as 'admin' | 'manager' | 'user',
+						role: data.role as 'admin' | 'user',
 						username: data.username,
-						fullName: data.name,
+						firstName: data.name,
 					},
 				},
 				{
@@ -94,10 +96,10 @@ const useAccountDetailController = ({ id }: Props) => {
 						toast.success('Sửa tài khoản thành công')
 						accountDetailForm.reset()
 						queryClient.invalidateQueries({
-							queryKey: usersControllerFindAllQueryKey(),
+							queryKey: userControllerGetAllQueryKey(),
 						})
 						queryClient.invalidateQueries({
-							queryKey: usersControllerFindOneQueryKey({
+							queryKey: userControllerGetByIdQueryKey({
 								path: { id: id ?? '' },
 							}),
 						})
