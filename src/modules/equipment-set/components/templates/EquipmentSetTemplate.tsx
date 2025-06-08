@@ -1,10 +1,11 @@
 'use client'
 
+import { equipmentsControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
-import { equipmentSets } from '@/mocks/equipment.mock'
 import DataTable from '@/modules/common/components/organisms/DataTable'
+import { useQuery } from '@tanstack/react-query'
 import { ChevronDown, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -13,6 +14,9 @@ import SearchEquipmentSet from '../organisms/SearchEquipmentSet'
 
 const EquipmentSetTemplate = () => {
 	const [open, setOpen] = useState<boolean>(false)
+	const { data: equipmentSets } = useQuery({
+		...equipmentsControllerFindAllOptions(),
+	})
 
 	return (
 		<div className="h-full">
@@ -37,7 +41,7 @@ const EquipmentSetTemplate = () => {
 					</Link>
 				</div>
 				<SearchEquipmentSet onOpenChange={setOpen} open={open} />
-				<DataTable columns={columns} data={equipmentSets} />
+				<DataTable columns={columns} data={equipmentSets ?? []} />
 			</Card>
 		</div>
 	)

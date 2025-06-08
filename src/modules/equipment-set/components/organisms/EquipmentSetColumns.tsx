@@ -1,36 +1,37 @@
+import type { EquipmentResponseDto } from '@/client'
+import {
+	equipmentsControllerFindAllQueryKey,
+	equipmentsControllerRemoveMutation,
+} from '@/client/@tanstack/react-query.gen'
+import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
 import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
-import type { EquipmentSet } from '@/types/equipment-set.types'
+import { useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
-export const columns: ColumnDef<EquipmentSet>[] = [
-	{
-		accessorKey: 'id',
-		header: 'ID',
-		enableResizing: false,
-		size: 1,
-	},
+export const columns: ColumnDef<EquipmentResponseDto>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Trang bị',
 	},
 	{
-		accessorKey: 'serial',
+		accessorKey: 'code',
 		header: 'Mã hiệu serial',
 	},
 	{
-		accessorKey: 'importDate',
+		accessorKey: 'entryDate',
 		header: 'Ngày nhập',
 	},
 	{
-		accessorKey: 'amount',
+		accessorKey: 'currentValue',
 		header: 'Giá tiền hiện tại',
 		cell: ({ row }) => {
 			return (
 				<span className="text-right">
-					{row.original.amount.toLocaleString('vi-VN', {
+					{(row.original.currentValue ?? 0).toLocaleString('vi-VN', {
 						style: 'currency',
 						currency: 'VND',
 					})}
@@ -39,12 +40,17 @@ export const columns: ColumnDef<EquipmentSet>[] = [
 		},
 	},
 	{
-		accessorKey: 'importUnit',
+		accessorKey: 'mainUnit',
 		header: 'Đơn vị nhập',
 	},
 	{
-		accessorKey: 'quality',
+		accessorKey: 'qualityLevel',
 		header: 'Phân cấp chất lượng',
+		cell: ({ row }) => {
+			return (
+				<span className="text-right">{row.original.qualityLevel?.name}</span>
+			)
+		},
 	},
 	{
 		accessorKey: 'status',
@@ -56,15 +62,33 @@ export const columns: ColumnDef<EquipmentSet>[] = [
 		size: 1,
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
+			const { mutate: remove } = useMutation({
+				...equipmentsControllerRemoveMutation(),
+			})
 
 			const handleDelete = () => {
-				setOpen(false)
+				remove(
+					{ path: { id: row.original._id } },
+					{
+						onSuccess: () => {
+							setOpen(false)
+							toast.success('Xóa trang bị thành công')
+							queryClient.invalidateQueries({
+								queryKey: equipmentsControllerFindAllQueryKey(),
+							})
+						},
+						onError: () => {
+							setOpen(false)
+							toast.error('Xóa trang bị khônng thành công')
+						},
+					},
+				)
 			}
 
 			return (
 				<div className="flex items-center justify-end gap-x-3">
 					<Link
-						href={pageList.equipmentSetDetail({ id: row.original.id }).href}
+						href={pageList.equipmentSetDetail({ id: row.original._id }).href}
 						className="text-blue-600"
 					>
 						Chỉnh sửa

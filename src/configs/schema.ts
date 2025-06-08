@@ -95,6 +95,10 @@ const equipmentSetDetailSchema = z.object({
 		.string({ required_error: 'Chưa nhập tên trang bị' })
 		.trim()
 		.min(1, 'Chưa nhập tên trang bị'),
+	typeGroup: z
+		.string({ required_error: 'Chưa chọn nhóm loại' })
+		.trim()
+		.min(1, 'Chưa chọn nhóm loại'),
 	serial: z
 		.string({ required_error: 'Chưa nhập mã hiệu serial' })
 		.trim()
@@ -123,22 +127,13 @@ const equipmentSetDetailSchema = z.object({
 		.string({ required_error: 'Chưa nhập ngày sản xuất' })
 		.trim()
 		.min(1, 'Chưa nhập ngày sản xuất'),
-	importUnit: z
-		.string({ required_error: 'Chưa nhập đơn vị nhập' })
-		.trim()
-		.min(1, 'Chưa nhập đơn vị nhập'),
-	rateUnit: z
-		.string({ required_error: 'Chưa nhập đơn vị đánh giá' })
-		.trim()
-		.min(1, 'Chưa nhập đơn vị đánh giá'),
+	importUnit: z.string().optional(),
+	rateUnit: z.string().optional(),
 	rateResult: z
 		.string({ required_error: 'Chưa nhập kết 	quả đánh giá' })
 		.trim()
 		.min(1, 'Chưa nhập kết 	quả đánh giá'),
-	usedUnit: z
-		.string({ required_error: 'Chưa nhập đơn vị sử dụng' })
-		.trim()
-		.min(1, 'Chưa nhập đơn vị sử dụng'),
+	usedUnit: z.string().optional(),
 	quality: z
 		.string({ required_error: 'Chưa nhập phân cấp chất lượng' })
 		.min(1, 'Chưa nhập phân cấp chất lượng'),

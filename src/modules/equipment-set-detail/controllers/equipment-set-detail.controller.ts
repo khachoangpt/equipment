@@ -1,9 +1,10 @@
+import { equipmentsControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
 import {
 	type EquipmentSetDetailSchema,
 	equipmentSetDetailSchema,
 } from '@/configs/schema'
-import { equipmentSets } from '@/mocks/equipment.mock'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -15,6 +16,7 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 	const defaultValues: EquipmentSetDetailSchema = {
 		name: '',
 		amount: 0,
+		typeGroup: '',
 		importDate: new Date().toString(),
 		importPlanNumber: 0,
 		importUnit: '',
@@ -31,31 +33,33 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 		defaultValues,
 		resolver: zodResolver(equipmentSetDetailSchema),
 	})
+	const { data, isPending } = useQuery({
+		...equipmentsControllerFindOneOptions({ path: { id: id ?? '' } }),
+		enabled: !!id,
+	})
 
 	useEffect(() => {
 		if (!id) return
 
-		const equipmentSetFound = equipmentSets.find(
-			(equipmentSet) => equipmentSet.id === id,
-		)
-		if (equipmentSetFound) {
+		if (data) {
 			form.reset({
-				name: equipmentSetFound.name,
-				amount: equipmentSetFound.amount,
-				importDate: equipmentSetFound.importDate,
-				importPlanNumber: equipmentSetFound.importPlanNumber,
-				importUnit: equipmentSetFound.importUnit,
-				manufacturingDate: equipmentSetFound.manufacturingDate,
-				origin: equipmentSetFound.origin,
-				quality: equipmentSetFound.quality,
-				rateResult: equipmentSetFound.rateResult,
-				rateUnit: equipmentSetFound.rateUnit,
-				serial: equipmentSetFound.serial,
-				status: equipmentSetFound.status,
-				usedUnit: equipmentSetFound.usedUnit,
+				name: data.name,
+				typeGroup: data.group?._id,
+				amount: data.currentValue,
+				importDate: data.entryDate,
+				importPlanNumber: Number(data.entryPlanNumber),
+				importUnit: data.mainUnit?.name,
+				manufacturingDate: data.productionDate,
+				origin: data.supplySource,
+				quality: data.qualityLevel?._id,
+				rateResult: data.evaluationResult,
+				rateUnit: data.evaluatingUnit?.name,
+				serial: data.code,
+				status: data.status,
+				usedUnit: data.currentUnit?.name,
 			})
 		}
-	}, [id])
+	}, [id, isPending])
 
 	return { form }
 }

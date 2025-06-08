@@ -2,9 +2,9 @@
 
 import type { OptionsLegacyParser } from '@hey-api/client-axios';
 import { queryOptions, type UseMutationOptions } from '@tanstack/react-query';
-import type { AuthControllerSignInData, AuthControllerSignInError, AuthControllerSignInResponse, EquipmentGroupsControllerCreateData, EquipmentGroupsControllerCreateError, EquipmentGroupsControllerCreateResponse, EquipmentGroupsControllerFindOneData, EquipmentGroupsControllerUpdateData, EquipmentGroupsControllerUpdateError, EquipmentGroupsControllerUpdateResponse, EquipmentGroupsControllerRemoveData, EquipmentGroupsControllerRemoveError, EquipmentGroupsControllerRemoveResponse, QualityLevelsControllerCreateData, QualityLevelsControllerCreateError, QualityLevelsControllerCreateResponse, QualityLevelsControllerFindOneData, QualityLevelsControllerUpdateData, QualityLevelsControllerUpdateError, QualityLevelsControllerUpdateResponse, QualityLevelsControllerRemoveData, QualityLevelsControllerRemoveError, QualityLevelsControllerRemoveResponse, UnitsControllerCreateData, UnitsControllerCreateError, UnitsControllerCreateResponse, UnitsControllerFindOneData, UnitsControllerUpdateData, UnitsControllerUpdateError, UnitsControllerUpdateResponse, UnitsControllerRemoveData, UnitsControllerRemoveError, UnitsControllerRemoveResponse, UsersControllerCreateData, UsersControllerCreateError, UsersControllerCreateResponse, UsersControllerFindOneData, UsersControllerUpdateData, UsersControllerUpdateError, UsersControllerUpdateResponse, UsersControllerRemoveData, UsersControllerRemoveError, UsersControllerRemoveResponse } from '../types.gen';
+import type { AuthControllerSignInData, AuthControllerSignInError, AuthControllerSignInResponse, EquipmentGroupsControllerCreateData, EquipmentGroupsControllerCreateError, EquipmentGroupsControllerCreateResponse, EquipmentGroupsControllerFindOneData, EquipmentGroupsControllerUpdateData, EquipmentGroupsControllerUpdateError, EquipmentGroupsControllerUpdateResponse, EquipmentGroupsControllerRemoveData, EquipmentGroupsControllerRemoveError, EquipmentGroupsControllerRemoveResponse, QualityLevelsControllerCreateData, QualityLevelsControllerCreateError, QualityLevelsControllerCreateResponse, QualityLevelsControllerFindOneData, QualityLevelsControllerUpdateData, QualityLevelsControllerUpdateError, QualityLevelsControllerUpdateResponse, QualityLevelsControllerRemoveData, QualityLevelsControllerRemoveError, QualityLevelsControllerRemoveResponse, UnitsControllerCreateData, UnitsControllerCreateError, UnitsControllerCreateResponse, UnitsControllerFindOneData, UnitsControllerUpdateData, UnitsControllerUpdateError, UnitsControllerUpdateResponse, UnitsControllerRemoveData, UnitsControllerRemoveError, UnitsControllerRemoveResponse, EquipmentsControllerCreateData, EquipmentsControllerCreateError, EquipmentsControllerCreateResponse, EquipmentsControllerFindOneData, EquipmentsControllerUpdateData, EquipmentsControllerUpdateError, EquipmentsControllerUpdateResponse, EquipmentsControllerRemoveData, EquipmentsControllerRemoveError, EquipmentsControllerRemoveResponse, UsersControllerCreateData, UsersControllerCreateError, UsersControllerCreateResponse, UsersControllerFindOneData, UsersControllerUpdateData, UsersControllerUpdateError, UsersControllerUpdateResponse, UsersControllerRemoveData, UsersControllerRemoveError, UsersControllerRemoveResponse } from '../types.gen';
 import type { AxiosError } from 'axios';
-import { client, AuthService, CategoriesEquipmentGroupsService, CategoriesQualityLevelsService, CategoriesUnitsService, UsersService } from '../sdk.gen';
+import { client, AuthService, CategoriesEquipmentGroupsService, CategoriesQualityLevelsService, CategoriesUnitsService, EquipmentsService, UsersService } from '../sdk.gen';
 
 type QueryKey<TOptions extends OptionsLegacyParser> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -353,6 +353,105 @@ export const unitsControllerRemoveMutation = (options?: Partial<OptionsLegacyPar
     const mutationOptions: UseMutationOptions<UnitsControllerRemoveResponse, AxiosError<UnitsControllerRemoveError>, OptionsLegacyParser<UnitsControllerRemoveData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await CategoriesUnitsService.unitsControllerRemove({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const equipmentsControllerCreateQueryKey = (options: OptionsLegacyParser<EquipmentsControllerCreateData>) => [
+    createQueryKey('equipmentsControllerCreate', options)
+];
+
+export const equipmentsControllerCreateOptions = (options: OptionsLegacyParser<EquipmentsControllerCreateData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await EquipmentsService.equipmentsControllerCreate({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentsControllerCreateQueryKey(options)
+    });
+};
+
+export const equipmentsControllerCreateMutation = (options?: Partial<OptionsLegacyParser<EquipmentsControllerCreateData>>) => {
+    const mutationOptions: UseMutationOptions<EquipmentsControllerCreateResponse, AxiosError<EquipmentsControllerCreateError>, OptionsLegacyParser<EquipmentsControllerCreateData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await EquipmentsService.equipmentsControllerCreate({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const equipmentsControllerFindAllQueryKey = (options?: OptionsLegacyParser) => [
+    createQueryKey('equipmentsControllerFindAll', options)
+];
+
+export const equipmentsControllerFindAllOptions = (options?: OptionsLegacyParser) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await EquipmentsService.equipmentsControllerFindAll({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentsControllerFindAllQueryKey(options)
+    });
+};
+
+export const equipmentsControllerFindOneQueryKey = (options: OptionsLegacyParser<EquipmentsControllerFindOneData>) => [
+    createQueryKey('equipmentsControllerFindOne', options)
+];
+
+export const equipmentsControllerFindOneOptions = (options: OptionsLegacyParser<EquipmentsControllerFindOneData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await EquipmentsService.equipmentsControllerFindOne({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentsControllerFindOneQueryKey(options)
+    });
+};
+
+export const equipmentsControllerUpdateMutation = (options?: Partial<OptionsLegacyParser<EquipmentsControllerUpdateData>>) => {
+    const mutationOptions: UseMutationOptions<EquipmentsControllerUpdateResponse, AxiosError<EquipmentsControllerUpdateError>, OptionsLegacyParser<EquipmentsControllerUpdateData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await EquipmentsService.equipmentsControllerUpdate({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const equipmentsControllerRemoveMutation = (options?: Partial<OptionsLegacyParser<EquipmentsControllerRemoveData>>) => {
+    const mutationOptions: UseMutationOptions<EquipmentsControllerRemoveResponse, AxiosError<EquipmentsControllerRemoveError>, OptionsLegacyParser<EquipmentsControllerRemoveData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await EquipmentsService.equipmentsControllerRemove({
                 ...options,
                 ...localOptions,
                 throwOnError: true
