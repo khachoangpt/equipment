@@ -13,6 +13,7 @@ type Props = {
 
 const useCreateHandoverController = ({ id }: Props) => {
 	const defaultValues: CreateEquipmentSetHandoverSchema = {
+		senderPerson: '',
 		code: '',
 		receiverPerson: '',
 		receiverUnit: '',
