@@ -1,9 +1,9 @@
 import {
-	userControllerCreateMutation,
-	userControllerGetAllQueryKey,
-	userControllerGetByIdOptions,
-	userControllerGetByIdQueryKey,
-	userControllerUpdateMutation,
+	usersControllerCreateMutation,
+	usersControllerFindAllQueryKey,
+	usersControllerFindOneOptions,
+	usersControllerFindOneQueryKey,
+	usersControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -32,22 +32,19 @@ const useAccountDetailController = ({ id }: Props) => {
 		defaultValues,
 		resolver: zodResolver(accountSchema),
 	})
-	const { mutate: create } = useMutation({ ...userControllerCreateMutation() })
-	const { mutate: update } = useMutation({ ...userControllerUpdateMutation() })
-	const { data, isPending } = useQuery({
-		...userControllerGetByIdOptions({ path: { id: id ?? '' } }),
+	const { mutate: create } = useMutation({ ...usersControllerCreateMutation() })
+	const { mutate: update } = useMutation({ ...usersControllerUpdateMutation() })
+	const { data: account, isPending } = useQuery({
+		...usersControllerFindOneOptions({ path: { id: id ?? '' } }),
 		enabled: !!id,
 	})
 
 	useEffect(() => {
 		if (id) {
-			const account = data as any
 			if (account) {
 				accountDetailForm.reset({
 					mode: 'edit',
-					name: account.firstName,
-					username: account.username,
-					password: undefined,
+					name: account.fullName,
 					role: account.role,
 				})
 			}
@@ -61,17 +58,16 @@ const useAccountDetailController = ({ id }: Props) => {
 					body: {
 						password: data.password ?? '',
 						role: data.role as 'admin' | 'user',
-						username: data.username,
-						firstName: data.name,
-						lastName: ' ',
+						username: data.username ?? '',
+						fullName: data.name,
 					},
 				},
 				{
 					onError: () => {
-						toast.error('Tạo tài khoản khônng thành công')
+						toast.error('Tạo không thành công')
 					},
 					onSuccess: () => {
-						toast.success('Tạo tài khoản thành công')
+						toast.success('Tạo thành công')
 						accountDetailForm.reset()
 						router.push(pageList.account.href)
 					},
@@ -82,24 +78,22 @@ const useAccountDetailController = ({ id }: Props) => {
 				{
 					path: { id: id },
 					body: {
-						password: data.password ?? '',
 						role: data.role as 'admin' | 'user',
-						username: data.username,
-						firstName: data.name,
+						fullName: data.name,
 					},
 				},
 				{
 					onError: () => {
-						toast.error('Lỗi sửa tài khoản')
+						toast.error('Cập nhật không thành công')
 					},
 					onSuccess: () => {
-						toast.success('Sửa tài khoản thành công')
+						toast.success('Cập nhật thành công')
 						accountDetailForm.reset()
 						queryClient.invalidateQueries({
-							queryKey: userControllerGetAllQueryKey(),
+							queryKey: usersControllerFindAllQueryKey(),
 						})
 						queryClient.invalidateQueries({
-							queryKey: userControllerGetByIdQueryKey({
+							queryKey: usersControllerFindOneQueryKey({
 								path: { id: id ?? '' },
 							}),
 						})

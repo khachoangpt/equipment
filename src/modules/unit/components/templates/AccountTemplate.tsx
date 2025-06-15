@@ -1,6 +1,6 @@
 'use client'
 
-import { organizationControllerFindAllUnitsOptions } from '@/client/@tanstack/react-query.gen'
+import { unitsControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -13,9 +13,7 @@ import { columns } from '../organisms/UnitTableColumns'
 
 const UnitTemplate = () => {
 	const router = useRouter()
-	const { data: units, isLoading } = useQuery(
-		organizationControllerFindAllUnitsOptions(),
-	)
+	const { data: units, isLoading } = useQuery(unitsControllerFindAllOptions())
 
 	if (isLoading) {
 		return (

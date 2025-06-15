@@ -1,9 +1,9 @@
 'use client'
 
 import {
-	syncEquipmentControllerFindAllOptions,
-	syncEquipmentControllerGetMaintenanceLogsOptions,
-	syncEquipmentControllerLogMaintenanceMutation,
+	activityLogsControllerSearchQueryKey,
+	equipmentInstancesControllerRepairMutation,
+	equipmentInstancesControllerSearchOptions,
 } from '@/client/@tanstack/react-query.gen'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
 import { Button } from '@/components/ui/button'
@@ -26,8 +26,10 @@ import {
 } from '@/components/ui/select'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
+import type { CreateEquipmentMaintenanceSchema } from '@/configs/schema'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import type { SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import useMaintenanceDetailController from '../../controllers/maintenance-detail.controller'
 
@@ -40,29 +42,33 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 	const { control } = form
 	const router = useRouter()
 	const { mutate: create } = useMutation({
-		...syncEquipmentControllerLogMaintenanceMutation(),
+		...equipmentInstancesControllerRepairMutation(),
 	})
 	const { data: equipments } = useQuery({
-		...syncEquipmentControllerFindAllOptions(),
-		select: (data: any) =>
-			data.map((equipment: any) => ({
-				label: equipment.name,
+		...equipmentInstancesControllerSearchOptions(),
+		select: (data) =>
+			data.map((equipment) => ({
+				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
 				value: equipment._id,
 			})),
 	})
 
-	const onSubmit = (data: any) => {
+	const onSubmit: SubmitHandler<CreateEquipmentMaintenanceSchema> = (data) => {
 		create(
 			{
+				path: { id: data.equipment },
 				body: {
-					equipment: data.equipmentId,
-					location: data.location,
-					sendDate: new Date(data.sendDate).toISOString(),
-					receiveDate: new Date(data.receiveDate).toISOString(),
 					reason: data.reason,
-					result: data.result,
+					repairLocation: data.repairLocation,
+					reportNumber: data.reportNumber,
+					sender: data.sender,
+					sentDate: new Date(data.sentDate).toISOString(),
+					receivedDate: data.receivedDate
+						? new Date(data.receivedDate).toISOString()
+						: undefined,
+					receiver: data.receiver,
 					notes: data.notes,
-					voucherNumber: data.voucherNumber,
+					result: data.result,
 				},
 			},
 			{
@@ -72,8 +78,9 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 				onSuccess: () => {
 					toast.success('Tạo thành công')
 					queryClient.invalidateQueries({
-						queryKey:
-							syncEquipmentControllerGetMaintenanceLogsOptions().queryKey,
+						queryKey: activityLogsControllerSearchQueryKey({
+							query: { activityType: 'Sửa chữa' },
+						}),
 					})
 					router.push(pageList.equipmentSetMaintenance.href)
 				},
@@ -88,12 +95,12 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 					<div className="grid gap-y-5 gap-x-20 grid-cols-2">
 						<FormField
 							control={control}
-							name="voucherNumber"
+							name="reportNumber"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Số phiếu</FormLabel>
+									<FormLabel>Số biên bản</FormLabel>
 									<FormControl>
-										<Input placeholder="Số phiếu" {...field} />
+										<Input placeholder="Số biên bản" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -101,7 +108,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="equipmentId"
+							name="equipment"
 							render={({ field: { value, onChange } }) => (
 								<FormItem key={value}>
 									<FormLabel>Trang bị</FormLabel>
@@ -111,7 +118,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												{((equipments as any) ?? [])?.map((quantity: any) => (
+												{equipments?.map((quantity: any) => (
 													<SelectItem
 														key={quantity.value}
 														value={quantity.value}
@@ -128,12 +135,12 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="location"
+							name="repairLocation"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Địa điểm</FormLabel>
+									<FormLabel>Nơi bảo dưỡng/sửa chữa</FormLabel>
 									<FormControl>
-										<Input placeholder="Địa điểm" {...field} />
+										<Input placeholder="Nơi bảo dưỡng/sửa chữa" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -141,7 +148,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="sendDate"
+							name="sentDate"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Ngày gửi</FormLabel>
@@ -157,15 +164,41 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="receiveDate"
+							name="receivedDate"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Ngày nhận</FormLabel>
 									<FormControl>
 										<DatePicker
-											value={new Date(field.value)}
+											value={new Date(field.value || '')}
 											onChange={(e) => field.onChange(e.toString())}
 										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="sender"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Người gửi</FormLabel>
+									<FormControl>
+										<Input placeholder="Người gửi" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="receiver"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Người nhận</FormLabel>
+									<FormControl>
+										<Input placeholder="Người nhận" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -176,9 +209,9 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 							name="reason"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Lý do</FormLabel>
+									<FormLabel>Lý do bảo dưỡng/sửa chữa</FormLabel>
 									<FormControl>
-										<Input placeholder="Lý do" {...field} />
+										<Input placeholder="Lý do bảo dưỡng/sửa chữa" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -189,7 +222,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 							name="result"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Kết qu </FormLabel>
+									<FormLabel>Kết quả</FormLabel>
 									<FormControl>
 										<Input placeholder="Kết quả" {...field} />
 									</FormControl>
@@ -216,7 +249,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 							type="button"
 							variant="secondary"
 							onClick={() => {
-								router.push(pageList.equipmentSet.href)
+								router.push(pageList.equipmentSetMaintenance.href)
 							}}
 						>
 							Quay lại

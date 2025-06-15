@@ -31,7 +31,7 @@ const AppSidebar = () => {
 			icon: <BriefcaseBusiness />,
 			items: [
 				{
-					id: 'trang-bi-trang-bi-dong-bo',
+					id: 'khoi-tao-trang-bi-trang-bi-dong-bo',
 					label: 'Trang bị',
 					href: pageList.equipmentSet.href,
 				},

@@ -1,6 +1,6 @@
 'use client'
 
-import { organizationControllerFindAllUnitsOptions } from '@/client/@tanstack/react-query.gen'
+import { unitsControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -33,7 +33,7 @@ const EditUnitForm = ({ id }: Props) => {
 	const { unitDetailForm, onSubmit } = useAccountDetailController({ id })
 	const { control, handleSubmit } = unitDetailForm
 	const { data: units } = useQuery({
-		...organizationControllerFindAllUnitsOptions(),
+		...unitsControllerFindAllOptions(),
 		select: (data) =>
 			(data as any)?.map((unit: any) => ({
 				label: unit.name,
@@ -107,7 +107,7 @@ const EditUnitForm = ({ id }: Props) => {
 							type="button"
 							variant="secondary"
 							onClick={() => {
-								router.push(pageList.account.href)
+								router.push(pageList.unit.href)
 							}}
 						>
 							Quay lại

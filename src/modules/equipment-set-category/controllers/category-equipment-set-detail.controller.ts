@@ -1,9 +1,10 @@
+import { syncEquipmentControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
 import {
 	type CategoryEquipmentSetDetailSchema,
 	categoryEquipmentSetDetailSchema,
 } from '@/configs/schema'
-import { equipmentSetCategories } from '@/mocks/equipment.mock'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -24,23 +25,23 @@ const useCategoryEquipmentSetDetailController = ({ id }: Props) => {
 			defaultValues,
 			resolver: zodResolver(categoryEquipmentSetDetailSchema),
 		})
+	const { data: categoryFound, isFetching } = useQuery({
+		...syncEquipmentControllerFindOneOptions({ path: { id: id ?? '' } }),
+	})
 
 	useEffect(() => {
 		if (!id) return
 
-		const categoryFound = equipmentSetCategories.find(
-			(category) => category.id === id,
-		)
 		if (categoryFound) {
 			categoryEquipmentSetDetailForm.reset({
 				name: categoryFound.name,
-				type: categoryFound.type,
+				type: categoryFound.groupId._id,
 				field: categoryFound.field,
-				defaultAmount: categoryFound.defaultAmount,
-				note: categoryFound.note,
+				defaultAmount: categoryFound.initialPrice,
+				note: categoryFound.notes,
 			})
 		}
-	}, [id])
+	}, [id, isFetching])
 
 	return {
 		categoryEquipmentSetDetailForm,

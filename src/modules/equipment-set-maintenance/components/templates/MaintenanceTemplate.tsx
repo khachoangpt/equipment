@@ -1,6 +1,6 @@
 'use client'
 
-import { syncEquipmentControllerGetMaintenanceLogsOptions } from '@/client/@tanstack/react-query.gen'
+import { activityLogsControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
@@ -11,8 +11,10 @@ import Link from 'next/link'
 import { columns } from '../organisms/MaintenanceColumns'
 
 const MaintenanceTemplate = () => {
-	const { data } = useQuery({
-		...syncEquipmentControllerGetMaintenanceLogsOptions(),
+	const { data: equipmentMaintenances } = useQuery({
+		...activityLogsControllerSearchOptions({
+			query: { activityType: 'Sửa chữa' },
+		}),
 	})
 
 	return (
@@ -29,7 +31,7 @@ const MaintenanceTemplate = () => {
 						</Button>
 					</Link>
 				</div>
-				<DataTable columns={columns} data={(data as any) ?? []} />
+				<DataTable columns={columns} data={equipmentMaintenances ?? []} />
 			</Card>
 		</div>
 	)

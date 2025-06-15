@@ -1,6 +1,10 @@
-import { createEquipmentSetHandoverSchema } from '@/configs/schema'
-import { equipmentHandovers } from '@/mocks/equipment.mock'
+import { activityLogsControllerFindByInstanceOptions } from '@/client/@tanstack/react-query.gen'
+import {
+	type CreateEquipmentSetHandoverSchema,
+	createEquipmentSetHandoverSchema,
+} from '@/configs/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -9,43 +13,40 @@ type Props = {
 }
 
 const useHandoverDetailController = ({ id }: Props) => {
-	const defaultValues: any = {
+	const defaultValues: CreateEquipmentSetHandoverSchema = {
 		code: '',
-		handoverPerson: '',
-		handoverUnit: '',
+		senderPerson: '',
 		receiverPerson: '',
 		receiverUnit: '',
 		handoverDate: new Date().toString(),
-		returnDate: '',
-		equipmentName: '',
-		equipments: [],
+		equipment: '',
 		note: '',
 	}
-	const form = useForm<any>({
+	const form = useForm<CreateEquipmentSetHandoverSchema>({
 		defaultValues,
 		resolver: zodResolver(createEquipmentSetHandoverSchema),
+	})
+	const { data: handoverFound, isFetching } = useQuery({
+		...activityLogsControllerFindByInstanceOptions({
+			path: { instanceId: id ?? '' },
+		}),
 	})
 
 	useEffect(() => {
 		if (!id) return
 
-		const handoverFound = equipmentHandovers.find(
-			(handover) => handover.id === id,
-		)
 		if (handoverFound) {
 			form.reset({
-				code: handoverFound.code,
-				handoverPerson: handoverFound.handoverPerson,
-				handoverUnit: handoverFound.handoverUnit,
-				receiverPerson: handoverFound.receiverPerson,
-				receiverUnit: handoverFound.receiverUnit,
-				handoverDate: handoverFound.handoverDate,
-				returnDate: handoverFound.returnDate,
-				equipmentName: handoverFound.equipmentName,
-				note: handoverFound.note,
+				code: handoverFound[0].details.code as string,
+				senderPerson: handoverFound[0].details.handoverPerson as string,
+				receiverPerson: handoverFound[0].details.receiverPerson as string,
+				receiverUnit: handoverFound[0].details.receiverUnit as string,
+				handoverDate: handoverFound[0].details.handoverDate as string,
+				equipment: handoverFound[0].details.equipmentName as string,
+				note: handoverFound[0].details.note as string,
 			})
 		}
-	}, [id])
+	}, [id, isFetching])
 
 	return { form }
 }

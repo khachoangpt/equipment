@@ -1,3 +1,8 @@
+import {
+	type CreateEquipmentDisposalSchema,
+	createEquipmentDisposalSchema,
+} from '@/configs/schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 type Props = {
@@ -5,16 +10,17 @@ type Props = {
 }
 
 const useLiquidationDetailController = (_: Props) => {
-	const defaultValues: any = {
+	const defaultValues: CreateEquipmentDisposalSchema = {
+		createdBy: '',
+		equipment: '',
 		decisionNumber: '',
-		unit: '',
-		liquidationDate: new Date().toString(),
-		creator: '',
-		equipmentList: [],
+		disposalDate: new Date().toISOString(),
+		signer: '',
 		notes: '',
 	}
-	const form = useForm<any>({
+	const form = useForm<CreateEquipmentDisposalSchema>({
 		defaultValues,
+		resolver: zodResolver(createEquipmentDisposalSchema),
 	})
 
 	// useEffect(() => {

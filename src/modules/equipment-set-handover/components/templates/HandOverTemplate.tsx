@@ -1,6 +1,6 @@
 'use client'
 
-import { syncEquipmentControllerGetHandoverLogsOptions } from '@/client/@tanstack/react-query.gen'
+import { activityLogsControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
@@ -12,7 +12,9 @@ import { columns } from '../organisms/HandOverColumns'
 
 const HandOverTemplate = () => {
 	const { data: equipmentHandovers } = useQuery({
-		...syncEquipmentControllerGetHandoverLogsOptions(),
+		...activityLogsControllerSearchOptions({
+			query: { activityType: 'Bàn giao' },
+		}),
 	})
 	return (
 		<div className="h-full">
@@ -28,7 +30,7 @@ const HandOverTemplate = () => {
 						</Button>
 					</Link>
 				</div>
-				<DataTable columns={columns} data={(equipmentHandovers as any) ?? []} />
+				<DataTable columns={columns} data={equipmentHandovers ?? []} />
 			</Card>
 		</div>
 	)

@@ -1,6 +1,7 @@
+import type { EquipmentInstance } from '@/client'
 import {
-	syncEquipmentControllerFindAllQueryKey,
-	syncEquipmentControllerRemoveMutation,
+	equipmentInstancesControllerRemoveMutation,
+	equipmentInstancesControllerSearchQueryKey,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -11,57 +12,47 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-export const columns: ColumnDef<any>[] = [
+export const columns: ColumnDef<EquipmentInstance>[] = [
 	{
-		accessorKey: 'name',
-		header: 'Trang bị',
+		accessorKey: 'equipmentId',
+		header: 'Tên',
+		cell: ({ row }) => {
+			return (
+				<span className="text-right">{row.original.equipmentId?.name}</span>
+			)
+		},
 	},
 	{
 		accessorKey: 'serialNumber',
 		header: 'Mã hiệu serial',
 	},
 	{
-		accessorKey: 'group',
-		header: 'Nhóm/loại',
-		cell: ({ row }) => {
-			return <span className="text-right">{row.original.group?.name}</span>
-		},
-	},
-	{
-		accessorKey: 'initialPrice',
-		header: 'Giá tiền',
+		accessorKey: 'usingUnitId',
+		header: 'Đơn vị sử dụng',
 		cell: ({ row }) => {
 			return (
-				<span className="text-right">
-					{(row.original.initialPrice ?? 0).toLocaleString('vi-VN', {
-						style: 'currency',
-						currency: 'VND',
-					})}
-				</span>
-			)
-		},
-	},
-	{
-		accessorKey: 'qualityLevel',
-		header: 'Phân cấp chất lượng',
-		cell: ({ row }) => {
-			return (
-				<span className="text-right">{row.original.qualityLevel?.name}</span>
+				<span className="text-right">{row.original.usingUnitId?.name}</span>
 			)
 		},
 	},
 	{
 		accessorKey: 'status',
-		header: 'Tình trạng trang bị',
+		header: 'Tình trạng',
 	},
 	{
-		accessorKey: 'currentUnit',
-		header: 'Đơn vị hiện tại',
+		accessorKey: 'qualityLevelId',
+		header: 'Phân cấp chất lượng',
 		cell: ({ row }) => {
 			return (
-				<span className="text-right">{row.original.currentUnit?.name}</span>
+				<span className="text-right">{row.original.qualityLevelId?.name}</span>
 			)
 		},
+	},
+	{
+		accessorKey: 'entryDate',
+		header: 'Ngày nhập',
+		cell: ({ row }) =>
+			new Date(row.original.entryDate).toLocaleDateString('vi-VN'),
 	},
 	{
 		id: 'actions',
@@ -70,7 +61,7 @@ export const columns: ColumnDef<any>[] = [
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...syncEquipmentControllerRemoveMutation(),
+				...equipmentInstancesControllerRemoveMutation(),
 			})
 
 			const handleDelete = () => {
@@ -79,14 +70,14 @@ export const columns: ColumnDef<any>[] = [
 					{
 						onSuccess: () => {
 							setOpen(false)
-							toast.success('Xóa trang bị thành công')
+							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
-								queryKey: syncEquipmentControllerFindAllQueryKey(),
+								queryKey: equipmentInstancesControllerSearchQueryKey(),
 							})
 						},
 						onError: () => {
 							setOpen(false)
-							toast.error('Xóa trang bị khônng thành công')
+							toast.error('Xóa khônng thành công')
 						},
 					},
 				)

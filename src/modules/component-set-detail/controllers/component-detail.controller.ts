@@ -1,4 +1,4 @@
-import { assembledEquipmentControllerFindComponentByIdOptions } from '@/client/@tanstack/react-query.gen'
+import { componentsControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -18,7 +18,7 @@ const useComponentDetailController = ({ id }: Props) => {
 		defaultValues,
 	})
 	const { data, isPending } = useQuery({
-		...assembledEquipmentControllerFindComponentByIdOptions({
+		...componentsControllerFindOneOptions({
 			path: { id: id ?? '' },
 		}),
 		enabled: !!id,

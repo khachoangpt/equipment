@@ -1,6 +1,8 @@
+'use client'
+
 import {
-	assembledEquipmentControllerFindAllComponentsOptions,
-	assembledEquipmentControllerRemoveComponentMutation,
+	componentsControllerFindAllQueryKey,
+	componentsControllerRemoveMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -35,7 +37,7 @@ export const columns: ColumnDef<any>[] = [
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...assembledEquipmentControllerRemoveComponentMutation(),
+				...componentsControllerRemoveMutation(),
 			})
 
 			const handleDelete = () => {
@@ -46,9 +48,7 @@ export const columns: ColumnDef<any>[] = [
 							setOpen(false)
 							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
-								queryKey:
-									assembledEquipmentControllerFindAllComponentsOptions()
-										.queryKey,
+								queryKey: componentsControllerFindAllQueryKey(),
 							})
 						},
 						onError: () => {
@@ -78,8 +78,8 @@ export const columns: ColumnDef<any>[] = [
 						Xoá
 					</p>
 					<DialogConfirmDelete
-						title="Xoá trang bị"
-						description="Bạn có chắc chắn muốn xoá trang bị này"
+						title="Xoá vật tư/linh kiện"
+						description="Bạn có chắc chắn muốn xoá vật tư/linh kiện này"
 						open={open}
 						onOpenChange={setOpen}
 						onConfirm={handleDelete}

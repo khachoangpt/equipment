@@ -1,3 +1,4 @@
+import { equipmentGroupsControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import {
 	Dialog,
@@ -24,7 +25,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import type { CategoryEquipmentSetDetailSchema } from '@/configs/schema'
-import { equipmentSetTypeGroups } from '@/mocks/equipment.mock'
+import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
 import useCategoryEquipmentSetDetailController from '../../controllers/category-equipment-set-detail.controller'
@@ -46,6 +47,9 @@ const DialogAddCategoryEquipmentSet = ({
 	const { categoryEquipmentSetDetailForm } =
 		useCategoryEquipmentSetDetailController({ id })
 	const { control, handleSubmit } = categoryEquipmentSetDetailForm
+	const { data: typeGroups } = useQuery({
+		...equipmentGroupsControllerFindAllOptions(),
+	})
 
 	useEffect(() => {
 		if (!open) {
@@ -87,8 +91,8 @@ const DialogAddCategoryEquipmentSet = ({
 												<SelectValue placeholder="Nhóm loại" />
 											</SelectTrigger>
 											<SelectContent>
-												{equipmentSetTypeGroups.map((typeGroup) => (
-													<SelectItem key={typeGroup.id} value={typeGroup.id}>
+												{typeGroups?.map((typeGroup) => (
+													<SelectItem key={typeGroup._id} value={typeGroup._id}>
 														{typeGroup.name}
 													</SelectItem>
 												))}
@@ -115,11 +119,18 @@ const DialogAddCategoryEquipmentSet = ({
 						<FormField
 							control={control}
 							name="defaultAmount"
-							render={({ field }) => (
+							render={({ field: { onChange, value } }) => (
 								<FormItem>
 									<FormLabel>Giá tiền ban đầu</FormLabel>
 									<FormControl>
-										<Input placeholder="Giá tiền ban đầu" {...field} />
+										<Input
+											placeholder="Giá tiền ban đầu"
+											onChange={(e) => {
+												if (Number.isNaN(Number(e.target.value))) return
+												onChange(Number(e.target.value))
+											}}
+											value={value}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

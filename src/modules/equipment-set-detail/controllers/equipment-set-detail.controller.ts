@@ -1,4 +1,9 @@
-import { syncEquipmentControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
+import { equipmentInstancesControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
+import {
+	type EquipmentSetDetailSchema,
+	equipmentSetDetailSchema,
+} from '@/configs/schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -8,20 +13,27 @@ type Props = {
 }
 
 const useEquipmentSetDetailController = ({ id }: Props) => {
-	const defaultValues: any = {
-		name: '',
+	const defaultValues: EquipmentSetDetailSchema = {
+		equipmentId: '',
 		serialNumber: '',
-		currentUnitId: '',
-		groupId: '',
+		entryPlanNumber: '',
+		importingUnitId: '',
+		usingUnitId: '',
+		evaluatingUnitId: '',
+		evaluationResult: '',
 		qualityLevelId: '',
+		currentPrice: 0,
+		entryDate: new Date().toISOString(),
+		productionDate: new Date().toISOString(),
+		supplySource: '',
 		status: '',
-		initialPrice: 0,
 	}
-	const form = useForm<any>({
+	const form = useForm<EquipmentSetDetailSchema>({
 		defaultValues,
+		resolver: zodResolver(equipmentSetDetailSchema),
 	})
-	const { data, isPending } = useQuery({
-		...syncEquipmentControllerFindOneOptions({ path: { id: id ?? '' } }),
+	const { data, isFetching } = useQuery({
+		...equipmentInstancesControllerFindOneOptions({ path: { id: id ?? '' } }),
 		enabled: !!id,
 	})
 
@@ -29,19 +41,23 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 		if (!id) return
 
 		if (data) {
-			const unit = data as any
-
 			form.reset({
-				name: unit?.name ?? '',
-				serialNumber: unit?.serialNumber ?? '',
-				currentUnit: unit?.currentUnit?._id ?? '',
-				group: unit?.group?._id ?? '',
-				quality: unit?.qualityLevel?._id ?? '',
-				status: unit?.status ?? '',
-				initialPrice: unit?.initialPrice ?? 0,
+				currentPrice: data.currentPrice,
+				entryDate: data.entryDate,
+				productionDate: data.productionDate,
+				entryPlanNumber: data.entryPlanNumber,
+				supplySource: data.supplySource,
+				qualityLevelId: data.qualityLevelId._id,
+				status: data.status,
+				equipmentId: data.equipmentId._id,
+				serialNumber: data.serialNumber,
+				evaluatingUnitId: data.evaluatingUnitId?._id,
+				evaluationResult: data.evaluationResult,
+				usingUnitId: data.usingUnitId._id,
+				importingUnitId: data.importingUnitId._id,
 			})
 		}
-	}, [id, isPending])
+	}, [id, isFetching])
 
 	return { form }
 }

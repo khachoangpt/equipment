@@ -19,11 +19,7 @@ const accountSchema = z
 			.string({ required_error: 'Chưa nhập tên' })
 			.trim()
 			.min(1, 'Chưa nhập tên'),
-		username: z
-			.string({ required_error: 'Chưa nhập tên đăng nhập' })
-			.trim()
-			.min(1, 'Chưa nhập tên đăng nhập')
-			.regex(/^[a-zA-Z0-9]+$/, 'Tên đăng nhập chỉ bao gồm chữ cái và số'),
+		username: z.string().optional(),
 		password: z.string().optional(),
 		role: z
 			.string({ required_error: 'Chưa chọn vai trò' })
@@ -35,6 +31,12 @@ const accountSchema = z
 			return mode === 'edit' || (mode === 'create' && password)
 		},
 		{ path: ['password'], message: 'Chưa nhập mật khẩu' },
+	)
+	.refine(
+		({ mode, username }) => {
+			return mode === 'edit' || (mode === 'create' && username)
+		},
+		{ path: ['username'], message: 'Chưa nhập tên đăng nhập' },
 	)
 
 type AccountSchema = z.infer<typeof accountSchema>
@@ -91,56 +93,22 @@ type CategoryEquipmentSetDetailSchema = z.infer<
 >
 
 const equipmentSetDetailSchema = z.object({
-	name: z
-		.string({ required_error: 'Chưa nhập tên trang bị' })
+	equipmentId: z.string().trim().min(1, 'Chưa nhập ID của loại trang bị'),
+	serialNumber: z.string().trim().min(1, 'Chưa nhập mã hiệu serial'),
+	currentPrice: z.number().optional(),
+	entryDate: z.string().optional(),
+	productionDate: z.string().optional(),
+	entryPlanNumber: z.string().trim().min(1, 'Chưa nhập số kế hoạch nhập'),
+	supplySource: z.string().optional(),
+	importingUnitId: z.string().trim().min(1, 'Chưa nhập ID của Đơn vị nhập'),
+	usingUnitId: z.string().trim().min(1, 'Chưa nhập ID của Đơn vị sử dụng'),
+	evaluatingUnitId: z.string().optional(),
+	evaluationResult: z.string().optional(),
+	qualityLevelId: z
+		.string()
 		.trim()
-		.min(1, 'Chưa nhập tên trang bị'),
-	typeGroup: z
-		.string({ required_error: 'Chưa chọn nhóm loại' })
-		.trim()
-		.min(1, 'Chưa chọn nhóm loại'),
-	serial: z
-		.string({ required_error: 'Chưa nhập mã hiệu serial' })
-		.trim()
-		.min(1, 'Chưa nhập má hiệu serial'),
-	importDate: z
-		.string({ required_error: 'Chưa nhập ngày nhập' })
-		.trim()
-		.min(1, 'Chưa nhập ngày nhập'),
-	importPlanNumber: z
-		.number({
-			required_error: 'Chưa nhập số kế hoạch nhập',
-			invalid_type_error: 'Chưa nhập số kế hoạch nhập',
-		})
-		.min(0, 'Số kế hoạch nhập phải lớn hơn 0'),
-	origin: z
-		.string({ required_error: 'Chưa nhập nguồn cấp' })
-		.trim()
-		.min(1, 'Chưa nhập nguồn cấp'),
-	amount: z
-		.number({
-			required_error: 'Chưa nhập số tiền',
-			invalid_type_error: 'Chưa nhập số tiền',
-		})
-		.min(0, 'Số tiền phải lớn hơn 0'),
-	manufacturingDate: z
-		.string({ required_error: 'Chưa nhập ngày sản xuất' })
-		.trim()
-		.min(1, 'Chưa nhập ngày sản xuất'),
-	importUnit: z.string().optional(),
-	rateUnit: z.string().optional(),
-	rateResult: z
-		.string({ required_error: 'Chưa nhập kết 	quả đánh giá' })
-		.trim()
-		.min(1, 'Chưa nhập kết 	quả đánh giá'),
-	usedUnit: z.string().optional(),
-	quality: z
-		.string({ required_error: 'Chưa nhập phân cấp chất lượng' })
-		.min(1, 'Chưa nhập phân cấp chất lượng'),
-	status: z
-		.string({ required_error: 'Chưa nhập trang thái' })
-		.trim()
-		.min(1, 'Chưa nhập trang thái'),
+		.min(1, 'Chưa nhập ID của Phân cấp chất lượng'),
+	status: z.string().optional(),
 })
 type EquipmentSetDetailSchema = z.infer<typeof equipmentSetDetailSchema>
 
@@ -163,17 +131,70 @@ type SearchEquipmentSetSchema = z.infer<typeof searchEquipmentSetSchema>
 
 const createEquipmentSetHandoverSchema = z.object({
 	code: z.string({ required_error: 'Chưa nhập số biên bản' }),
-	handoverPerson: z.string({ required_error: 'Chưa nhập người giao' }),
-	handoverUnit: z.string({ required_error: 'Chưa nhập đơn vị giao' }),
+	senderPerson: z.string({ required_error: 'Chưa nhập người giao' }),
 	receiverPerson: z.string({ required_error: 'Chưa nhập người nhận' }),
 	receiverUnit: z.string({ required_error: 'Chưa nhập đơn vị nhận' }),
 	handoverDate: z.string({ required_error: 'Chưa nhập ngày giao' }),
-	returnDate: z.string({ required_error: 'Chưa nhập ngày nhận' }),
-	equipmentName: z.string({ required_error: 'Chưa nhập tên trang bị' }),
+	equipment: z.string({ required_error: 'Chưa nhập trang bị' }),
 	note: z.string().optional(),
 })
 type CreateEquipmentSetHandoverSchema = z.infer<
 	typeof createEquipmentSetHandoverSchema
+>
+
+const createEquipmentMaintenanceSchema = z.object({
+	reportNumber: z
+		.string({ required_error: 'Chưa nhập số biên bản' })
+		.trim()
+		.min(1, 'Chưa nhập số biên bản'),
+	equipment: z
+		.string({ required_error: 'Chưa nhập trang bị' })
+		.trim()
+		.min(1, 'Chưa nhập trang bị'),
+	repairLocation: z
+		.string({ required_error: 'Chưa nhập nơi sửa chữa' })
+		.trim()
+		.min(1, 'Chưa nhập nơi sửa chữa'),
+	sentDate: z.string({ required_error: 'Chưa nhập ngày gửi đi sửa chữa' }),
+	receivedDate: z.string().optional(),
+	sender: z
+		.string({ required_error: 'Chưa nhập người gửi đi sửa' })
+		.trim()
+		.min(1, 'Chưa nhập người gửi đi sửa'),
+	receiver: z.string().optional(),
+	reason: z
+		.string({ required_error: 'Chưa nhập lý do' })
+		.trim()
+		.min(1, 'Chưa nhập lý do'),
+	result: z.string().optional(),
+	notes: z.string().optional(),
+})
+type CreateEquipmentMaintenanceSchema = z.infer<
+	typeof createEquipmentMaintenanceSchema
+>
+
+const createEquipmentDisposalSchema = z.object({
+	decisionNumber: z
+		.string({ required_error: 'Chưa nhập số quyết định thanh lý' })
+		.trim()
+		.min(1, 'Chưa nhập số quyết định thanh lý'),
+	equipment: z
+		.string({ required_error: 'Chưa nhập trang bị' })
+		.trim()
+		.min(1, 'Chưa nhập trang bị'),
+	disposalDate: z.string({ required_error: 'Chưa nhập ngày thanh lý' }),
+	createdBy: z
+		.string({ required_error: 'Chưa nhập người lập' })
+		.trim()
+		.min(1, 'Chưa nhập người lập'),
+	signer: z
+		.string({ required_error: 'Chưa nhập người ký quyết định' })
+		.trim()
+		.min(1, 'Chưa nhập người ký quyết định'),
+	notes: z.string().optional(),
+})
+type CreateEquipmentDisposalSchema = z.infer<
+	typeof createEquipmentDisposalSchema
 >
 
 export {
@@ -185,6 +206,8 @@ export {
 	equipmentSetDetailSchema,
 	searchEquipmentSetSchema,
 	createEquipmentSetHandoverSchema,
+	createEquipmentMaintenanceSchema,
+	createEquipmentDisposalSchema,
 }
 
 export type {
@@ -196,4 +219,6 @@ export type {
 	EquipmentSetDetailSchema,
 	SearchEquipmentSetSchema,
 	CreateEquipmentSetHandoverSchema,
+	CreateEquipmentMaintenanceSchema,
+	CreateEquipmentDisposalSchema,
 }

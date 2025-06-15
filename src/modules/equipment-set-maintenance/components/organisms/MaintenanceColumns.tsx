@@ -1,30 +1,77 @@
 'use client'
+import type { ActivityLog } from '@/client'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const columns: ColumnDef<any>[] = [
+export const columns: ColumnDef<ActivityLog>[] = [
 	{
-		accessorKey: 'voucherNumber',
+		id: 'reportNumber',
+		accessorKey: 'details',
 		header: 'Số biên bản',
+		cell: ({ row }) => row.original.details.reportNumber,
 	},
 	{
-		accessorKey: 'location',
+		id: 'equipment',
+		accessorKey: 'instanceId',
+		header: 'Serial trang bị',
+		cell: ({ row }) => row.original.instanceId.serialNumber,
+	},
+	{
+		id: 'repairLocation',
+		accessorKey: 'details',
 		header: 'Nơi bảo dưỡng',
+		cell: ({ row }) => row.original.details.repairLocation,
 	},
 	{
-		accessorKey: 'sendDate',
+		id: 'sendDate',
+		accessorKey: 'details',
 		header: 'Ngày gửi',
+		cell: ({ row }) =>
+			row.original.details.sentDate
+				? new Date(row.original.details.sentDate as string).toLocaleDateString(
+						'vi-VN',
+					)
+				: '',
 	},
 	{
-		accessorKey: 'reason',
+		id: 'receivedDate',
+		accessorKey: 'details',
+		header: 'Ngày nhận',
+		cell: ({ row }) =>
+			row.original.details.receivedDate
+				? new Date(
+						row.original.details.receivedDate as string,
+					).toLocaleDateString('vi-VN')
+				: '',
+	},
+	{
+		id: 'sender',
+		accessorKey: 'details',
+		header: 'Người gửi',
+		cell: ({ row }) => row.original.details.sender,
+	},
+	{
+		id: 'receiver',
+		accessorKey: 'details',
+		header: 'Người nhận',
+		cell: ({ row }) => row.original.details.receiver,
+	},
+	{
+		id: 'reason',
+		accessorKey: 'details',
 		header: 'Lý do',
+		cell: ({ row }) => row.original.details.reason,
 	},
 	{
-		accessorKey: 'result',
+		id: 'result',
+		accessorKey: 'details',
 		header: 'Kết quả',
+		cell: ({ row }) => row.original.details.result,
 	},
 	{
-		accessorKey: 'notes',
+		id: 'notes',
+		accessorKey: 'details',
 		header: 'Ghi chú',
+		cell: ({ row }) => row.original.details.notes,
 	},
 	// {
 	// 	id: 'actions',

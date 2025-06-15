@@ -1,4 +1,4 @@
-import { UsersService } from '@/client'
+import { CoreUsersService as UsersService } from '@/client'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
 	Menubar,
@@ -15,7 +15,7 @@ const Header = async () => {
 	const jwt = (await cookies()).get(COOKIES.JWT)?.value
 	const jwtPayload = jwt && JSON.parse(atob(jwt.split('.')[1]))
 
-	const { data } = await UsersService.userControllerGetById({
+	const { data } = await UsersService.usersControllerFindOne({
 		path: { id: jwtPayload?.sub },
 		baseURL: process.env.NEXT_PUBLIC_API_URL,
 		headers: { Authorization: `Bearer ${jwt}` },
@@ -34,13 +34,9 @@ const Header = async () => {
 								</AvatarFallback>
 							</Avatar>
 							<div>
-								<p className="font-medium text-base">
-									{(data as any)?.firstName}
-								</p>
+								<p className="font-medium text-base">{data?.fullName ?? ''}</p>
 								<p className="text-sm text-gray-500">
-									{(data as any)?.role === 'user'
-										? 'Người dùng'
-										: 'Quản trị viên'}
+									{data?.role === 'user' ? 'Người dùng' : 'Quản trị viên'}
 								</p>
 							</div>
 						</div>

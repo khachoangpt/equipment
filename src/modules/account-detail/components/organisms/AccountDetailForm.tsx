@@ -88,34 +88,42 @@ const EditAccountForm = ({ id }: Props) => {
 								)
 							}}
 						/>
-						<FormField
-							control={control}
-							name="username"
-							render={({ field }) => {
-								return (
-									<FormItem>
-										<FormLabel>Tên đăng nhập</FormLabel>
-										<FormControl>
-											<Input placeholder="Tên đăng nhập" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)
-							}}
-						/>
-						<FormField
-							control={control}
-							name="password"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Mật khẩu</FormLabel>
-									<FormControl>
-										<Input type="password" placeholder="Mật khẩu" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+						{!id && (
+							<>
+								<FormField
+									control={control}
+									name="username"
+									render={({ field }) => {
+										return (
+											<FormItem>
+												<FormLabel>Tên đăng nhập</FormLabel>
+												<FormControl>
+													<Input placeholder="Tên đăng nhập" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)
+									}}
+								/>
+								<FormField
+									control={control}
+									name="password"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Mật khẩu</FormLabel>
+											<FormControl>
+												<Input
+													type="password"
+													placeholder="Mật khẩu"
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</>
+						)}
 					</div>
 					<div className="mt-10 flex items-center justify-end gap-x-5">
 						<Button

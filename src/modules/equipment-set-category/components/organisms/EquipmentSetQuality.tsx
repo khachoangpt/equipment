@@ -1,9 +1,9 @@
 'use client'
 
 import {
-	categoriesControllerCreateMutation,
-	categoriesControllerFindAllOptions,
-	categoriesControllerFindAllQueryKey,
+	qualityLevelsControllerCreateMutation,
+	qualityLevelsControllerFindAllOptions,
+	qualityLevelsControllerFindAllQueryKey,
 } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -21,10 +21,10 @@ import { columns } from './EquipmentSetQualityTableColumns'
 const EquipmentSetQuality = () => {
 	const [open, setOpen] = useState<boolean>(false)
 	const { data: equipmentSetQuality } = useQuery({
-		...categoriesControllerFindAllOptions({ query: { type: 'QUALITY_LEVEL' } }),
+		...qualityLevelsControllerFindAllOptions(),
 	})
 	const { mutate: create } = useMutation({
-		...categoriesControllerCreateMutation(),
+		...qualityLevelsControllerCreateMutation(),
 	})
 
 	const handleConfirmAdd: SubmitHandler<QualityDetailSchema> = (data) => {
@@ -33,8 +33,7 @@ const EquipmentSetQuality = () => {
 				body: {
 					code: data.code,
 					name: data.name,
-					notes: data.note,
-					type: 'QUALITY_LEVEL',
+					note: data.note,
 				},
 			},
 			{
@@ -45,9 +44,7 @@ const EquipmentSetQuality = () => {
 				onSuccess: () => {
 					toast.success('Tạo thành công')
 					queryClient.invalidateQueries({
-						queryKey: categoriesControllerFindAllQueryKey({
-							query: { type: 'QUALITY_LEVEL' },
-						}),
+						queryKey: qualityLevelsControllerFindAllQueryKey(),
 					})
 					setOpen(false)
 				},

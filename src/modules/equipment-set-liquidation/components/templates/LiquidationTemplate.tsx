@@ -1,6 +1,6 @@
 'use client'
 
-import { syncEquipmentControllerGetLiquidationLogsOptions } from '@/client/@tanstack/react-query.gen'
+import { activityLogsControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
@@ -12,7 +12,9 @@ import { columns } from '../organisms/LiquidationColumns'
 
 const LiquidationTemplate = () => {
 	const { data } = useQuery({
-		...syncEquipmentControllerGetLiquidationLogsOptions(),
+		...activityLogsControllerSearchOptions({
+			query: { activityType: 'Thanh lý' },
+		}),
 	})
 
 	return (
@@ -29,7 +31,7 @@ const LiquidationTemplate = () => {
 						</Button>
 					</Link>
 				</div>
-				<DataTable columns={columns} data={(data as any) ?? []} />
+				<DataTable columns={columns} data={data ?? []} />
 			</Card>
 		</div>
 	)

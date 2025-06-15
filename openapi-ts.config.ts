@@ -1,7 +1,7 @@
 import { defaultPlugins, defineConfig } from '@hey-api/openapi-ts'
 
 export default defineConfig({
-	input: '../equipment/swagger-spec.json',
+	input: '../equipment-management-api/swagger.json',
 	output: {
 		format: 'biome',
 		lint: 'biome',

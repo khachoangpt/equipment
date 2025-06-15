@@ -1,6 +1,6 @@
 'use client'
 
-import { syncEquipmentControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
+import { equipmentInstancesControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
@@ -15,7 +15,7 @@ import SearchEquipmentSet from '../organisms/SearchEquipmentSet'
 const EquipmentSetTemplate = () => {
 	const [open, setOpen] = useState<boolean>(false)
 	const { data: equipmentSets } = useQuery({
-		...syncEquipmentControllerFindAllOptions(),
+		...equipmentInstancesControllerSearchOptions(),
 	})
 
 	return (
@@ -23,15 +23,7 @@ const EquipmentSetTemplate = () => {
 			<Card>
 				<div className="flex items-center justify-between">
 					<div className="flex items-end gap-x-2">
-						<h3 className="font-bold text-2xl">Trang bị đồng bộ</h3>
-						{/* <Button
-							variant="link"
-							className="p-0 h-fit"
-							onClick={() => setOpen((open) => !open)}
-						>
-							Tìm kiếm
-							<ChevronDown />
-						</Button> */}
+						<h3 className="font-bold text-2xl">Trang bị</h3>
 					</div>
 					<Link href={pageList.equipmentSetCreate.href}>
 						<Button>

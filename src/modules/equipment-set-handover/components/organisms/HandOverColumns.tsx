@@ -3,40 +3,47 @@ import type { ColumnDef } from '@tanstack/react-table'
 
 export const columns: ColumnDef<any>[] = [
 	{
-		accessorKey: 'voucherNumber',
+		id: 'reportNumber',
+		accessorKey: 'details',
 		header: 'Số biên bản',
+		cell: ({ row }) => row.original.details?.reportNumber,
 	},
 	{
-		accessorKey: 'fromUnit',
+		id: 'serialNumber',
+		accessorKey: 'instanceId',
+		header: 'Mã hiệu serial',
+		cell: ({ row }) => row.original.instanceId?.serialNumber,
+	},
+	{
+		id: 'fromUnit',
+		accessorKey: 'details',
 		header: 'Đơn vị giao',
-		cell: ({ row }) => row.original.fromUnit?.name,
+		cell: ({ row }) => row.original.details?.fromUnitId?.name,
 	},
 	{
-		accessorKey: 'receiver',
-		header: 'Người nhận',
-		cell: ({ row }) => row.original.receiver?.firstName,
-	},
-	{
-		accessorKey: 'toUnit',
+		id: 'toUnit',
+		accessorKey: 'details',
 		header: 'Đơn vị nhận',
-		cell: ({ row }) => row.original.toUnit?.name,
+		cell: ({ row }) => row.original.details?.toUnitId?.name,
 	},
 	{
-		accessorKey: 'handoverDate',
-		header: 'Ngày bàn giao',
+		id: 'sender',
+		accessorKey: 'details',
+		header: 'Người giao',
+		cell: ({ row }) => row.original.details.sender,
+	},
+	{
+		id: 'receiver',
+		accessorKey: 'details',
+		header: 'Người nhận',
+		cell: ({ row }) => row.original.details.receiver,
+	},
+	{
+		id: 'handoverDate',
+		accessorKey: 'details',
+		header: 'Ngày giao',
 		cell: ({ row }) =>
-			new Date(row.original.handoverDate).toLocaleDateString('vi-VN'),
-	},
-	{
-		accessorKey: 'equipments',
-		header: 'Trang bị',
-		cell: ({ row }) => (
-			<div>
-				{row.original.equipment?.map((e: any) => (
-					<div key={e._id}>{e.name}</div>
-				))}
-			</div>
-		),
+			new Date(row.original.details.handoverDate).toLocaleDateString('vi-VN'),
 	},
 	// {
 	// 	id: 'actions',

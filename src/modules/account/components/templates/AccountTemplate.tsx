@@ -1,6 +1,6 @@
 'use client'
 
-import { userControllerGetAllOptions } from '@/client/@tanstack/react-query.gen'
+import { usersControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -13,7 +13,9 @@ import { columns } from '../organisms/AccountTableColumns'
 
 const AccountTemplate = () => {
 	const router = useRouter()
-	const { data: accounts, isLoading } = useQuery(userControllerGetAllOptions())
+	const { data: accounts, isLoading } = useQuery(
+		usersControllerFindAllOptions(),
+	)
 
 	if (isLoading) {
 		return (
@@ -38,7 +40,7 @@ const AccountTemplate = () => {
 					<h3 className="font-bold text-2xl">Tài khoản</h3>
 					<Button onClick={() => router.push(pageList.accountCreate.href)}>
 						<Plus />
-						Thêm tài khoản
+						Thêm
 					</Button>
 				</div>
 				<DataTable columns={columns} data={accounts as any} />

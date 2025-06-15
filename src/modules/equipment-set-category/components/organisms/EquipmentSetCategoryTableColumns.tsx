@@ -1,37 +1,39 @@
 'use client'
+import type { Equipment } from '@/client'
+import {
+	syncEquipmentControllerFindAllQueryKey,
+	syncEquipmentControllerUpdateMutation,
+} from '@/client/@tanstack/react-query.gen'
+import { queryClient } from '@/configs/query-client'
 import type { CategoryEquipmentSetDetailSchema } from '@/configs/schema'
 import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
-import type { EquipmentSetCategory } from '@/types/equipment-set.types'
+import { useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useState } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
+import { toast } from 'sonner'
 import DialogAddCategoryEquipmentSet from './DialogAddCategoryEquipmentSet'
 
-export const columns: ColumnDef<EquipmentSetCategory>[] = [
-	{
-		accessorKey: 'id',
-		header: 'ID',
-		enableResizing: false,
-		size: 1,
-	},
+export const columns: ColumnDef<Equipment>[] = [
 	{
 		accessorKey: 'name',
 		header: 'Tên',
 	},
 	{
-		accessorKey: 'type',
+		accessorKey: 'groupId',
 		header: 'Nhóm loại',
+		cell: ({ row }) => row.original.groupId?.name,
 	},
 	{
 		accessorKey: 'field',
 		header: 'Lĩnh vực',
 	},
 	{
-		accessorKey: 'defaultAmount',
+		accessorKey: 'initialPrice',
 		header: 'Giá tiền ban đầu',
 		cell: ({ row }) => (
 			<span className="text-right">
-				{row.original.defaultAmount.toLocaleString('vi-VN', {
+				{row.original.initialPrice?.toLocaleString('vi-VN', {
 					style: 'currency',
 					currency: 'VND',
 				})}
@@ -39,8 +41,10 @@ export const columns: ColumnDef<EquipmentSetCategory>[] = [
 		),
 	},
 	{
-		accessorKey: 'note',
-		header: 'Ghi chú',
+		accessorKey: 'createdAt',
+		header: 'Ngày tạo',
+		cell: ({ row }) =>
+			new Date(row.original.createdAt).toLocaleDateString('vi-VN'),
 	},
 	{
 		id: 'actions',
@@ -49,15 +53,42 @@ export const columns: ColumnDef<EquipmentSetCategory>[] = [
 		cell: ({ row }) => {
 			const [openDelete, setOpenDelete] = useState<boolean>(false)
 			const [openDetail, setOpenDetail] = useState<boolean>(false)
+			const { mutate: update } = useMutation({
+				...syncEquipmentControllerUpdateMutation(),
+			})
 
 			const handleDelete = () => {
 				setOpenDelete(false)
 			}
 
-			const handleEdit: SubmitHandler<
-				CategoryEquipmentSetDetailSchema
-			> = () => {
-				setOpenDetail(false)
+			const handleEdit: SubmitHandler<CategoryEquipmentSetDetailSchema> = (
+				data,
+			) => {
+				update(
+					{
+						body: {
+							name: data.name,
+							groupId: data.type,
+							field: data.field,
+							initialPrice: data.defaultAmount,
+							notes: data.note,
+						},
+						path: { id: row.original._id },
+					},
+					{
+						onError: () => {
+							toast.error('Cập nhật không thành công')
+							setOpenDetail(false)
+						},
+						onSuccess: () => {
+							toast.success('Cập nhật thành công')
+							queryClient.invalidateQueries({
+								queryKey: syncEquipmentControllerFindAllQueryKey(),
+							})
+							setOpenDetail(false)
+						},
+					},
+				)
 			}
 
 			return (
@@ -81,12 +112,15 @@ export const columns: ColumnDef<EquipmentSetCategory>[] = [
 						onOpenChange={setOpenDelete}
 						onConfirm={handleDelete}
 					/>
-					<DialogAddCategoryEquipmentSet
-						open={openDetail}
-						onOpenChange={setOpenDetail}
-						id={row.original.id}
-						onConfirm={handleEdit}
-					/>
+
+					{row.original._id && openDetail && (
+						<DialogAddCategoryEquipmentSet
+							open={openDetail}
+							onOpenChange={setOpenDetail}
+							id={row.original._id}
+							onConfirm={handleEdit}
+						/>
+					)}
 				</div>
 			)
 		},

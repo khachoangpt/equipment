@@ -6,7 +6,7 @@ type Props = {
 }
 
 const EquipmentSetDetailTemplate = ({ id }: Props) => {
-	const pageTitle = id ? 'Chỉnh sửa trang bị đồng bộ' : 'Thêm trang bị đồng bộ'
+	const pageTitle = id ? 'Chỉnh sửa trang bị' : 'Khởi tạo trang bị'
 
 	return (
 		<div>

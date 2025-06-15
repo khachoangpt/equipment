@@ -1,7 +1,7 @@
 'use client'
 import {
-	userControllerGetAllQueryKey,
-	userControllerRemoveMutation,
+	usersControllerFindAllQueryKey,
+	usersControllerRemoveMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -14,7 +14,7 @@ import DialogConfirmDeleteAccount from './DialogConfirmDeleteAccount'
 
 export const columns: ColumnDef<any>[] = [
 	{
-		accessorKey: 'firstName',
+		accessorKey: 'fullName',
 		header: 'Tên',
 	},
 	{
@@ -32,7 +32,7 @@ export const columns: ColumnDef<any>[] = [
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...userControllerRemoveMutation(),
+				...usersControllerRemoveMutation(),
 			})
 
 			const handleDelete = () => {
@@ -43,7 +43,7 @@ export const columns: ColumnDef<any>[] = [
 							setOpen(false)
 							toast.success('Xóa tài khoản thành công')
 							queryClient.invalidateQueries({
-								queryKey: userControllerGetAllQueryKey(),
+								queryKey: usersControllerFindAllQueryKey(),
 							})
 						},
 						onError: () => {

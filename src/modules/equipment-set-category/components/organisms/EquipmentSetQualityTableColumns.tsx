@@ -1,9 +1,9 @@
 'use client'
 
 import {
-	categoriesControllerFindAllQueryKey,
-	categoriesControllerRemoveMutation,
-	categoriesControllerUpdateMutation,
+	qualityLevelsControllerFindAllQueryKey,
+	qualityLevelsControllerRemoveMutation,
+	qualityLevelsControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import type { QualityDetailSchema } from '@/configs/schema'
@@ -25,7 +25,7 @@ export const columns: ColumnDef<any>[] = [
 		header: 'Mã phân cấp',
 	},
 	{
-		accessorKey: 'notes',
+		accessorKey: 'note',
 		header: 'Ghi chú',
 	},
 	{
@@ -36,10 +36,10 @@ export const columns: ColumnDef<any>[] = [
 			const [openDelete, setOpenDelete] = useState<boolean>(false)
 			const [openDetail, setOpenDetail] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...categoriesControllerRemoveMutation(),
+				...qualityLevelsControllerRemoveMutation(),
 			})
 			const { mutate: update } = useMutation({
-				...categoriesControllerUpdateMutation(),
+				...qualityLevelsControllerUpdateMutation(),
 			})
 
 			const handleDelete = () => {
@@ -50,9 +50,7 @@ export const columns: ColumnDef<any>[] = [
 							setOpenDelete(false)
 							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
-								queryKey: categoriesControllerFindAllQueryKey({
-									query: { type: 'QUALITY_LEVEL' },
-								}),
+								queryKey: qualityLevelsControllerFindAllQueryKey(),
 							})
 						},
 						onError: () => {
@@ -66,7 +64,7 @@ export const columns: ColumnDef<any>[] = [
 			const handleConfirmEdit: SubmitHandler<QualityDetailSchema> = (data) => {
 				update(
 					{
-						body: { code: data.code, name: data.name, notes: data.note },
+						body: { code: data.code, name: data.name, note: data.note },
 						path: { id: row.original._id },
 					},
 					{
@@ -77,9 +75,7 @@ export const columns: ColumnDef<any>[] = [
 						onSuccess: () => {
 							toast.success('Chình sửa thành công')
 							queryClient.invalidateQueries({
-								queryKey: categoriesControllerFindAllQueryKey({
-									query: { type: 'QUALITY_LEVEL' },
-								}),
+								queryKey: qualityLevelsControllerFindAllQueryKey(),
 							})
 							setOpenDetail(false)
 						},

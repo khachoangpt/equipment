@@ -1,9 +1,9 @@
 'use client'
 
 import {
-	assembledEquipmentControllerCreateComponentMutation,
-	assembledEquipmentControllerUpdateComponentMutation,
-	syncEquipmentControllerFindAllQueryKey,
+	componentsControllerCreateMutation,
+	componentsControllerFindAllQueryKey,
+	componentsControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -32,10 +32,10 @@ const ComponentDetailForm = ({ id }: Props) => {
 	const router = useRouter()
 	const { form } = useComponentDetailController({ id })
 	const { mutate: create } = useMutation({
-		...assembledEquipmentControllerCreateComponentMutation(),
+		...componentsControllerCreateMutation(),
 	})
 	const { mutate: update } = useMutation({
-		...assembledEquipmentControllerUpdateComponentMutation(),
+		...componentsControllerUpdateMutation(),
 	})
 
 	const onSubmit = (data: any) => {
@@ -51,13 +51,14 @@ const ComponentDetailForm = ({ id }: Props) => {
 				},
 				{
 					onSuccess: () => {
+						toast.success('Tạo thành công')
 						router.push(pageList.assembledEquipmentComponent.href)
 						queryClient.invalidateQueries({
-							queryKey: syncEquipmentControllerFindAllQueryKey(),
+							queryKey: componentsControllerFindAllQueryKey(),
 						})
 					},
 					onError: () => {
-						toast.error('Tạo trang bị không thành công')
+						toast.error('Tạo không thành công')
 					},
 				},
 			)
@@ -76,8 +77,9 @@ const ComponentDetailForm = ({ id }: Props) => {
 				},
 				{
 					onSuccess: () => {
+						toast.success('Cập nhật thành cong')
 						queryClient.invalidateQueries({
-							queryKey: syncEquipmentControllerFindAllQueryKey(),
+							queryKey: componentsControllerFindAllQueryKey(),
 						})
 						router.push(pageList.assembledEquipmentComponent.href)
 					},

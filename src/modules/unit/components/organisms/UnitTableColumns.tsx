@@ -1,7 +1,8 @@
 'use client'
+
 import {
-	organizationControllerFindAllUnitsQueryKey,
-	organizationControllerRemoveUnitMutation,
+	unitsControllerFindAllQueryKey,
+	unitsControllerRemoveMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -18,9 +19,9 @@ export const columns: ColumnDef<any>[] = [
 		header: 'Tên',
 	},
 	{
-		accessorKey: 'parentUnit',
+		accessorKey: 'parentId',
 		header: 'Đơn vị chính',
-		cell: ({ row }) => row.original.parentUnit?.name,
+		cell: ({ row }) => row.original.parentId?.name,
 	},
 	{
 		id: 'actions',
@@ -29,7 +30,7 @@ export const columns: ColumnDef<any>[] = [
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...organizationControllerRemoveUnitMutation(),
+				...unitsControllerRemoveMutation(),
 			})
 
 			const handleDelete = () => {
@@ -40,7 +41,7 @@ export const columns: ColumnDef<any>[] = [
 							setOpen(false)
 							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
-								queryKey: organizationControllerFindAllUnitsQueryKey(),
+								queryKey: unitsControllerFindAllQueryKey(),
 							})
 						},
 						onError: () => {

@@ -1,9 +1,9 @@
 import {
-	organizationControllerCreateUnitMutation,
-	organizationControllerFindAllUnitsQueryKey,
-	organizationControllerFindOneUnitOptions,
-	organizationControllerFindOneUnitQueryKey,
-	organizationControllerUpdateUnitMutation,
+	unitsControllerCreateMutation,
+	unitsControllerFindAllQueryKey,
+	unitsControllerFindOneOptions,
+	unitsControllerFindOneQueryKey,
+	unitsControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -29,25 +29,24 @@ const useUnitDetailController = ({ id }: Props) => {
 		defaultValues,
 	})
 	const { mutate: create } = useMutation({
-		...organizationControllerCreateUnitMutation(),
+		...unitsControllerCreateMutation(),
 	})
 	const { mutate: update } = useMutation({
-		...organizationControllerUpdateUnitMutation(),
+		...unitsControllerUpdateMutation(),
 	})
-	const { data, isPending } = useQuery({
-		...organizationControllerFindOneUnitOptions({ path: { id: id ?? '' } }),
+	const { data: unit, isPending } = useQuery({
+		...unitsControllerFindOneOptions({ path: { id: id ?? '' } }),
 		enabled: !!id,
 	})
 
 	useEffect(() => {
 		if (id) {
-			const unit = data as any
 			if (unit) {
 				unitDetailForm.reset({
 					mode: 'edit',
 					name: unit.name,
 					code: unit.code,
-					parentUnitId: unit.parentUnit._id,
+					parentUnitId: unit?.parentId,
 				})
 			}
 		}
@@ -60,7 +59,7 @@ const useUnitDetailController = ({ id }: Props) => {
 					body: {
 						name: data.name,
 						code: data.code,
-						parentUnitId: data.parentUnitId,
+						parentId: data.parentUnitId,
 					},
 				},
 				{
@@ -81,7 +80,7 @@ const useUnitDetailController = ({ id }: Props) => {
 					body: {
 						name: data.name,
 						code: data.code,
-						parentUnitId: data.parentUnitId,
+						parentId: data.parentUnitId,
 					},
 				},
 				{
@@ -92,10 +91,10 @@ const useUnitDetailController = ({ id }: Props) => {
 						toast.success('Sửa đơn vị thành công')
 						unitDetailForm.reset()
 						queryClient.invalidateQueries({
-							queryKey: organizationControllerFindAllUnitsQueryKey(),
+							queryKey: unitsControllerFindAllQueryKey(),
 						})
 						queryClient.invalidateQueries({
-							queryKey: organizationControllerFindOneUnitQueryKey({
+							queryKey: unitsControllerFindOneQueryKey({
 								path: { id: id ?? '' },
 							}),
 						})

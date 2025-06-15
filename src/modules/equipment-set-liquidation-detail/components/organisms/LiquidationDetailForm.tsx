@@ -1,11 +1,9 @@
 'use client'
 
 import {
-	organizationControllerFindAllUnitsOptions,
-	syncEquipmentControllerFindAllOptions,
-	syncEquipmentControllerGetLiquidationLogsOptions,
-	syncEquipmentControllerLiquidateMutation,
-	userControllerGetAllOptions,
+	activityLogsControllerSearchQueryKey,
+	equipmentInstancesControllerDisposeMutation,
+	equipmentInstancesControllerSearchOptions,
 } from '@/client/@tanstack/react-query.gen'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
 import { Button } from '@/components/ui/button'
@@ -19,7 +17,6 @@ import {
 	FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { MultiSelect } from '@/components/ui/multi-select'
 import {
 	Select,
 	SelectContent,
@@ -29,8 +26,10 @@ import {
 } from '@/components/ui/select'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
+import type { CreateEquipmentDisposalSchema } from '@/configs/schema'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import type { SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import useLiquidationDetailController from '../../controllers/liquidation-detail.controller'
 
@@ -43,31 +42,26 @@ const LiquidationDetailForm = ({ id }: Props) => {
 	const { control } = form
 	const router = useRouter()
 	const { mutate: create } = useMutation({
-		...syncEquipmentControllerLiquidateMutation(),
-	})
-	const { data: units } = useQuery({
-		...organizationControllerFindAllUnitsOptions(),
-	})
-	const { data: users } = useQuery({
-		...userControllerGetAllOptions(),
+		...equipmentInstancesControllerDisposeMutation(),
 	})
 	const { data: equipments } = useQuery({
-		...syncEquipmentControllerFindAllOptions(),
-		select: (data: any) =>
-			data.map((equipment: any) => ({
-				label: equipment.name,
+		...equipmentInstancesControllerSearchOptions(),
+		select: (data) =>
+			data.map((equipment) => ({
+				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
 				value: equipment._id,
 			})),
 	})
 
-	const onSubmit = (data: any) => {
+	const onSubmit: SubmitHandler<CreateEquipmentDisposalSchema> = (data) => {
 		create(
 			{
+				path: { id: data.equipment },
 				body: {
+					createdBy: data.createdBy,
 					decisionNumber: data.decisionNumber,
-					equipmentIds: data.equipmentList,
-					liquidationDate: new Date(data.liquidationDate).toISOString(),
-					unitId: data.unit,
+					disposalDate: new Date(data.disposalDate).toISOString(),
+					signer: data.signer,
 					notes: data.notes,
 				},
 			},
@@ -78,8 +72,9 @@ const LiquidationDetailForm = ({ id }: Props) => {
 				onSuccess: () => {
 					toast.success('Tạo thành công')
 					queryClient.invalidateQueries({
-						queryKey:
-							syncEquipmentControllerGetLiquidationLogsOptions().queryKey,
+						queryKey: activityLogsControllerSearchQueryKey({
+							query: { activityType: 'Thanh lý' },
+						}),
 					})
 					router.push(pageList.equipmentSetLiquidation.href)
 				},
@@ -107,36 +102,22 @@ const LiquidationDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="equipmentList"
+							name="equipment"
 							render={({ field: { value, onChange } }) => (
 								<FormItem key={value}>
 									<FormLabel>Trang bị</FormLabel>
-									<FormControl>
-										<MultiSelect
-											defaultValue={value}
-											options={(equipments as any) ?? []}
-											onValueChange={onChange}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={control}
-							name="unit"
-							render={({ field: { value, onChange } }) => (
-								<FormItem>
-									<FormLabel>Đơn vị</FormLabel>
 									<FormControl>
 										<Select value={value} onValueChange={onChange}>
 											<SelectTrigger className="w-full">
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												{((units as any) ?? [])?.map((quantity: any) => (
-													<SelectItem key={quantity._id} value={quantity._id}>
-														{quantity.name}
+												{equipments?.map((equipment) => (
+													<SelectItem
+														key={equipment.value}
+														value={equipment.value}
+													>
+														{equipment.label}
 													</SelectItem>
 												))}
 											</SelectContent>
@@ -148,7 +129,7 @@ const LiquidationDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="liquidationDate"
+							name="disposalDate"
 							render={({ field: { onChange, value } }) => (
 								<FormItem>
 									<FormLabel>Ngày thanh lý</FormLabel>
@@ -161,26 +142,28 @@ const LiquidationDetailForm = ({ id }: Props) => {
 								</FormItem>
 							)}
 						/>
+						<FormField
+							control={control}
+							name="createdBy"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Người lập</FormLabel>
+									<FormControl>
+										<Input placeholder="Người lập" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
 						<FormField
 							control={control}
-							name="creator"
-							render={({ field: { onChange, value } }) => (
+							name="signer"
+							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Người tạo</FormLabel>
+									<FormLabel>Người ký</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												{((users as any) ?? [])?.map((quantity: any) => (
-													<SelectItem key={quantity._id} value={quantity._id}>
-														{quantity.firstName}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
+										<Input placeholder="Người ký" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

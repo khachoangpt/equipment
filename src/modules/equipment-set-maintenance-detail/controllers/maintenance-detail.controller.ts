@@ -1,3 +1,8 @@
+import {
+	type CreateEquipmentMaintenanceSchema,
+	createEquipmentMaintenanceSchema,
+} from '@/configs/schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 type Props = {
@@ -5,18 +10,21 @@ type Props = {
 }
 
 const useMaintenanceDetailController = (_: Props) => {
-	const defaultValues: any = {
-		equipmentId: '',
-		voucherNumber: '',
-		location: '',
-		sendDate: new Date().toString(),
-		receiveDate: new Date().toString(),
+	const defaultValues: CreateEquipmentMaintenanceSchema = {
 		reason: '',
-		result: '',
+		equipment: '',
+		repairLocation: '',
+		reportNumber: '',
+		sender: '',
+		sentDate: new Date().toISOString(),
 		notes: '',
+		receivedDate: new Date().toISOString(),
+		receiver: '',
+		result: '',
 	}
-	const form = useForm<any>({
+	const form = useForm<CreateEquipmentMaintenanceSchema>({
 		defaultValues,
+		resolver: zodResolver(createEquipmentMaintenanceSchema),
 	})
 
 	// useEffect(() => {

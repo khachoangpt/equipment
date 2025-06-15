@@ -1,9 +1,9 @@
 'use client'
 
 import {
-	categoriesControllerFindAllQueryKey,
-	categoriesControllerRemoveMutation,
-	categoriesControllerUpdateMutation,
+	equipmentGroupsControllerFindAllQueryKey,
+	equipmentGroupsControllerRemoveMutation,
+	equipmentGroupsControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import type { TypeGroupDetailSchema } from '@/configs/schema'
@@ -25,7 +25,7 @@ export const columns: ColumnDef<any>[] = [
 		header: 'Mã nhóm',
 	},
 	{
-		accessorKey: 'notes',
+		accessorKey: 'note',
 		header: 'Ghi chú',
 	},
 	{
@@ -36,10 +36,10 @@ export const columns: ColumnDef<any>[] = [
 			const [openDelete, setOpenDelete] = useState<boolean>(false)
 			const [openDetail, setOpenDetail] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...categoriesControllerRemoveMutation(),
+				...equipmentGroupsControllerRemoveMutation(),
 			})
 			const { mutate: update } = useMutation({
-				...categoriesControllerUpdateMutation(),
+				...equipmentGroupsControllerUpdateMutation(),
 			})
 
 			const handleDelete = () => {
@@ -50,9 +50,7 @@ export const columns: ColumnDef<any>[] = [
 							setOpenDelete(false)
 							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
-								queryKey: categoriesControllerFindAllQueryKey({
-									query: { type: 'EQUIPMENT_GROUP' },
-								}),
+								queryKey: equipmentGroupsControllerFindAllQueryKey(),
 							})
 						},
 						onError: () => {
@@ -68,7 +66,7 @@ export const columns: ColumnDef<any>[] = [
 			) => {
 				update(
 					{
-						body: { code: data.code, name: data.name, notes: data.note },
+						body: { code: data.code, name: data.name, note: data.note },
 						path: { id: row.original._id },
 					},
 					{
@@ -79,9 +77,7 @@ export const columns: ColumnDef<any>[] = [
 						onSuccess: () => {
 							toast.success('Chình sửa thành công')
 							queryClient.invalidateQueries({
-								queryKey: categoriesControllerFindAllQueryKey({
-									query: { type: 'EQUIPMENT_GROUP' },
-								}),
+								queryKey: equipmentGroupsControllerFindAllQueryKey(),
 							})
 							setOpenDetail(false)
 						},

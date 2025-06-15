@@ -1,35 +1,31 @@
 'use client'
+import type { ActivityLog } from '@/client'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const columns: ColumnDef<any>[] = [
+export const columns: ColumnDef<ActivityLog>[] = [
 	{
-		accessorKey: 'decisionNumber',
+		accessorKey: 'details.decisionNumber',
 		header: 'Số quyết định',
 	},
 	{
-		accessorKey: 'unit',
-		header: 'Đơn vị',
-		cell: ({ row }) => row.original.unit?.name,
-	},
-	{
-		accessorKey: 'liquidationDate',
+		accessorKey: 'details.disposalDate',
 		header: 'Ngày thanh lý',
+		cell: ({ row }) =>
+			new Date(row.original.details.disposalDate as string).toLocaleDateString(
+				'vi-VN',
+			),
 	},
 	{
-		accessorKey: 'creator',
-		header: 'Người tạo',
-		cell: ({ row }) => row.original.creator?.firstName,
+		accessorKey: 'details.createdBy',
+		header: 'Người lập',
 	},
 	{
-		accessorKey: 'equipmentList',
-		header: 'Trang bị',
-		cell: ({ row }) => (
-			<div>
-				{row.original.equipmentList?.map((e: any) => (
-					<div key={e._id}>{e.name}</div>
-				))}
-			</div>
-		),
+		accessorKey: 'details.signer',
+		header: 'Người ký',
+	},
+	{
+		accessorKey: 'instanceId.serialNumber',
+		header: 'Serial trang bị',
 	},
 	{
 		accessorKey: 'notes',

@@ -1,10 +1,10 @@
 'use client'
 
 import {
-	organizationControllerFindAllUnitsOptions,
-	syncEquipmentControllerFindAllOptions,
-	syncEquipmentControllerHandoverMutation,
-	userControllerGetAllOptions,
+	equipmentInstancesControllerHandoverMutation,
+	equipmentInstancesControllerSearchOptions,
+	equipmentInstancesControllerSearchQueryKey,
+	unitsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,6 @@ import {
 	FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { MultiSelect } from '@/components/ui/multi-select'
 import {
 	Select,
 	SelectContent,
@@ -28,8 +27,10 @@ import {
 } from '@/components/ui/select'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
+import type { CreateEquipmentSetHandoverSchema } from '@/configs/schema'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import type { SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import useHandoverDetailController from '../../controllers/handover-detail.controller'
 
@@ -42,33 +43,31 @@ const HandoverDetailForm = ({ id }: Props) => {
 	const { control } = form
 	const router = useRouter()
 	const { mutate: create } = useMutation({
-		...syncEquipmentControllerHandoverMutation(),
+		...equipmentInstancesControllerHandoverMutation(),
 	})
 	const { data: units } = useQuery({
-		...organizationControllerFindAllUnitsOptions(),
-	})
-	const { data: users } = useQuery({
-		...userControllerGetAllOptions(),
+		...unitsControllerFindAllOptions(),
 	})
 	const { data: equipments } = useQuery({
-		...syncEquipmentControllerFindAllOptions(),
-		select: (data: any) =>
-			data.map((equipment: any) => ({
-				label: equipment.name,
+		...equipmentInstancesControllerSearchOptions(),
+		select: (data) =>
+			data?.map((equipment) => ({
+				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
 				value: equipment._id,
 			})),
 	})
 
-	const onSubmit = (data: any) => {
+	const onSubmit: SubmitHandler<CreateEquipmentSetHandoverSchema> = (data) => {
 		create(
 			{
+				path: { id: data?.equipment },
 				body: {
-					voucherNumber: data?.code,
-					fromUnitId: data?.handoverUnit,
-					toUnitId: data?.receiverUnit,
-					receiverId: data?.receiverPerson,
-					handoverDate: new Date(data?.handoverDate).toISOString(),
-					equipmentIds: form.getValues()?.equipmentIds,
+					sender: data.senderPerson,
+					receiver: data.receiverPerson,
+					reportNumber: data.code,
+					toUnitId: data.receiverUnit,
+					notes: data.note,
+					handoverDate: new Date(data.handoverDate).toISOString(),
 				},
 			},
 			{
@@ -76,9 +75,9 @@ const HandoverDetailForm = ({ id }: Props) => {
 					toast.error('Tạo không thành công')
 				},
 				onSuccess: () => {
-					toast.success('Tạo bàn giao thành công')
+					toast.success('Tạo thành công')
 					queryClient.invalidateQueries({
-						queryKey: syncEquipmentControllerFindAllOptions().queryKey,
+						queryKey: equipmentInstancesControllerSearchQueryKey(),
 					})
 					router.push(pageList.equipmentSetHandover.href)
 				},
@@ -106,23 +105,12 @@ const HandoverDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="receiverPerson"
-							render={({ field: { onChange, value } }) => (
+							name="senderPerson"
+							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Người nhận</FormLabel>
+									<FormLabel>Người bàn giao</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												{((users as any) ?? [])?.map((quantity: any) => (
-													<SelectItem key={quantity._id} value={quantity._id}>
-														{quantity.firstName}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
+										<Input placeholder="Người bàn giao" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -130,23 +118,12 @@ const HandoverDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="handoverUnit"
-							render={({ field: { onChange, value } }) => (
+							name="receiverPerson"
+							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Đơn vị giao</FormLabel>
+									<FormLabel>Người nhận</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												{((units as any) ?? [])?.map((quantity: any) => (
-													<SelectItem key={quantity._id} value={quantity._id}>
-														{quantity.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
+										<Input placeholder="Người nhận" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -164,9 +141,9 @@ const HandoverDetailForm = ({ id }: Props) => {
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												{((units as any) ?? [])?.map((quantity: any) => (
-													<SelectItem key={quantity._id} value={quantity._id}>
-														{quantity.name}
+												{units?.map((unit) => (
+													<SelectItem key={unit._id} value={unit._id}>
+														{unit.name}
 													</SelectItem>
 												))}
 											</SelectContent>
@@ -194,16 +171,26 @@ const HandoverDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="equipmentIds"
-							render={({ field }) => (
-								<FormItem>
+							name="equipment"
+							render={({ field: { value, onChange } }) => (
+								<FormItem key={value}>
 									<FormLabel>Trang bị</FormLabel>
 									<FormControl>
-										<MultiSelect
-											defaultValue={field.value}
-											options={(equipments as any) ?? []}
-											onValueChange={field.onChange}
-										/>
+										<Select value={value} onValueChange={onChange}>
+											<SelectTrigger className="w-full">
+												<SelectValue />
+											</SelectTrigger>
+											<SelectContent>
+												{equipments?.map((equipment) => (
+													<SelectItem
+														key={equipment.value}
+														value={equipment.value}
+													>
+														{equipment.label}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -215,7 +202,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 							type="button"
 							variant="secondary"
 							onClick={() => {
-								router.push(pageList.equipmentSet.href)
+								router.push(pageList.equipmentSetHandover.href)
 							}}
 						>
 							Quay lại

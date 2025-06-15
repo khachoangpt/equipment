@@ -1,6 +1,6 @@
 'use client'
 
-import { assembledEquipmentControllerFindAllComponentsOptions } from '@/client/@tanstack/react-query.gen'
+import { componentsControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
@@ -12,7 +12,7 @@ import { columns } from '../organisms/ComponentColumns'
 
 const ComponentTemplate = () => {
 	const { data: components } = useQuery({
-		...assembledEquipmentControllerFindAllComponentsOptions(),
+		...componentsControllerFindAllOptions(),
 	})
 
 	return (
