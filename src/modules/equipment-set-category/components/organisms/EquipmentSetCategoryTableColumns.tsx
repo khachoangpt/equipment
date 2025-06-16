@@ -2,6 +2,7 @@
 import type { Equipment } from '@/client'
 import {
 	syncEquipmentControllerFindAllQueryKey,
+	syncEquipmentControllerRemoveMutation,
 	syncEquipmentControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
@@ -56,9 +57,27 @@ export const columns: ColumnDef<Equipment>[] = [
 			const { mutate: update } = useMutation({
 				...syncEquipmentControllerUpdateMutation(),
 			})
+			const { mutate: remove } = useMutation({
+				...syncEquipmentControllerRemoveMutation(),
+			})
 
 			const handleDelete = () => {
-				setOpenDelete(false)
+				remove(
+					{ path: { id: row.original._id } },
+					{
+						onSuccess: () => {
+							setOpenDelete(false)
+							toast.success('Xóa thành công')
+							queryClient.invalidateQueries({
+								queryKey: syncEquipmentControllerFindAllQueryKey(),
+							})
+						},
+						onError: () => {
+							toast.error('Xóa không thành công')
+							setOpenDelete(false)
+						},
+					},
+				)
 			}
 
 			const handleEdit: SubmitHandler<CategoryEquipmentSetDetailSchema> = (
