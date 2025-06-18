@@ -101,7 +101,7 @@ const equipmentSetDetailSchema = z.object({
 	entryPlanNumber: z.string().trim().min(1, 'Chưa nhập số kế hoạch nhập'),
 	supplySource: z.string().optional(),
 	importingUnitId: z.string().trim().min(1, 'Chưa nhập ID của Đơn vị nhập'),
-	usingUnitId: z.string().trim().min(1, 'Chưa nhập ID của Đơn vị sử dụng'),
+	usingUnitId: z.string().optional(),
 	evaluatingUnitId: z.string().optional(),
 	evaluationResult: z.string().optional(),
 	qualityLevelId: z
@@ -109,6 +109,14 @@ const equipmentSetDetailSchema = z.object({
 		.trim()
 		.min(1, 'Chưa nhập ID của Phân cấp chất lượng'),
 	status: z.string().optional(),
+	quantity: z
+		.number({
+			required_error: 'Chưa nhập số lượng',
+			coerce: true,
+			invalid_type_error: 'Số lượng không hợp lệ',
+		})
+		.min(0, 'Số lượng phải lớn hơn hoặc bằng 0')
+		.optional(),
 })
 type EquipmentSetDetailSchema = z.infer<typeof equipmentSetDetailSchema>
 

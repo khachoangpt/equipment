@@ -32,6 +32,10 @@ export type Component = {
     storageLocation?: string;
     technicalFeatures?: string;
     /**
+     * Danh sách các sản phẩm hoàn chỉnh có thể tích hợp
+     */
+    compatibleProducts?: Array<(string)>;
+    /**
      * Danh sách URL tài liệu đính kèm
      */
     attachments?: Array<(string)>;
@@ -49,6 +53,10 @@ export type CreateComponentDto = {
     quantityInStock?: number;
     storageLocation?: string;
     technicalFeatures?: string;
+    /**
+     * Danh sách các sản phẩm hoàn chỉnh có thể tích hợp
+     */
+    compatibleProducts?: Array<(string)>;
     /**
      * Danh sách URL tài liệu đính kèm
      */
@@ -101,7 +109,7 @@ export type CreateEquipmentInstanceDto = {
     /**
      * ID của Đơn vị sử dụng (ban đầu)
      */
-    usingUnitId: string;
+    usingUnitId?: string;
     /**
      * ID của Đơn vị đánh giá
      */
@@ -112,6 +120,7 @@ export type CreateEquipmentInstanceDto = {
      */
     qualityLevelId: string;
     status?: string;
+    quantity: number;
 };
 
 export type CreateProductProfileDto = {
@@ -218,7 +227,7 @@ export type EquipmentInstance = {
     /**
      * Đơn vị đang sử dụng hiện tại (thay đổi khi bàn giao)
      */
-    usingUnitId: (Unit);
+    usingUnitId?: (Unit);
     qualityLevelId: QualityLevel;
     /**
      * Đơn vị thực hiện đánh giá chất lượng ban đầu
@@ -229,6 +238,7 @@ export type EquipmentInstance = {
      */
     evaluationResult?: string;
     status: string;
+    quantity?: number;
     createdAt: string;
     updatedAt: string;
 };
@@ -358,6 +368,10 @@ export type UpdateComponentDto = {
     storageLocation?: string;
     technicalFeatures?: string;
     /**
+     * Danh sách các sản phẩm hoàn chỉnh có thể tích hợp
+     */
+    compatibleProducts?: Array<(string)>;
+    /**
      * Danh sách URL tài liệu đính kèm
      */
     attachments?: Array<(string)>;
@@ -420,6 +434,7 @@ export type UpdateEquipmentInstanceDto = {
      */
     qualityLevelId?: string;
     status?: string;
+    quantity?: number;
 };
 
 export type UpdateProductProfileDto = {

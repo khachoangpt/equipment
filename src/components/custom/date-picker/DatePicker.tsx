@@ -11,7 +11,7 @@ import { vi } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
 
 type Props = {
-	value: Date
+	value?: Date
 	onChange: (value: Date) => void
 }
 

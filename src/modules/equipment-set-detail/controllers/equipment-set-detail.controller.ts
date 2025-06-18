@@ -23,8 +23,9 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 		evaluationResult: '',
 		qualityLevelId: '',
 		currentPrice: 0,
+		quantity: 0,
 		entryDate: new Date().toISOString(),
-		productionDate: new Date().toISOString(),
+		productionDate: undefined,
 		supplySource: '',
 		status: '',
 	}
@@ -53,8 +54,9 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 				serialNumber: data.serialNumber,
 				evaluatingUnitId: data.evaluatingUnitId?._id,
 				evaluationResult: data.evaluationResult,
-				usingUnitId: data.usingUnitId._id,
+				usingUnitId: data.usingUnitId?._id,
 				importingUnitId: data.importingUnitId._id,
+				quantity: data.quantity,
 			})
 		}
 	}, [id, isFetching])

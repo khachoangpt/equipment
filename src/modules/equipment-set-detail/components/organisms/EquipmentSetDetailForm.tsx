@@ -8,6 +8,7 @@ import {
 	syncEquipmentControllerFindAllOptions,
 	unitsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
+import Combobox from '@/components/custom/combobox/Combobox'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -63,7 +64,14 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 		if (!id) {
 			create(
 				{
-					body: data,
+					body: {
+						...data,
+						evaluatingUnitId: data.evaluatingUnitId
+							? data.evaluatingUnitId
+							: undefined,
+						usingUnitId: data.usingUnitId ? data.usingUnitId : undefined,
+						quantity: data.quantity ? data.quantity : 0,
+					},
 				},
 				{
 					onSuccess: () => {
@@ -84,7 +92,13 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 					path: {
 						id: id,
 					},
-					body: data,
+					body: {
+						...data,
+						evaluatingUnitId: data.evaluatingUnitId
+							? data.evaluatingUnitId
+							: undefined,
+						usingUnitId: data.usingUnitId ? data.usingUnitId : undefined,
+					},
 				},
 				{
 					onSuccess: () => {
@@ -114,7 +128,7 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem key={value}>
 									<FormLabel>Loại trang bị</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
+										{/* <Select value={value} onValueChange={onChange}>
 											<SelectTrigger className="w-full">
 												<SelectValue placeholder="Loại trang bị" />
 											</SelectTrigger>
@@ -125,7 +139,15 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 													</SelectItem>
 												))}
 											</SelectContent>
-										</Select>
+										</Select> */}
+										<Combobox
+											options={(syncEquipments || []).map((e) => ({
+												value: e._id,
+												label: e.name,
+											}))}
+											value={value}
+											onChange={onChange}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -223,7 +245,7 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 									<FormControl>
 										<DatePicker
 											onChange={(e) => onChange(e.toISOString())}
-											value={new Date(value ?? '')}
+											value={value ? new Date(value ?? '') : undefined}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -338,6 +360,23 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 												))}
 											</SelectContent>
 										</Select>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="quantity"
+							render={({ field: { onChange, value } }) => (
+								<FormItem>
+									<FormLabel>Số lượng</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="Số lượng"
+											value={value}
+											onChange={onChange}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
