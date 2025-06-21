@@ -28,6 +28,8 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 		productionDate: undefined,
 		supplySource: '',
 		status: '',
+		images: [],
+		imageFiles: [],
 	}
 	const form = useForm<EquipmentSetDetailSchema>({
 		defaultValues,
@@ -57,11 +59,12 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 				usingUnitId: data.usingUnitId?._id,
 				importingUnitId: data.importingUnitId._id,
 				quantity: data.quantity,
+				images: data.images ?? [],
 			})
 		}
 	}, [id, isFetching])
 
-	return { form }
+	return { form, data, isFetching }
 }
 
 export default useEquipmentSetDetailController

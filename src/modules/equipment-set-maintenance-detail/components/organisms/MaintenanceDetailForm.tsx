@@ -24,6 +24,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
 import type { CreateEquipmentMaintenanceSchema } from '@/configs/schema'
@@ -237,7 +238,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Ghi chú</FormLabel>
 									<FormControl>
-										<Input placeholder="Ghi chú" {...field} />
+										<Textarea placeholder="Ghi chú" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

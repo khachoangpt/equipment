@@ -121,6 +121,10 @@ export type CreateEquipmentInstanceDto = {
     qualityLevelId: string;
     status?: string;
     quantity: number;
+    /**
+     * Các file ảnh cho trang bị
+     */
+    images: Array<(string)>;
 };
 
 export type CreateProductProfileDto = {
@@ -241,6 +245,7 @@ export type EquipmentInstance = {
     quantity?: number;
     createdAt: string;
     updatedAt: string;
+    images: Array<ImageAttachment>;
 };
 
 export type HandoverDto = {
@@ -256,6 +261,14 @@ export type HandoverDto = {
      */
     handoverDate: string;
     notes?: string;
+};
+
+export type ImageAttachment = {
+    /**
+     * Mongo document ID
+     */
+    _id: string;
+    url: string;
 };
 
 export type LoginDto = {
@@ -435,6 +448,10 @@ export type UpdateEquipmentInstanceDto = {
     qualityLevelId?: string;
     status?: string;
     quantity?: number;
+    /**
+     * Các file ảnh cho trang bị
+     */
+    images?: Array<(string)>;
 };
 
 export type UpdateProductProfileDto = {
@@ -876,6 +893,32 @@ export type EquipmentInstancesControllerCreateData = {
 export type EquipmentInstancesControllerCreateResponse = (EquipmentInstance);
 
 export type EquipmentInstancesControllerCreateError = (unknown);
+
+export type EquipmentInstancesControllerUploadFilesData = {
+    body: {
+        files?: Array<((Blob | File))>;
+    };
+    headers: {
+        /**
+         * The ID of the equipment instance
+         */
+        'x-equipment-instance-id': string;
+    };
+};
+
+export type EquipmentInstancesControllerUploadFilesResponse = (unknown);
+
+export type EquipmentInstancesControllerUploadFilesError = unknown;
+
+export type EquipmentInstancesControllerGetImageData = {
+    path: {
+        imageId: string;
+    };
+};
+
+export type EquipmentInstancesControllerGetImageResponse = (unknown);
+
+export type EquipmentInstancesControllerGetImageError = unknown;
 
 export type EquipmentInstancesControllerSearchData = {
     query?: {

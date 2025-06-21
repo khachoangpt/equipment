@@ -117,6 +117,8 @@ const equipmentSetDetailSchema = z.object({
 		})
 		.min(0, 'Số lượng phải lớn hơn hoặc bằng 0')
 		.optional(),
+	images: z.array(z.any()).optional(),
+	imageFiles: z.array(z.any()).optional(),
 })
 type EquipmentSetDetailSchema = z.infer<typeof equipmentSetDetailSchema>
 

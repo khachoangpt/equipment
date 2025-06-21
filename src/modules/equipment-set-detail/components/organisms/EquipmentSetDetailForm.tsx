@@ -1,5 +1,5 @@
 'use client'
-
+import type { ImageAttachment } from '@/client'
 import {
 	equipmentInstancesControllerCreateMutation,
 	equipmentInstancesControllerSearchQueryKey,
@@ -30,9 +30,13 @@ import {
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
 import type { EquipmentSetDetailSchema } from '@/configs/schema'
+import useUploadFile from '@/hooks/use-upload-file'
+import { genImageUrl } from '@/utils/gen-image-url'
 import { SelectValue } from '@radix-ui/react-select'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { type ChangeEvent, useEffect, useState } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import useEquipmentSetDetailController from '../../controllers/equipment-set-detail.controller'
@@ -43,7 +47,10 @@ type Props = {
 
 const EquipmentSetDetailForm = ({ id }: Props) => {
 	const router = useRouter()
-	const { form } = useEquipmentSetDetailController({ id })
+	const { form, data, isFetching } = useEquipmentSetDetailController({ id })
+	const [previewImages, setPreviewImages] = useState<
+		ImageAttachment[] | undefined
+	>(form.getValues('images'))
 	const { mutate: create } = useMutation({
 		...equipmentInstancesControllerCreateMutation(),
 	})
@@ -59,6 +66,40 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 	const { data: quantityList } = useQuery({
 		...qualityLevelsControllerFindAllOptions(),
 	})
+	const { uploadFile } = useUploadFile()
+
+	useEffect(() => {
+		if (!isFetching && data) {
+			setPreviewImages((prev) => [...(prev ?? []), ...data.images])
+		}
+	}, [data, isFetching])
+
+	const handleChooseImages = (event: ChangeEvent<HTMLInputElement>) => {
+		const previewImages = Array.from(event.target.files ?? []).map((file) => ({
+			url: URL.createObjectURL(file),
+		})) as ImageAttachment[]
+		setPreviewImages((prev) => {
+			const newPreviewImages = [...(prev ?? []), ...previewImages]
+			const uniquePreviewImages = newPreviewImages.filter(
+				(image, index, self) =>
+					index === self.findIndex((i) => i.url === image.url),
+			)
+			return uniquePreviewImages
+		})
+
+		form.setValue(
+			'imageFiles',
+			Array.from(event.target.files ?? [])
+				.map((file, index) => ({
+					file,
+					preview: previewImages[index].url,
+				}))
+				.filter(
+					(image, index, self) =>
+						index === self.findIndex((i) => i.preview === image.preview),
+				),
+		)
+	}
 
 	const onSubmit: SubmitHandler<EquipmentSetDetailSchema> = (data) => {
 		if (!id) {
@@ -71,10 +112,27 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 							: undefined,
 						usingUnitId: data.usingUnitId ? data.usingUnitId : undefined,
 						quantity: data.quantity ? data.quantity : 0,
+						images: [],
 					},
 				},
 				{
-					onSuccess: () => {
+					onSuccess: (equipmentInstance) => {
+						if (data?.imageFiles?.length && data?.imageFiles?.length > 0) {
+							uploadFile(
+								{
+									body: { files: data.imageFiles.map((file) => file.file) },
+									headers: {
+										'x-equipment-instance-id': equipmentInstance?._id,
+									},
+								},
+								{
+									onError: () => {
+										toast.error('Tạo không thành công')
+									},
+								},
+							)
+						}
+
 						toast.success('Tạo thành công')
 						router.push(pageList.equipmentSet.href)
 						queryClient.invalidateQueries({
@@ -98,10 +156,26 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 							? data.evaluatingUnitId
 							: undefined,
 						usingUnitId: data.usingUnitId ? data.usingUnitId : undefined,
+						images: data.images,
 					},
 				},
 				{
 					onSuccess: () => {
+						if (data?.imageFiles?.length && data?.imageFiles?.length > 0) {
+							uploadFile(
+								{
+									body: { files: data.imageFiles.map((f) => f.file) },
+									headers: {
+										'x-equipment-instance-id': id,
+									},
+								},
+								{
+									onError: () => {
+										toast.error('Tạo không thành công')
+									},
+								},
+							)
+						}
 						toast.success('Cập nhật thành công')
 						queryClient.invalidateQueries({
 							queryKey: equipmentInstancesControllerSearchQueryKey(),
@@ -114,6 +188,26 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 				},
 			)
 		}
+	}
+
+	const handleDeleteImage = (image: ImageAttachment) => {
+		const newImages = [...(previewImages ?? [])]
+		const imageFound = form
+			.getValues('images')
+			?.find((i) => i.url === image.url)
+		if (imageFound) {
+			form.setValue(
+				'images',
+				form.getValues('images')?.filter((i) => i.url !== image.url),
+			)
+		}
+		form.setValue(
+			'imageFiles',
+			form
+				.getValues('imageFiles')
+				?.filter((file) => file.preview !== image.url),
+		)
+		setPreviewImages(newImages.filter((i) => i.url !== image.url))
 	}
 
 	return (
@@ -395,6 +489,46 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								</FormItem>
 							)}
 						/>
+						<div>
+							<FormField
+								control={form.control}
+								name="images"
+								render={() => (
+									<FormItem>
+										<FormLabel>Hình ảnh trang bị</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="Hình ảnh trang bị"
+												type="file"
+												multiple
+												accept="image/*"
+												onChange={(e) => handleChooseImages(e)}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							{previewImages && previewImages?.length > 0 && (
+								<div className="mt-5 flex flex-wrap gap-4	">
+									{previewImages?.map((image) => (
+										<div key={image.url} className="relative">
+											<img
+												src={genImageUrl(image.url)}
+												alt=""
+												className="w-40 h-auto object-contain"
+											/>
+											<div
+												onClick={() => handleDeleteImage(image)}
+												className="absolute size-6 flex items-center justify-center top-0 right-0 translate-x-1/2 -translate-y-1/2 cursor-pointer bg-primary rounded-full text-white"
+											>
+												<X className="size-5" />
+											</div>
+										</div>
+									))}
+								</div>
+							)}
+						</div>
 					</div>
 					<div className="mt-10 flex items-center justify-end gap-x-5">
 						<Button
