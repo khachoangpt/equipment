@@ -27,6 +27,7 @@ import {
 	SelectItem,
 	SelectTrigger,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
 import type { EquipmentSetDetailSchema } from '@/configs/schema'
@@ -401,7 +402,7 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Kết quả đánh giá</FormLabel>
 									<FormControl>
-										<Input
+										<Textarea
 											placeholder="Kết quả đánh giá"
 											value={value}
 											onChange={onChange}

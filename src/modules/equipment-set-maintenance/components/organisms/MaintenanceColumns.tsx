@@ -71,8 +71,23 @@ export const columns: ColumnDef<ActivityLog>[] = [
 		id: 'notes',
 		accessorKey: 'details',
 		header: 'Ghi chú',
-		cell: ({ row }) => row.original.details.notes,
+		cell: ({ row }) => (
+			<div className="whitespace-pre-wrap break-words max-w-[250px]">
+				{row.original.details.notes as string}
+			</div>
+		),
 	},
+	{
+		id: 'comment',
+		accessorKey: 'details',
+		header: 'Nhận xét',
+		cell: ({ row }) => (
+			<div className="whitespace-pre-wrap break-words max-w-[250px]">
+				{row.original.details.comment as string}
+			</div>
+		),
+	},
+
 	// {
 	// 	id: 'actions',
 	// 	enableResizing: false,

@@ -147,6 +147,7 @@ const createEquipmentSetHandoverSchema = z.object({
 	handoverDate: z.string({ required_error: 'Chưa nhập ngày giao' }),
 	equipment: z.string({ required_error: 'Chưa nhập trang bị' }),
 	note: z.string().optional(),
+	comment: z.string().optional(),
 })
 type CreateEquipmentSetHandoverSchema = z.infer<
 	typeof createEquipmentSetHandoverSchema
@@ -178,6 +179,7 @@ const createEquipmentMaintenanceSchema = z.object({
 		.min(1, 'Chưa nhập lý do'),
 	result: z.string().optional(),
 	notes: z.string().optional(),
+	comment: z.string().optional(),
 })
 type CreateEquipmentMaintenanceSchema = z.infer<
 	typeof createEquipmentMaintenanceSchema

@@ -45,6 +45,26 @@ export const columns: ColumnDef<any>[] = [
 		cell: ({ row }) =>
 			new Date(row.original.details.handoverDate).toLocaleDateString('vi-VN'),
 	},
+	{
+		id: 'note',
+		accessorKey: 'details',
+		header: 'Ghi chú',
+		cell: ({ row }) => (
+			<div className="whitespace-pre-wrap break-words max-w-[250px]">
+				{row.original.notes}
+			</div>
+		),
+	},
+	{
+		id: 'comment',
+		accessorKey: 'details',
+		header: 'Nhận xét',
+		cell: ({ row }) => (
+			<div className="whitespace-pre-wrap break-words max-w-[250px]">
+				{row.original.details.comment}
+			</div>
+		),
+	},
 	// {
 	// 	id: 'actions',
 	// 	enableResizing: false,

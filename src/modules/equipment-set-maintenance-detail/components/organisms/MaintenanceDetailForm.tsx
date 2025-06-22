@@ -70,6 +70,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 					receiver: data.receiver,
 					notes: data.notes,
 					result: data.result,
+					comment: data.comment,
 				},
 			},
 			{
@@ -239,6 +240,19 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 									<FormLabel>Ghi chú</FormLabel>
 									<FormControl>
 										<Textarea placeholder="Ghi chú" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="comment"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Nhận xét</FormLabel>
+									<FormControl>
+										<Textarea placeholder="Nhận xét" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

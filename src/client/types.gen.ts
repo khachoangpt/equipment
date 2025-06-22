@@ -261,6 +261,7 @@ export type HandoverDto = {
      */
     handoverDate: string;
     notes?: string;
+    comment?: string;
 };
 
 export type ImageAttachment = {
@@ -337,6 +338,7 @@ export type RepairDto = {
     reason: string;
     result?: string;
     notes?: string;
+    comment?: string;
 };
 
 export type RequiredComponent = {

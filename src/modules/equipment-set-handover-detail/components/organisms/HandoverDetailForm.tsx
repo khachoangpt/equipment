@@ -25,6 +25,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
 import type { CreateEquipmentSetHandoverSchema } from '@/configs/schema'
@@ -68,6 +69,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 					toUnitId: data.receiverUnit,
 					notes: data.note,
 					handoverDate: new Date(data.handoverDate).toISOString(),
+					comment: data.comment,
 				},
 			},
 			{
@@ -191,6 +193,32 @@ const HandoverDetailForm = ({ id }: Props) => {
 												))}
 											</SelectContent>
 										</Select>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="note"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Ghi chú</FormLabel>
+									<FormControl>
+										<Textarea placeholder="Ghi chú" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="comment"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Nhận xét</FormLabel>
+									<FormControl>
+										<Textarea placeholder="Nhận xét" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

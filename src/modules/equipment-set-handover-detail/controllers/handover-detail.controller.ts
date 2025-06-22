@@ -21,6 +21,7 @@ const useHandoverDetailController = ({ id }: Props) => {
 		handoverDate: new Date().toString(),
 		equipment: '',
 		note: '',
+		comment: '',
 	}
 	const form = useForm<CreateEquipmentSetHandoverSchema>({
 		defaultValues,
@@ -44,6 +45,7 @@ const useHandoverDetailController = ({ id }: Props) => {
 				handoverDate: handoverFound[0].details.handoverDate as string,
 				equipment: handoverFound[0].details.equipmentName as string,
 				note: handoverFound[0].details.note as string,
+				comment: handoverFound[0].details.comment as string,
 			})
 		}
 	}, [id, isFetching])

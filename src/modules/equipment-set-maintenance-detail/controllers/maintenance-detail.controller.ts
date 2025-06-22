@@ -21,6 +21,7 @@ const useMaintenanceDetailController = (_: Props) => {
 		receivedDate: new Date().toISOString(),
 		receiver: '',
 		result: '',
+		comment: '',
 	}
 	const form = useForm<CreateEquipmentMaintenanceSchema>({
 		defaultValues,
