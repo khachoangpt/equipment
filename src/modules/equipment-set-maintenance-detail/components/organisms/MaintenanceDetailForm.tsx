@@ -5,6 +5,7 @@ import {
 	equipmentInstancesControllerRepairMutation,
 	equipmentInstancesControllerSearchOptions,
 } from '@/client/@tanstack/react-query.gen'
+import Combobox from '@/components/custom/combobox/Combobox'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -17,13 +18,7 @@ import {
 	FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select'
+import {} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -46,9 +41,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 		...equipmentInstancesControllerRepairMutation(),
 	})
 	const { data: equipments } = useQuery({
-		...equipmentInstancesControllerSearchOptions({
-			query: { type: 'SYNCHRONIZED_EQUIPMENT' },
-		}),
+		...equipmentInstancesControllerSearchOptions(),
 		select: (data) =>
 			data.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
@@ -117,21 +110,11 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 								<FormItem key={value}>
 									<FormLabel>Trang bị</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												{equipments?.map((quantity: any) => (
-													<SelectItem
-														key={quantity.value}
-														value={quantity.value}
-													>
-														{quantity.label}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
+										<Combobox
+											options={equipments || []}
+											value={value}
+											onChange={onChange}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
