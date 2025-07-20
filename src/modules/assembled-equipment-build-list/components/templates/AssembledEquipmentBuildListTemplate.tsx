@@ -1,6 +1,6 @@
 'use client'
 
-import { equipmentInstancesControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
+import { assembledEquipmentControllerFindAllBuildActivitiesOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
@@ -8,14 +8,11 @@ import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
-import { columns } from '../organisms/columns'
+import { columns } from '../organisms/BuildColumns'
 
-const AssembledEquipmentTemplate = () => {
-	// const [open, setOpen] = useState<boolean>(false)
-	const { data: assembledEquipments } = useQuery({
-		...equipmentInstancesControllerSearchOptions({
-			query: { type: 'ASSEMBLED_EQUIPMENT' },
-		}),
+const AssembledEquipmentBuildListTemplate = () => {
+	const { data: builds } = useQuery({
+		...assembledEquipmentControllerFindAllBuildActivitiesOptions(),
 	})
 
 	return (
@@ -23,28 +20,29 @@ const AssembledEquipmentTemplate = () => {
 			<Card>
 				<div className="flex items-center justify-between">
 					<div className="flex items-end gap-x-2">
-						<h3 className="font-bold text-2xl">Trang bị lắp ghép</h3>
+						<h3 className="font-bold text-2xl">
+							Danh sách xây dựng trang bị lắp ghép
+						</h3>
 						{/* <Button
 							variant="link"
 							className="p-0 h-fit"
-							// onClick={() => setOpen((open) => !open)}
+							onClick={() => setOpen((open) => !open)}
 						>
 							Tìm kiếm
 							<ChevronDown />
 						</Button> */}
 					</div>
-					<Link href={pageList.createAssembledEquipment.href}>
+					<Link href={pageList.assembledEquipmentBuildCreate.href}>
 						<Button>
 							<Plus />
 							Thêm
 						</Button>
 					</Link>
 				</div>
-				{/* <SearchEquipmentSet onOpenChange={setOpen} open={open} /> */}
-				<DataTable columns={columns} data={assembledEquipments || []} />
+				<DataTable columns={columns} data={builds ?? ([] as any)} />
 			</Card>
 		</div>
 	)
 }
 
-export default AssembledEquipmentTemplate
+export default AssembledEquipmentBuildListTemplate

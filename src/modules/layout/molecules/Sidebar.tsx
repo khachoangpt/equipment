@@ -73,6 +73,16 @@ const AppSidebar = () => {
 					label: 'Vật tư/ linh kiện',
 					href: pageList.assembledEquipmentComponent.href,
 				},
+				{
+					id: 'cau-hinh-trang-bi-lap-ghep',
+					label: 'Cấu hình trang bị',
+					href: pageList.assembledEquipmentConfig.href,
+				},
+				{
+					id: 'xay-dung-trang-bi-lap-ghep',
+					label: 'Xây dựng trang bị',
+					href: pageList.assembledEquipmentBuild.href,
+				},
 			],
 		},
 		{

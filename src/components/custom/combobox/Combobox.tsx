@@ -38,7 +38,7 @@ const Combobox = ({ onChange, value, options }: Props) => {
 					{value ? (
 						options.find((option) => option.value === value)?.label
 					) : (
-						<div className="text-muted-foreground font-normal">Select</div>
+						<div className="text-muted-foreground font-normal">Chọn</div>
 					)}
 					<ChevronsUpDown className="opacity-50" />
 				</Button>

@@ -108,6 +108,11 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 				{
 					body: {
 						...data,
+						type: 'SYNCHRONIZED_EQUIPMENT',
+						name:
+							syncEquipments?.find((item) => item._id === data.equipmentId)
+								?.name ?? '',
+						unitOfMeasure: '',
 						evaluatingUnitId: data.evaluatingUnitId
 							? data.evaluatingUnitId
 							: undefined,
@@ -223,18 +228,6 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem key={value}>
 									<FormLabel>Loại trang bị</FormLabel>
 									<FormControl>
-										{/* <Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue placeholder="Loại trang bị" />
-											</SelectTrigger>
-											<SelectContent>
-												{syncEquipments?.map((equipment) => (
-													<SelectItem key={equipment._id} value={equipment._id}>
-														{equipment.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select> */}
 										<Combobox
 											options={(syncEquipments || []).map((e) => ({
 												value: e._id,

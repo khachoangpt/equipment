@@ -154,6 +154,42 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['assembled-equipment', 'create'],
 	},
+	assembledEquipmentConfig: {
+		title: 'Assembled Equipment Config',
+		href: '/assembled-equipment/config',
+		isAuth: true,
+		pattern: ['assembled-equipment', 'config'],
+	},
+	assembledEquipmentConfigDetail: (config?: { id?: string }) => ({
+		title: 'Assembled Equipment Config',
+		href: `/assembled-equipment/config/${config?.id}`,
+		isAuth: true,
+		pattern: ['assembled-equipment', 'config', ''],
+	}),
+	assembledEquipmentConfigCreate: {
+		title: 'Assembled Equipment Config Create',
+		href: '/assembled-equipment/config/create',
+		isAuth: true,
+		pattern: ['assembled-equipment', 'config', 'create'],
+	},
+	assembledEquipmentBuild: {
+		title: 'Assembled Equipment Build',
+		href: '/assembled-equipment/build',
+		isAuth: true,
+		pattern: ['assembled-equipment', 'build'],
+	},
+	assembledEquipmentBuildCreate: {
+		title: 'Assembled Equipment Build Create',
+		href: '/assembled-equipment/build/create',
+		isAuth: true,
+		pattern: ['assembled-equipment', 'build', 'create'],
+	},
+	assembledEquipmentBuildDetail: (config?: { id?: string }) => ({
+		title: 'Assembled Equipment Build',
+		href: `/assembled-equipment/build/${config?.id}`,
+		isAuth: true,
+		pattern: ['assembled-equipment', 'build', ''],
+	}),
 	assembledEquipmentComponent: {
 		title: 'Assembled Equipment Component',
 		href: '/assembled-equipment/component',

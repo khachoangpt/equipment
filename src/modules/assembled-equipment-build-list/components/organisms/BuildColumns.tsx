@@ -1,8 +1,8 @@
 'use client'
 
 import {
-	equipmentInstancesControllerRemoveMutation,
-	equipmentInstancesControllerSearchQueryKey,
+	assembledEquipmentControllerFindAllBuildActivitiesQueryKey,
+	assembledEquipmentControllerRemoveBuildActivityMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -15,50 +15,17 @@ import { toast } from 'sonner'
 
 export const columns: ColumnDef<any>[] = [
 	{
-		accessorKey: 'name',
-		header: 'Tên trang bị',
-	},
-	// {
-	// 	accessorKey: 'category',
-	// 	header: 'Loại/Nhóm',
-	// },
-	{
-		accessorKey: 'importingUnitId.name',
-		header: 'Đơn vị cấp',
+		accessorKey: 'config.name',
+		header: 'Tên',
 	},
 	{
-		accessorKey: 'usingUnitId.name',
-		header: 'Đơn vị sử dụng',
+		accessorKey: 'quantity',
+		header: 'Số lượng',
 	},
 	{
-		accessorKey: 'evaluatingUnitId.name',
-		header: 'Đơn vị đánh giá',
+		accessorKey: 'notes',
+		header: 'Ghi chú',
 	},
-	{
-		accessorKey: 'unitOfMeasure',
-		header: 'Đơn vị tính',
-	},
-	// {
-	// 	accessorKey: 'quantity',
-	// 	header: 'Số lượng',
-	// },
-	// {
-	// 	accessorKey: 'handoverDocumentNumber',
-	// 	header: 'Số Biên bản bàn giao',
-	// },
-	// {
-	// 	accessorKey: 'storageLocation',
-	// 	header: 'Vị trí lưu trữ',
-	// },
-	// {
-	// 	accessorKey: 'technicalFeatures',
-	// 	header: 'Tính năng kỹ thuật',
-	// },
-	// {
-	// 	accessorKey: 'notes',
-	// 	header: 'Ghi chú',
-	// },
-
 	{
 		id: 'actions',
 		enableResizing: false,
@@ -66,7 +33,7 @@ export const columns: ColumnDef<any>[] = [
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...equipmentInstancesControllerRemoveMutation(),
+				...assembledEquipmentControllerRemoveBuildActivityMutation(),
 			})
 
 			const handleDelete = () => {
@@ -77,7 +44,8 @@ export const columns: ColumnDef<any>[] = [
 							setOpen(false)
 							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
-								queryKey: equipmentInstancesControllerSearchQueryKey(),
+								queryKey:
+									assembledEquipmentControllerFindAllBuildActivitiesQueryKey(),
 							})
 						},
 						onError: () => {
@@ -92,7 +60,9 @@ export const columns: ColumnDef<any>[] = [
 				<div className="flex items-center justify-end gap-x-3">
 					<Link
 						href={
-							pageList.assembleEquipmentDetail({ id: row.original._id }).href
+							pageList.assembledEquipmentBuildDetail({
+								id: row.original._id,
+							}).href
 						}
 						className="text-blue-600"
 					>
@@ -105,8 +75,8 @@ export const columns: ColumnDef<any>[] = [
 						Xoá
 					</p>
 					<DialogConfirmDelete
-						title="Xoá trang bị"
-						description="Bạn có chắc chắn muốn xoá trang bị này"
+						title="Xoá"
+						description="Bạn có chắc chắn muốn xoá?"
 						open={open}
 						onOpenChange={setOpen}
 						onConfirm={handleDelete}

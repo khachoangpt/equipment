@@ -50,7 +50,9 @@ const HandoverDetailForm = ({ id }: Props) => {
 		...unitsControllerFindAllOptions(),
 	})
 	const { data: equipments } = useQuery({
-		...equipmentInstancesControllerSearchOptions(),
+		...equipmentInstancesControllerSearchOptions({
+			query: { type: 'SYNCHRONIZED_EQUIPMENT' },
+		}),
 		select: (data) =>
 			data?.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
