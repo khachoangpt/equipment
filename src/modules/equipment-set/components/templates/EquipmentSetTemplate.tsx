@@ -15,7 +15,9 @@ import SearchEquipmentSet from '../organisms/SearchEquipmentSet'
 const EquipmentSetTemplate = () => {
 	const [open, setOpen] = useState<boolean>(false)
 	const { data: equipmentSets } = useQuery({
-		...equipmentInstancesControllerSearchOptions(),
+		...equipmentInstancesControllerSearchOptions({
+			query: { type: 'SYNCHRONIZED_EQUIPMENT' },
+		}),
 	})
 
 	return (

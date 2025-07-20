@@ -6,6 +6,7 @@ import {
 	equipmentInstancesControllerSearchQueryKey,
 	unitsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
+import Combobox from '@/components/custom/combobox/Combobox'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -178,21 +179,11 @@ const HandoverDetailForm = ({ id }: Props) => {
 								<FormItem key={value}>
 									<FormLabel>Trang bị</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												{equipments?.map((equipment) => (
-													<SelectItem
-														key={equipment.value}
-														value={equipment.value}
-													>
-														{equipment.label}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
+										<Combobox
+											options={equipments || []}
+											value={value}
+											onChange={onChange}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

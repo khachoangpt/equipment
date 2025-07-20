@@ -21,6 +21,14 @@ export type ActivityLog = {
 
 export type activityType = 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý';
 
+export type BuildCheckDto = {
+    /**
+     * ID của cấu hình trang bị cần xây dựng
+     */
+    configId: string;
+    quantityToBuild: number;
+};
+
 export type Component = {
     /**
      * Mongo document ID
@@ -44,13 +52,66 @@ export type Component = {
     updatedAt: string;
 };
 
+export type CreateAssembledProductConfigDto = {
+    /**
+     * ID của loại trang bị (trong danh mục)
+     */
+    equipmentId: string;
+    name: string;
+    unitOfMeasure: string;
+    technicalFeatures?: string;
+    componentList: Array<RequiredComponentDto>;
+    documentUrls: Array<(string)>;
+    notes?: string;
+};
+
+export type CreateBuildActivityDto = {
+    /**
+     * ID của cấu hình trang bị đã được kiểm tra
+     */
+    configId: string;
+    /**
+     * Số lượng trang bị được xây dựng
+     */
+    quantity: number;
+    /**
+     * ID của đơn vị thực hiện xây dựng
+     */
+    buildingUnitId: string;
+    notes?: string;
+};
+
 export type CreateComponentDto = {
+    /**
+     * ID của loại trang bị (trong danh mục)
+     */
+    equipmentId: string;
     name: string;
     unitOfMeasure: string;
     /**
      * Số lượng ban đầu trong kho
      */
     quantityInStock?: number;
+    /**
+     * Ngày nhập kho
+     */
+    time?: string;
+    /**
+     * ID của Đơn vị cấp
+     */
+    supplyingUnitId?: string;
+    /**
+     * ID của Đơn vị nhận
+     */
+    receivingUnitId?: string;
+    /**
+     * ID của Đơn vị đánh giá
+     */
+    evaluatingUnitId?: string;
+    /**
+     * Nội dung đánh giá
+     */
+    evaluationContent?: string;
     storageLocation?: string;
     technicalFeatures?: string;
     /**
@@ -90,7 +151,13 @@ export type CreateEquipmentInstanceDto = {
      * ID của loại trang bị (trong danh mục)
      */
     equipmentId: string;
+    /**
+     * ID của hoạt động xây dựng trang bị lắp ráp
+     */
+    buildActivityId?: string;
     serialNumber: string;
+    name: string;
+    unitOfMeasure: string;
     currentPrice?: number;
     /**
      * Ngày nhập kho
@@ -114,17 +181,26 @@ export type CreateEquipmentInstanceDto = {
      * ID của Đơn vị đánh giá
      */
     evaluatingUnitId?: string;
+    /**
+     * Nội dung đánh giá
+     */
     evaluationResult?: string;
     /**
      * ID của Phân cấp chất lượng
      */
-    qualityLevelId: string;
+    qualityLevelId?: string;
     status?: string;
     quantity: number;
+    storageLocation?: string;
     /**
      * Các file ảnh cho trang bị
      */
     images: Array<(string)>;
+    type?: string;
+    /**
+     * Ghi chú
+     */
+    notes?: string;
 };
 
 export type CreateProductProfileDto = {
@@ -218,7 +294,10 @@ export type EquipmentInstance = {
      */
     _id: string;
     equipmentId: Equipment;
+    buildActivityId?: ObjectId;
     serialNumber: string;
+    name?: string;
+    unitOfMeasure?: string;
     currentPrice?: number;
     entryDate: string;
     productionDate?: string;
@@ -246,6 +325,14 @@ export type EquipmentInstance = {
     createdAt: string;
     updatedAt: string;
     images: Array<ImageAttachment>;
+    /**
+     * Vị trí lưu trữ trang bị
+     */
+    storageLocation?: string;
+    /**
+     * Ghi chú
+     */
+    notes?: string;
 };
 
 export type HandoverDto = {
@@ -373,13 +460,66 @@ export type Unit = {
     updatedAt: string;
 };
 
+export type UpdateAssembledProductConfigDto = {
+    /**
+     * ID của loại trang bị (trong danh mục)
+     */
+    equipmentId?: string;
+    name?: string;
+    unitOfMeasure?: string;
+    technicalFeatures?: string;
+    componentList?: Array<RequiredComponentDto>;
+    documentUrls?: Array<(string)>;
+    notes?: string;
+};
+
+export type UpdateBuildActivityDto = {
+    /**
+     * ID của cấu hình trang bị đã được kiểm tra
+     */
+    configId?: string;
+    /**
+     * Số lượng trang bị được xây dựng
+     */
+    quantity?: number;
+    /**
+     * ID của đơn vị thực hiện xây dựng
+     */
+    buildingUnitId?: string;
+    notes?: string;
+};
+
 export type UpdateComponentDto = {
+    /**
+     * ID của loại trang bị (trong danh mục)
+     */
+    equipmentId?: string;
     name?: string;
     unitOfMeasure?: string;
     /**
      * Số lượng ban đầu trong kho
      */
     quantityInStock?: number;
+    /**
+     * Ngày nhập kho
+     */
+    time?: string;
+    /**
+     * ID của Đơn vị cấp
+     */
+    supplyingUnitId?: string;
+    /**
+     * ID của Đơn vị nhận
+     */
+    receivingUnitId?: string;
+    /**
+     * ID của Đơn vị đánh giá
+     */
+    evaluatingUnitId?: string;
+    /**
+     * Nội dung đánh giá
+     */
+    evaluationContent?: string;
     storageLocation?: string;
     technicalFeatures?: string;
     /**
@@ -419,7 +559,13 @@ export type UpdateEquipmentInstanceDto = {
      * ID của loại trang bị (trong danh mục)
      */
     equipmentId?: string;
+    /**
+     * ID của hoạt động xây dựng trang bị lắp ráp
+     */
+    buildActivityId?: string;
     serialNumber?: string;
+    name?: string;
+    unitOfMeasure?: string;
     currentPrice?: number;
     /**
      * Ngày nhập kho
@@ -443,6 +589,9 @@ export type UpdateEquipmentInstanceDto = {
      * ID của Đơn vị đánh giá
      */
     evaluatingUnitId?: string;
+    /**
+     * Nội dung đánh giá
+     */
     evaluationResult?: string;
     /**
      * ID của Phân cấp chất lượng
@@ -450,10 +599,16 @@ export type UpdateEquipmentInstanceDto = {
     qualityLevelId?: string;
     status?: string;
     quantity?: number;
+    storageLocation?: string;
     /**
      * Các file ảnh cho trang bị
      */
     images?: Array<(string)>;
+    type?: string;
+    /**
+     * Ghi chú
+     */
+    notes?: string;
 };
 
 export type UpdateProductProfileDto = {
@@ -578,6 +733,124 @@ export type ComponentsControllerRemoveData = {
 export type ComponentsControllerRemoveResponse = (Component);
 
 export type ComponentsControllerRemoveError = (unknown);
+
+export type AssembledEquipmentControllerCreateConfigData = {
+    body: CreateAssembledProductConfigDto;
+};
+
+export type AssembledEquipmentControllerCreateConfigResponse = (unknown);
+
+export type AssembledEquipmentControllerCreateConfigError = unknown;
+
+export type AssembledEquipmentControllerFindAllConfigsResponse = (unknown);
+
+export type AssembledEquipmentControllerFindAllConfigsError = unknown;
+
+export type AssembledEquipmentControllerUploadFilesData = {
+    body: {
+        documents?: Array<((Blob | File))>;
+    };
+    path: {
+        id: string;
+    };
+};
+
+export type AssembledEquipmentControllerUploadFilesResponse = (unknown);
+
+export type AssembledEquipmentControllerUploadFilesError = unknown;
+
+export type AssembledEquipmentControllerGetImageData = {
+    path: {
+        id: string;
+        imageId: string;
+    };
+};
+
+export type AssembledEquipmentControllerGetImageResponse = (unknown);
+
+export type AssembledEquipmentControllerGetImageError = unknown;
+
+export type AssembledEquipmentControllerFindConfigByIdData = {
+    path: {
+        id: string;
+    };
+};
+
+export type AssembledEquipmentControllerFindConfigByIdResponse = (unknown);
+
+export type AssembledEquipmentControllerFindConfigByIdError = unknown;
+
+export type AssembledEquipmentControllerUpdateConfigData = {
+    body: UpdateAssembledProductConfigDto;
+    path: {
+        id: string;
+    };
+};
+
+export type AssembledEquipmentControllerUpdateConfigResponse = (unknown);
+
+export type AssembledEquipmentControllerUpdateConfigError = unknown;
+
+export type AssembledEquipmentControllerRemoveConfigData = {
+    path: {
+        id: string;
+    };
+};
+
+export type AssembledEquipmentControllerRemoveConfigResponse = (unknown);
+
+export type AssembledEquipmentControllerRemoveConfigError = unknown;
+
+export type AssembledEquipmentControllerCheckBuildAvailabilityData = {
+    body: BuildCheckDto;
+};
+
+export type AssembledEquipmentControllerCheckBuildAvailabilityResponse = (unknown);
+
+export type AssembledEquipmentControllerCheckBuildAvailabilityError = unknown;
+
+export type AssembledEquipmentControllerCreateBuildActivityData = {
+    body: CreateBuildActivityDto;
+};
+
+export type AssembledEquipmentControllerCreateBuildActivityResponse = (unknown);
+
+export type AssembledEquipmentControllerCreateBuildActivityError = unknown;
+
+export type AssembledEquipmentControllerFindAllBuildActivitiesResponse = (unknown);
+
+export type AssembledEquipmentControllerFindAllBuildActivitiesError = unknown;
+
+export type AssembledEquipmentControllerFindbuildActivityByIdData = {
+    path: {
+        id: string;
+    };
+};
+
+export type AssembledEquipmentControllerFindbuildActivityByIdResponse = (unknown);
+
+export type AssembledEquipmentControllerFindbuildActivityByIdError = unknown;
+
+export type AssembledEquipmentControllerUpdateBuildActivityData = {
+    body: UpdateBuildActivityDto;
+    path: {
+        id: string;
+    };
+};
+
+export type AssembledEquipmentControllerUpdateBuildActivityResponse = (unknown);
+
+export type AssembledEquipmentControllerUpdateBuildActivityError = unknown;
+
+export type AssembledEquipmentControllerRemoveBuildActivityData = {
+    path: {
+        id: string;
+    };
+};
+
+export type AssembledEquipmentControllerRemoveBuildActivityResponse = (unknown);
+
+export type AssembledEquipmentControllerRemoveBuildActivityError = unknown;
 
 export type ProductProfilesControllerCreateData = {
     body: CreateProductProfileDto;
@@ -960,6 +1233,10 @@ export type EquipmentInstancesControllerSearchData = {
          * Tìm theo trạng thái (ví dụ: "Trong kho")
          */
         status?: string;
+        /**
+         * Tìm theo loại trang bị (ví dụ: "SYNCHRONIZED_EQUIPMENT")
+         */
+        type?: string;
         /**
          * ID của Đơn vị sử dụng
          */

@@ -209,6 +209,43 @@ type CreateEquipmentDisposalSchema = z.infer<
 	typeof createEquipmentDisposalSchema
 >
 
+const componentDetailSchema = z.object({
+	category: z
+		.string({ required_error: 'Chưa nhập danh mục' })
+		.trim()
+		.min(1, 'Chưa nhập danh mục'),
+	name: z
+		.string({ required_error: 'Chưa nhập tên' })
+		.trim()
+		.min(1, 'Chưa nhập tên'),
+	unitOfMeasure: z
+		.string({ required_error: 'Chưa nhập đơn vị tính' })
+		.trim()
+		.min(1, 'Chưa nhập đơn vị tính'),
+	quantity: z
+		.number({
+			required_error: 'Chưa nhập số lượng',
+			invalid_type_error: 'Số lượng không hợp lệ',
+		})
+		.min(0, 'Số lượng phải lớn hơn 0'),
+	time: z.string({ required_error: 'Chưa nhập thời gian' }),
+	supplyUnit: z
+		.string({ required_error: 'Chưa nhập đơn vị cấp' })
+		.trim()
+		.min(1, 'Chưa nhập đơn vị cấp'),
+	receiverUnit: z.string().optional(),
+	reviewUnit: z.string().optional(),
+	reviewContent: z.string().optional(),
+	storageLocation: z
+		.string({ required_error: 'Chưa nhập vị trí lưu trữ' })
+		.trim()
+		.min(1, 'Chưa nhập vị trí lưu trữ'),
+	technicalFeatures: z.string().optional(),
+	files: z.any().optional(),
+	note: z.string().optional(),
+})
+type ComponentDetailSchema = z.infer<typeof componentDetailSchema>
+
 export {
 	loginSchema,
 	accountSchema,
@@ -220,6 +257,7 @@ export {
 	createEquipmentSetHandoverSchema,
 	createEquipmentMaintenanceSchema,
 	createEquipmentDisposalSchema,
+	componentDetailSchema,
 }
 
 export type {
@@ -233,4 +271,5 @@ export type {
 	CreateEquipmentSetHandoverSchema,
 	CreateEquipmentMaintenanceSchema,
 	CreateEquipmentDisposalSchema,
+	ComponentDetailSchema,
 }

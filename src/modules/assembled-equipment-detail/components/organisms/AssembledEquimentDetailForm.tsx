@@ -1,10 +1,10 @@
 'use client'
 
+import type { CreateEquipmentInstanceDto } from '@/client'
 import {
-	componentsControllerCreateMutation,
-	componentsControllerFindAllQueryKey,
-	componentsControllerUpdateMutation,
-	equipmentGroupsControllerFindAllOptions,
+	assembledEquipmentControllerFindAllBuildActivitiesOptions,
+	equipmentInstancesControllerCreateMutation,
+	equipmentInstancesControllerUpdateMutation,
 	unitsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import Combobox from '@/components/custom/combobox/Combobox'
@@ -28,99 +28,88 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
-import type { ComponentDetailSchema } from '@/configs/schema'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import type { SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
-import useComponentDetailController from '../../controllers/component-detail.controller'
+import useAssembledEquipmentDetailController from '../../controllers/assembled-equipment-detail.controller'
 
 type Props = {
 	id?: string
 }
 
-const ComponentDetailForm = ({ id }: Props) => {
-	const router = useRouter()
-	const { form } = useComponentDetailController({ id })
-	const { mutate: create } = useMutation({
-		...componentsControllerCreateMutation(),
-	})
-	const { mutate: update } = useMutation({
-		...componentsControllerUpdateMutation(),
-	})
+const AssembledEquipmentDetailForm = ({ id }: Props) => {
+	const { form } = useAssembledEquipmentDetailController({ id })
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions(),
 	})
-	const { data: typeGroups } = useQuery({
-		...equipmentGroupsControllerFindAllOptions({
-			query: { type: 'EQUIPMENT_GROUP' },
-		}),
+	// const { data: typeGroups } = useQuery({
+	// 	...equipmentGroupsControllerFindAllOptions({
+	// 		query: { type: 'EQUIPMENT_GROUP' },
+	// 	}),
+	// })
+	const { mutate: create } = useMutation({
+		...equipmentInstancesControllerCreateMutation(),
+	})
+	const { mutate: update } = useMutation({
+		...equipmentInstancesControllerUpdateMutation(),
+	})
+	const { data: buildActivities } = useQuery({
+		...assembledEquipmentControllerFindAllBuildActivitiesOptions(),
+		select: (data: any) =>
+			data?.map((e: any) => ({
+				value: e?.config?._id,
+				label: e?.config?.name,
+				...e,
+			})),
 	})
 
-	const onSubmit = (data: ComponentDetailSchema) => {
+	const router = useRouter()
+
+	const onSubmit: SubmitHandler<CreateEquipmentInstanceDto> = async (data) => {
 		if (!id) {
 			create(
 				{
 					body: {
-						equipmentId: data?.category ?? '',
-						name: data?.name ?? '',
-						unitOfMeasure: data?.unitOfMeasure ?? '',
-						quantityInStock: Number(data?.quantity) ?? 0,
-						time: new Date(data?.time).toISOString(),
-						supplyingUnitId: data?.supplyUnit ?? '',
-						receivingUnitId: data?.receiverUnit ?? '',
-						evaluatingUnitId: data?.reviewUnit ?? '',
-						evaluationContent: data?.reviewContent ?? '',
-						storageLocation: data?.storageLocation ?? '',
-						technicalFeatures: data?.technicalFeatures ?? '',
-						notes: data?.note ?? '',
+						...data,
+						type: 'ASSEMBLED_EQUIPMENT',
+						productionDate: data.productionDate
+							? new Date(data.productionDate).toISOString()
+							: undefined,
+						quantity: Number(data.quantity),
 					},
 				},
 				{
-					onSuccess: () => {
-						toast.success('Tạo thành công')
-						router.push(pageList.assembledEquipmentComponent.href)
-						queryClient.invalidateQueries({
-							queryKey: componentsControllerFindAllQueryKey(),
-						})
-					},
 					onError: () => {
-						toast.error('Tạo không thành công')
+						toast.error('Tạo trang bị khônng thành công')
+					},
+					onSuccess: () => {
+						toast.success('Tạo trang bị thành công')
+						router.push(pageList.assembledEquipment.href)
 					},
 				},
 			)
 		} else {
 			update(
 				{
-					path: {
-						id: id,
-					},
+					path: { id },
 					body: {
-						equipmentId: data?.category ?? '',
-						name: data?.name ?? '',
-						unitOfMeasure: data?.unitOfMeasure ?? '',
-						quantityInStock: Number(data?.quantity) ?? 0,
-						time: new Date(data?.time).toISOString(),
-						supplyingUnitId: data?.supplyUnit ?? '',
-						receivingUnitId: data?.receiverUnit ?? '',
-						evaluatingUnitId: data?.reviewUnit ?? '',
-						evaluationContent: data?.reviewContent ?? '',
-						storageLocation: data?.storageLocation ?? '',
-						technicalFeatures: data?.technicalFeatures ?? '',
-						notes: data?.note ?? '',
+						...data,
+						type: 'ASSEMBLED_EQUIPMENT',
+						productionDate: data.productionDate
+							? new Date(data.productionDate).toISOString()
+							: undefined,
+						quantity: Number(data.quantity),
 					},
 				},
 				{
-					onSuccess: () => {
-						toast.success('Cập nhật thành cong')
-						queryClient.invalidateQueries({
-							queryKey: componentsControllerFindAllQueryKey(),
-						})
-						router.push(pageList.assembledEquipmentComponent.href)
-					},
 					onError: () => {
-						toast.error('Cập nhật không thành công')
+						toast.error('Cập nhật trang bị khônng thành công')
+					},
+					onSuccess: () => {
+						toast.success('Cập nhật trang bị thành công')
+						router.push(pageList.assembledEquipment.href)
 					},
 				},
 			)
@@ -132,10 +121,10 @@ const ComponentDetailForm = ({ id }: Props) => {
 			<Card>
 				<Form {...form}>
 					<div className="grid gap-y-5 gap-x-20 grid-cols-2">
-						<FormField
+						{/* <FormField
 							control={form.control}
-							name="category"
-							render={({ field: { onChange, value } }) => (
+							name="equipmentId"
+							render={({ field: { value, onChange } }) => (
 								<FormItem>
 									<FormLabel>Danh mục</FormLabel>
 									<FormControl>
@@ -152,15 +141,34 @@ const ComponentDetailForm = ({ id }: Props) => {
 								</FormItem>
 							)}
 						/>
-						<div />
+						<div /> */}
 						<FormField
 							control={form.control}
-							name="name"
-							render={({ field }) => (
+							name="buildActivityId"
+							render={({ field: { value, onChange } }) => (
 								<FormItem>
-									<FormLabel>Tên vật tư/linh kiện</FormLabel>
+									<FormLabel>Tên trang bị</FormLabel>
 									<FormControl>
-										<Input placeholder="Tên vật tư/linh kiện" {...field} />
+										<Combobox
+											options={buildActivities || []}
+											value={value}
+											onChange={(value) => {
+												onChange(value)
+												const buildFound = buildActivities?.find(
+													(e: any) => e.value === value,
+												)
+												form.setValue('name', buildFound?.config?.name)
+												form.setValue(
+													'equipmentId',
+													buildFound?.config?.equipmentId,
+												)
+												form.setValue(
+													'unitOfMeasure',
+													buildFound?.config?.unitOfMeasure,
+												)
+												form.setValue('quantity', buildFound?.quantity)
+											}}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -205,7 +213,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={form.control}
-							name="time"
+							name="productionDate"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Thời gian</FormLabel>
@@ -222,7 +230,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 						<div />
 						<FormField
 							control={form.control}
-							name="supplyUnit"
+							name="importingUnitId"
 							render={({ field: { value, onChange } }) => (
 								<FormItem>
 									<FormLabel>Đơn vị cấp</FormLabel>
@@ -247,7 +255,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 						<div />
 						<FormField
 							control={form.control}
-							name="receiverUnit"
+							name="usingUnitId"
 							render={({ field: { value, onChange } }) => (
 								<FormItem>
 									<FormLabel>Đơn vị nhận</FormLabel>
@@ -273,7 +281,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 						<div>
 							<FormField
 								control={form.control}
-								name="reviewUnit"
+								name="evaluatingUnitId"
 								render={({ field: { value, onChange } }) => (
 									<FormItem>
 										<FormLabel>Đơn vị đánh giá</FormLabel>
@@ -302,7 +310,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 						</div>
 						<FormField
 							control={form.control}
-							name="reviewContent"
+							name="evaluationResult"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Nội dung đánh giá</FormLabel>
@@ -333,42 +341,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 					</div>
 					<FormField
 						control={form.control}
-						name="technicalFeatures"
-						render={({ field }) => (
-							<FormItem className="mt-5">
-								<FormLabel>Tính năng kỹ thuật</FormLabel>
-								<FormControl>
-									<Textarea
-										placeholder="Tính năng kỹ thuật"
-										className="h-40"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					{/* <FormField
-						control={form.control}
-						name="files"
-						render={({ field }) => (
-							<FormItem className="mt-5">
-								<FormLabel>Tài liệu</FormLabel>
-								<FormControl>
-									<Input
-										type="file"
-										placeholder="Tài liệu"
-										className="w-1/2"
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/> */}
-					<FormField
-						control={form.control}
-						name="note"
+						name="notes"
 						render={({ field }) => (
 							<FormItem className="mt-5">
 								<FormLabel>Ghi chú</FormLabel>
@@ -404,4 +377,4 @@ const ComponentDetailForm = ({ id }: Props) => {
 	)
 }
 
-export default ComponentDetailForm
+export default AssembledEquipmentDetailForm

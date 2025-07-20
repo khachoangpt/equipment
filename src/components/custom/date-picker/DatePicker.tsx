@@ -13,9 +13,10 @@ import { CalendarIcon } from 'lucide-react'
 type Props = {
 	value?: Date
 	onChange: (value: Date) => void
+	className?: string
 }
 
-export const DatePicker = ({ onChange, value }: Props) => {
+export const DatePicker = ({ onChange, value, className }: Props) => {
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
@@ -24,6 +25,7 @@ export const DatePicker = ({ onChange, value }: Props) => {
 					className={cn(
 						'justify-start text-left font-normal',
 						!value && 'text-muted-foreground',
+						className,
 					)}
 				>
 					<CalendarIcon className="mr-2 h-4 w-4" />
