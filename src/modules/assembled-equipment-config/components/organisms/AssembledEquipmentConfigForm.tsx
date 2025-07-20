@@ -2,7 +2,7 @@
 
 import {
 	componentsControllerFindAllOptions,
-	equipmentGroupsControllerFindAllOptions,
+	syncEquipmentControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import Combobox from '@/components/custom/combobox/Combobox'
 import { Button } from '@/components/ui/button'
@@ -34,10 +34,8 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 		useAssembledEquipmentConfigController({ id })
 	const { control } = form
 	const router = useRouter()
-	const { data: typeGroups } = useQuery({
-		...equipmentGroupsControllerFindAllOptions({
-			query: { type: 'EQUIPMENT_GROUP' },
-		}),
+	const { data: syncEquipments } = useQuery({
+		...syncEquipmentControllerFindAllOptions(),
 	})
 
 	const { data: components } = useQuery({
@@ -118,7 +116,7 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 									<FormLabel>Danh mục</FormLabel>
 									<FormControl>
 										<Combobox
-											options={(typeGroups || []).map((e) => ({
+											options={(syncEquipments || []).map((e) => ({
 												value: e._id,
 												label: e.name,
 											}))}
