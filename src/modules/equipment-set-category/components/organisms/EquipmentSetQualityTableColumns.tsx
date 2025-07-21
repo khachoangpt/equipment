@@ -17,6 +17,13 @@ import DialogAddQuality from './DialogAddQuality'
 
 export const columns: ColumnDef<any>[] = [
 	{
+		accessorKey: 'index',
+		header: 'STT',
+		cell: ({ row }) => {
+			return <div>{row.index + 1}</div>
+		},
+	},
+	{
 		accessorKey: 'name',
 		header: 'Tên phân cấp',
 	},

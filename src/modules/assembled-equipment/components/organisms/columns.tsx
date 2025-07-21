@@ -15,6 +15,13 @@ import { toast } from 'sonner'
 
 export const columns: ColumnDef<any>[] = [
 	{
+		accessorKey: 'index',
+		header: 'STT',
+		cell: ({ row }) => {
+			return <div>{row.index + 1}</div>
+		},
+	},
+	{
 		accessorKey: 'name',
 		header: 'Tên trang bị',
 	},

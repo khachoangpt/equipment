@@ -17,6 +17,13 @@ import DialogAddCategoryEquipmentSet from './DialogAddCategoryEquipmentSet'
 
 export const columns: ColumnDef<Equipment>[] = [
 	{
+		accessorKey: 'index',
+		header: 'STT',
+		cell: ({ row }) => {
+			return <div>{row.index + 1}</div>
+		},
+	},
+	{
 		accessorKey: 'name',
 		header: 'Tên',
 	},
