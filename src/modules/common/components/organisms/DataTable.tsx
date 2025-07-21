@@ -1,4 +1,5 @@
 'use client'
+import { Pagination } from '@/components/custom/pagination'
 import {
 	Table,
 	TableBody,
@@ -15,18 +16,31 @@ import {
 	getPaginationRowModel,
 	useReactTable,
 } from '@tanstack/react-table'
+import { useState } from 'react'
 
 type Props<TData, TValue> = {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
+	pagination?: {
+		page: number
+		pageSize: number
+		totalCount: number
+	}
 }
 
 function DataTable<TData, TValue>({ columns, data }: Props<TData, TValue>) {
+	const [page, setPage] = useState(0)
 	const table = useReactTable({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
+		state: {
+			pagination: {
+				pageIndex: page,
+				pageSize: 10,
+			},
+		},
 	})
 
 	return (
@@ -87,6 +101,12 @@ function DataTable<TData, TValue>({ columns, data }: Props<TData, TValue>) {
 					)}
 				</TableBody>
 			</Table>
+			<Pagination
+				onChange={(page) => setPage(page - 1)}
+				page={table.getState().pagination.pageIndex + 1}
+				pageSize={table.getState().pagination.pageSize}
+				totalCount={data.length}
+			/>
 		</>
 	)
 }
