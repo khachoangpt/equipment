@@ -4,6 +4,11 @@ import type { ColumnDef } from '@tanstack/react-table'
 
 export const columns: ColumnDef<ActivityLog>[] = [
 	{
+		accessorKey: 'index',
+		header: 'STT',
+		cell: ({ row }) => row.index + 1,
+	},
+	{
 		id: 'reportNumber',
 		accessorKey: 'details',
 		header: 'Số biên bản',

@@ -14,6 +14,11 @@ import { toast } from 'sonner'
 
 export const columns: ColumnDef<EquipmentInstance>[] = [
 	{
+		accessorKey: 'index',
+		header: 'STT',
+		cell: ({ row }) => row.index + 1,
+	},
+	{
 		accessorKey: 'equipmentId',
 		header: 'Tên',
 		cell: ({ row }) => {

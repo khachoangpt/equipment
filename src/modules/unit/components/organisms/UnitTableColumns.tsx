@@ -15,6 +15,11 @@ import DialogConfirmDeleteUnit from './DialogConfirmDeleteUnit'
 
 export const columns: ColumnDef<any>[] = [
 	{
+		accessorKey: 'index',
+		header: 'STT',
+		cell: ({ row }) => row.index + 1,
+	},
+	{
 		accessorKey: 'name',
 		header: 'Tên',
 	},
