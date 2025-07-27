@@ -241,7 +241,10 @@ const componentDetailSchema = z.object({
 		.trim()
 		.min(1, 'Chưa nhập vị trí lưu trữ'),
 	technicalFeatures: z.string().optional(),
-	files: z.any().optional(),
+	images: z.array(z.any()).optional(),
+	imageFiles: z.array(z.any()).optional(),
+	documents: z.array(z.any()).optional(),
+	documentFiles: z.array(z.any()).optional(),
 	note: z.string().optional(),
 })
 type ComponentDetailSchema = z.infer<typeof componentDetailSchema>

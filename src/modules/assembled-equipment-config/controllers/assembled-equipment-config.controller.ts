@@ -22,8 +22,16 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 		selectedComponentName: string
 		selectedComponentQuantity: string
 		selectedComponentNote: string
+		imageFiles?: any
+		documentFiles?: any
+		images?: any
+		documents?: any
 	} = {
 		componentList: [],
+		images: [],
+		imageFiles: [],
+		documents: [],
+		documentFiles: [],
 		documentUrls: [],
 		equipmentId: '',
 		name: '',
@@ -39,6 +47,10 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 			selectedComponentName: string
 			selectedComponentQuantity: string
 			selectedComponentNote: string
+			imageFiles?: any
+			documentFiles?: any
+			images?: any
+			documents?: any
 		}
 	>({ defaultValues })
 
@@ -83,6 +95,12 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 					quantity: item?.quantity,
 					note: item?.notes,
 				})),
+				images: (config as any).images?.filter(
+					(item: any) => item.activityType === 'IMAGE',
+				),
+				documents: (config as any).images?.filter(
+					(item: any) => item.activityType === 'DOCUMENT',
+				),
 			})
 		}
 	}, [config, isFetching])
@@ -106,9 +124,17 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 		])
 	}
 
-	const onSubmit: SubmitHandler<CreateAssembledProductConfigDto> = async (
-		data,
-	) => {
+	const onSubmit: SubmitHandler<
+		CreateAssembledProductConfigDto & {
+			selectedComponentName: string
+			selectedComponentQuantity: string
+			selectedComponentNote: string
+			imageFiles?: any
+			documentFiles?: any
+			images?: any
+			documents?: any
+		}
+	> = async (data) => {
 		if (!id) {
 			createConfig(
 				{
@@ -131,11 +157,54 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 						toast.error((error.response?.data as any)?.message)
 					},
 					onSuccess: (config: any) => {
-						if (data?.documentUrls?.length && data?.documentUrls?.length > 0) {
+						// if (data?.documentUrls?.length && data?.documentUrls?.length > 0) {
+						// 	upload(
+						// 		{
+						// 			body: { documents: data?.documentUrls as any },
+						// 			path: { id: config?._id },
+						// 		},
+						// 		{
+						// 			onError: (error) => {
+						// 				toast.error((error.response?.data as any)?.message)
+						// 			},
+						// 		},
+						// 	)
+						// }
+						if (data?.imageFiles?.length && data?.imageFiles?.length > 0) {
 							upload(
 								{
-									body: { documents: data?.documentUrls as any },
-									path: { id: config?._id },
+									path: {
+										id: config?._id,
+									},
+									body: {
+										documents: data.imageFiles.map((file: any) => file.file),
+									},
+									headers: {
+										'x-assembled-equipment-config-type': 'IMAGE',
+									},
+								},
+								{
+									onError: (error) => {
+										toast.error((error.response?.data as any)?.message)
+									},
+								},
+							)
+						}
+						if (
+							data?.documentFiles?.length &&
+							data?.documentFiles?.length > 0
+						) {
+							upload(
+								{
+									path: {
+										id: config?._id,
+									},
+									body: {
+										documents: data.documentFiles.map((file: any) => file.file),
+									},
+									headers: {
+										'x-assembled-equipment-config-type': 'DOCUMENT',
+									},
 								},
 								{
 									onError: (error) => {
@@ -165,6 +234,7 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 						unitOfMeasure: data?.unitOfMeasure,
 						notes: data?.notes,
 						technicalFeatures: data?.technicalFeatures,
+						documentUrls: [...(data.images ?? []), ...(data.documents ?? [])],
 					},
 				},
 				{
@@ -172,15 +242,56 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 						toast.error((error.response?.data as any)?.message)
 					},
 					onSuccess: (config: any) => {
+						// if (
+						// 	data?.documentUrls?.length &&
+						// 	data?.documentUrls?.length > 0 &&
+						// 	typeof data?.documentUrls?.[0] !== 'string'
+						// ) {
+						// 	upload({
+						// 		body: { documents: data?.documentUrls as any },
+						// 		path: { id: config?._id },
+						// 	})
+						// }
+						if (data?.imageFiles?.length && data?.imageFiles?.length > 0) {
+							upload(
+								{
+									path: {
+										id: config?._id,
+									},
+									body: { documents: data.imageFiles.map((f: any) => f.file) },
+									headers: {
+										'x-assembled-equipment-config-type': 'IMAGE',
+									},
+								},
+								{
+									onError: (error) => {
+										toast.error((error.response?.data as any)?.message)
+									},
+								},
+							)
+						}
 						if (
-							data?.documentUrls?.length &&
-							data?.documentUrls?.length > 0 &&
-							typeof data?.documentUrls?.[0] !== 'string'
+							data?.documentFiles?.length &&
+							data?.documentFiles?.length > 0
 						) {
-							upload({
-								body: { documents: data?.documentUrls as any },
-								path: { id: config?._id },
-							})
+							upload(
+								{
+									path: {
+										id: config?._id,
+									},
+									body: {
+										documents: data.documentFiles.map((file: any) => file.file),
+									},
+									headers: {
+										'x-assembled-equipment-config-type': 'DOCUMENT',
+									},
+								},
+								{
+									onError: (error) => {
+										toast.error((error.response?.data as any)?.message)
+									},
+								},
+							)
 						}
 						toast.success('Cập nhật thành công')
 						form.reset()
@@ -191,7 +302,13 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 		}
 	}
 
-	return { form, handleSelectComponent, onSubmit }
+	return {
+		form,
+		handleSelectComponent,
+		onSubmit,
+		config: config as any,
+		isFetching,
+	}
 }
 
 export default useAssembledEquipmentConfigController

@@ -9,7 +9,7 @@ type Props = {
 }
 
 const useComponentDetailController = ({ id }: Props) => {
-	const defaultValues: ComponentDetailSchema = {
+	const defaultValues: ComponentDetailSchema & { imageFiles: File[] } = {
 		category: '',
 		name: '',
 		quantity: 0,
@@ -17,17 +17,20 @@ const useComponentDetailController = ({ id }: Props) => {
 		supplyUnit: '',
 		time: new Date().toISOString(),
 		unitOfMeasure: '',
-		files: '',
+		images: [],
+		imageFiles: [],
 		note: '',
 		receiverUnit: '',
 		reviewContent: '',
 		reviewUnit: '',
 		technicalFeatures: '',
+		documents: [],
+		documentFiles: [],
 	}
 	const form = useForm<ComponentDetailSchema>({
 		defaultValues,
 	})
-	const { data, isPending } = useQuery({
+	const { data, isFetching } = useQuery({
 		...componentsControllerFindOneOptions({
 			path: { id: id ?? '' },
 		}),
@@ -53,11 +56,19 @@ const useComponentDetailController = ({ id }: Props) => {
 				storageLocation: component?.storageLocation ?? '',
 				technicalFeatures: component?.technicalFeatures ?? '',
 				note: component?.notes ?? '',
+				images:
+					component?.attachments?.filter(
+						(item: any) => item.activityType === 'IMAGE',
+					) ?? [],
+				documents:
+					component?.attachments?.filter(
+						(item: any) => item.activityType === 'DOCUMENT',
+					) ?? [],
 			})
 		}
-	}, [id, isPending])
+	}, [id, isFetching])
 
-	return { form }
+	return { form, data, isFetching }
 }
 
 export default useComponentDetailController

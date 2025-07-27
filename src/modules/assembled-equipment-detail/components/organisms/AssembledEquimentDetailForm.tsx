@@ -59,10 +59,12 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 		...assembledEquipmentControllerFindAllBuildActivitiesOptions({
 			query: { limit: 1000000, page: 1 },
 		}),
-		select: (data: any) => {
-			return data?.data?.map((e: any) => ({
-				value: e?.config?._id,
-				label: e?.config?.name,
+		select: (data) => {
+			return data?.data?.map((e) => ({
+				value: (e?.config as any)?._id,
+				label: (e?.config as any)?.name,
+				config: e?.config as any,
+				quantity: e?.quantity,
 				...e,
 			}))
 		},

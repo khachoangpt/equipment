@@ -1051,6 +1051,12 @@ export type AssembledEquipmentControllerUploadFilesData = {
     body: {
         documents?: Array<((Blob | File))>;
     };
+    headers: {
+        /**
+         * The ID of the equipment instance
+         */
+        'x-assembled-equipment-config-type': string;
+    };
     path: {
         id: string;
     };
