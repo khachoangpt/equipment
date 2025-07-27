@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { queryClient } from '@/configs/query-client'
 import type { TypeGroupDetailSchema } from '@/configs/schema'
+import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
@@ -20,10 +21,25 @@ import { columns } from './EquipmentSetTypeGroupTableColumns'
 
 const EquipmentSetTypeGroup = () => {
 	const [open, setOpen] = useState<boolean>(false)
+	const [page, setPage] = useState(1)
+	const { settings, isFetchingGeneralSettings } = useGetGeneralSettings()
 	const { data: equipmentSetTypeGroups } = useQuery({
 		...equipmentGroupsControllerFindAllOptions({
-			query: { type: 'EQUIPMENT_GROUP' },
+			query: { type: 'EQUIPMENT_GROUP', limit: settings?.pagingSize, page },
 		}),
+		select: (data) => {
+			return {
+				...data,
+				data: data?.data?.map((item, index) => ({
+					...item,
+					index: settings?.pagingSize
+						? (page - 1) * settings?.pagingSize + index + 1
+						: index + 1,
+				})),
+			}
+		},
+		enabled: !isFetchingGeneralSettings,
+		placeholderData: (prev) => prev,
 	})
 	const { mutate: create } = useMutation({
 		...equipmentGroupsControllerCreateMutation(),
@@ -39,8 +55,8 @@ const EquipmentSetTypeGroup = () => {
 				},
 			},
 			{
-				onError: () => {
-					toast.error('Tạo nhóm loại trang bị khônng thành công')
+				onError: (error) => {
+					toast.error((error.response?.data as any)?.message)
 					setOpen(false)
 				},
 				onSuccess: () => {
@@ -65,7 +81,13 @@ const EquipmentSetTypeGroup = () => {
 			</div>
 			<DataTable
 				columns={columns}
-				data={(equipmentSetTypeGroups ?? []) as any}
+				data={(equipmentSetTypeGroups?.data ?? []) as any}
+				onChangePage={setPage}
+				pagination={{
+					page,
+					totalCount: equipmentSetTypeGroups?.total ?? 0,
+					pageSize: settings?.pagingSize ?? 10,
+				}}
 			/>
 			<DialogAddTypeGroup
 				open={open}

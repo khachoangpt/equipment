@@ -16,9 +16,6 @@ export const columns: ColumnDef<EquipmentInstance>[] = [
 	{
 		accessorKey: 'index',
 		header: 'STT',
-		cell: ({ row }) => {
-			return <div>{row.index + 1}</div>
-		},
 	},
 	{
 		accessorKey: 'equipmentId',
@@ -82,9 +79,9 @@ export const columns: ColumnDef<EquipmentInstance>[] = [
 								queryKey: equipmentInstancesControllerSearchQueryKey(),
 							})
 						},
-						onError: () => {
+						onError: (error) => {
 							setOpen(false)
-							toast.error('Xóa khônng thành công')
+							toast.error((error.response?.data as any)?.message)
 						},
 					},
 				)

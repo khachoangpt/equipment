@@ -28,8 +28,8 @@ const useLoginController = () => {
 					await setCookie(COOKIES.JWT, result.access_token)
 					router.push(pageList.home.href)
 				},
-				onError: () => {
-					toast.error('Tên đăng nhập hoặc mật khẩu khônng chính xác')
+				onError: (error) => {
+					toast.error((error.response?.data as any)?.message)
 				},
 			},
 		)

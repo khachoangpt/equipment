@@ -5,9 +5,6 @@ export const columns: ColumnDef<any>[] = [
 	{
 		accessorKey: 'index',
 		header: 'STT',
-		cell: ({ row }) => {
-			return <div>{row.index + 1}</div>
-		},
 	},
 	{
 		id: 'reportNumber',

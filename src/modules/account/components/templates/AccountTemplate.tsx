@@ -13,9 +13,9 @@ import { columns } from '../organisms/AccountTableColumns'
 
 const AccountTemplate = () => {
 	const router = useRouter()
-	const { data: accounts, isLoading } = useQuery(
-		usersControllerFindAllOptions(),
-	)
+	const { data: accounts, isLoading } = useQuery({
+		...usersControllerFindAllOptions(),
+	})
 
 	if (isLoading) {
 		return (

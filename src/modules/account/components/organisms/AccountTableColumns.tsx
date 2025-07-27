@@ -53,8 +53,8 @@ export const columns: ColumnDef<any>[] = [
 								queryKey: usersControllerFindAllQueryKey(),
 							})
 						},
-						onError: () => {
-							toast.error('Xóa tài khoản không thành công')
+						onError: (error) => {
+							toast.error((error.response?.data as any)?.message)
 							setOpen(false)
 						},
 					},

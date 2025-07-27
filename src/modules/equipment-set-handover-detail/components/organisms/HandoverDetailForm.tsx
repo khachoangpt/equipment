@@ -48,12 +48,14 @@ const HandoverDetailForm = ({ id }: Props) => {
 		...equipmentInstancesControllerHandoverMutation(),
 	})
 	const { data: units } = useQuery({
-		...unitsControllerFindAllOptions(),
+		...unitsControllerFindAllOptions({ query: { limit: 1000000, page: 1 } }),
 	})
 	const { data: equipments } = useQuery({
-		...equipmentInstancesControllerSearchOptions(),
+		...equipmentInstancesControllerSearchOptions({
+			query: { limit: 1000000, page: 1 },
+		}),
 		select: (data) =>
-			data?.map((equipment) => ({
+			data?.data?.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
 				value: equipment._id,
 			})),
@@ -74,8 +76,8 @@ const HandoverDetailForm = ({ id }: Props) => {
 				},
 			},
 			{
-				onError: () => {
-					toast.error('Tạo không thành công')
+				onError: (error) => {
+					toast.error((error.response?.data as any)?.message)
 				},
 				onSuccess: () => {
 					toast.success('Tạo thành công')
@@ -144,7 +146,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												{units?.map((unit) => (
+												{units?.data?.map((unit) => (
 													<SelectItem key={unit._id} value={unit._id}>
 														{unit.name}
 													</SelectItem>

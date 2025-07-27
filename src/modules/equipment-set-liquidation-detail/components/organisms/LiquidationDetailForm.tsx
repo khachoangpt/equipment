@@ -41,9 +41,11 @@ const LiquidationDetailForm = ({ id }: Props) => {
 		...equipmentInstancesControllerDisposeMutation(),
 	})
 	const { data: equipments } = useQuery({
-		...equipmentInstancesControllerSearchOptions(),
+		...equipmentInstancesControllerSearchOptions({
+			query: { limit: 1000000, page: 1 },
+		}),
 		select: (data) =>
-			data.map((equipment) => ({
+			data?.data?.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
 				value: equipment._id,
 			})),
@@ -62,8 +64,8 @@ const LiquidationDetailForm = ({ id }: Props) => {
 				},
 			},
 			{
-				onError: () => {
-					toast.error('Tạo không thành công')
+				onError: (error) => {
+					toast.error((error.response?.data as any)?.message)
 				},
 				onSuccess: () => {
 					toast.success('Tạo thành công')

@@ -21,6 +21,14 @@ export type ActivityLog = {
 
 export type activityType = 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý';
 
+export type AssembledProductConfig = {
+    [key: string]: unknown;
+};
+
+export type BuildActivity = {
+    [key: string]: unknown;
+};
+
 export type BuildCheckDto = {
     /**
      * ID của cấu hình trang bị cần xây dựng
@@ -37,16 +45,15 @@ export type Component = {
     name: string;
     unitOfMeasure: string;
     quantityInStock: number;
+    supplyingUnit?: Unit;
+    receivingUnit?: Unit;
     storageLocation?: string;
     technicalFeatures?: string;
     /**
      * Danh sách các sản phẩm hoàn chỉnh có thể tích hợp
      */
     compatibleProducts?: Array<(string)>;
-    /**
-     * Danh sách URL tài liệu đính kèm
-     */
-    attachments?: Array<(string)>;
+    attachments: Array<DocumentAttachment>;
     notes?: string;
     createdAt: string;
     updatedAt: string;
@@ -216,6 +223,10 @@ export type CreateQualityLevelDto = {
     note?: string;
 };
 
+export type CreateSettingDto = {
+    pagingSize?: number;
+};
+
 export type CreateUnitDto = {
     name: string;
     code: string;
@@ -257,6 +268,17 @@ export type DisposeDto = {
     signer: string;
     notes?: string;
 };
+
+export type DocumentAttachment = {
+    /**
+     * Mongo document ID
+     */
+    _id: string;
+    url: string;
+    activityType: 'IMAGE' | 'DOCUMENT';
+};
+
+export type activityType2 = 'IMAGE' | 'DOCUMENT';
 
 export type Equipment = {
     /**
@@ -444,6 +466,226 @@ export type RequiredComponentDto = {
     quantity: number;
 };
 
+export type SearchAssembledBuildActivityResponseDto = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
+    data: Array<BuildActivity>;
+};
+
+export type SearchAssembledConfigResponseDto = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
+    data: Array<AssembledProductConfig>;
+};
+
+export type SearchComponentResponseDto = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
+    data: Array<Component>;
+};
+
+export type SearchEquipmentGroupResponse = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
+    data: Array<EquipmentGroup>;
+};
+
+export type SearchInstanceResponseDto = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
+    data: Array<EquipmentInstance>;
+};
+
+export type SearchLogResponseDto = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
+    data: Array<ActivityLog>;
+};
+
+export type SearchProductProfileResponse = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
+    data: Array<ProductProfile>;
+};
+
+export type SearchQualityLevelResponse = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
+    data: Array<QualityLevel>;
+};
+
+export type SearchSyncEquipmentResponse = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
+    data: Array<Equipment>;
+};
+
+export type SearchUnitResponseDto = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
+    data: Array<Unit>;
+};
+
+export type Setting = {
+    /**
+     * Mongo document ID
+     */
+    _id: string;
+    /**
+     * Kích thước trang mặc định cho phân trang
+     */
+    pagingSize?: number;
+    updatedBy?: ObjectId;
+    /**
+     * Thời điểm tạo
+     */
+    createdAt: string;
+    /**
+     * Thời điểm cập nhật lần cuối
+     */
+    updatedAt: string;
+};
+
 export type Unit = {
     /**
      * Mongo document ID
@@ -624,6 +866,10 @@ export type UpdateQualityLevelDto = {
     note?: string;
 };
 
+export type UpdateSettingDto = {
+    pagingSize?: number;
+};
+
 export type UpdateUnitDto = {
     name?: string;
     code?: string;
@@ -699,9 +945,51 @@ export type ComponentsControllerCreateResponse = (Component);
 
 export type ComponentsControllerCreateError = unknown;
 
-export type ComponentsControllerFindAllResponse = (Array<Component>);
+export type ComponentsControllerFindAllData = {
+    query?: {
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+    };
+};
+
+export type ComponentsControllerFindAllResponse = (SearchComponentResponseDto);
 
 export type ComponentsControllerFindAllError = unknown;
+
+export type ComponentsControllerUploadFilesData = {
+    body: {
+        files?: Array<((Blob | File))>;
+    };
+    headers: {
+        /**
+         * The ID of the equipment instance
+         */
+        'x-component-attachment-type': string;
+    };
+    path: {
+        id: string;
+    };
+};
+
+export type ComponentsControllerUploadFilesResponse = (unknown);
+
+export type ComponentsControllerUploadFilesError = unknown;
+
+export type ComponentsControllerGetImageData = {
+    path: {
+        imageId: string;
+    };
+};
+
+export type ComponentsControllerGetImageResponse = (unknown);
+
+export type ComponentsControllerGetImageError = unknown;
 
 export type ComponentsControllerFindOneData = {
     path: {
@@ -742,7 +1030,20 @@ export type AssembledEquipmentControllerCreateConfigResponse = (unknown);
 
 export type AssembledEquipmentControllerCreateConfigError = unknown;
 
-export type AssembledEquipmentControllerFindAllConfigsResponse = (unknown);
+export type AssembledEquipmentControllerFindAllConfigsData = {
+    query?: {
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+    };
+};
+
+export type AssembledEquipmentControllerFindAllConfigsResponse = (SearchAssembledConfigResponseDto);
 
 export type AssembledEquipmentControllerFindAllConfigsError = unknown;
 
@@ -817,7 +1118,20 @@ export type AssembledEquipmentControllerCreateBuildActivityResponse = (unknown);
 
 export type AssembledEquipmentControllerCreateBuildActivityError = unknown;
 
-export type AssembledEquipmentControllerFindAllBuildActivitiesResponse = (unknown);
+export type AssembledEquipmentControllerFindAllBuildActivitiesData = {
+    query?: {
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+    };
+};
+
+export type AssembledEquipmentControllerFindAllBuildActivitiesResponse = (SearchAssembledBuildActivityResponseDto);
 
 export type AssembledEquipmentControllerFindAllBuildActivitiesError = unknown;
 
@@ -852,6 +1166,39 @@ export type AssembledEquipmentControllerRemoveBuildActivityResponse = (unknown);
 
 export type AssembledEquipmentControllerRemoveBuildActivityError = unknown;
 
+export type SettingsControllerCreateData = {
+    body: CreateSettingDto;
+};
+
+export type SettingsControllerCreateResponse = (Setting);
+
+export type SettingsControllerCreateError = (unknown);
+
+export type SettingsControllerFindAllResponse = (Array<Setting>);
+
+export type SettingsControllerFindAllError = unknown;
+
+export type SettingsControllerFindOneData = {
+    path: {
+        id: string;
+    };
+};
+
+export type SettingsControllerFindOneResponse = (Setting);
+
+export type SettingsControllerFindOneError = (unknown);
+
+export type SettingsControllerUpdateData = {
+    body: UpdateSettingDto;
+    path: {
+        id: string;
+    };
+};
+
+export type SettingsControllerUpdateResponse = (Setting);
+
+export type SettingsControllerUpdateError = (unknown);
+
 export type ProductProfilesControllerCreateData = {
     body: CreateProductProfileDto;
 };
@@ -860,7 +1207,20 @@ export type ProductProfilesControllerCreateResponse = (ProductProfile);
 
 export type ProductProfilesControllerCreateError = unknown;
 
-export type ProductProfilesControllerFindAllResponse = (Array<ProductProfile>);
+export type ProductProfilesControllerFindAllData = {
+    query?: {
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+    };
+};
+
+export type ProductProfilesControllerFindAllResponse = (SearchProductProfileResponse);
 
 export type ProductProfilesControllerFindAllError = unknown;
 
@@ -911,7 +1271,20 @@ export type EquipmentGroupsControllerCreateResponse = (EquipmentGroup);
 
 export type EquipmentGroupsControllerCreateError = unknown;
 
-export type EquipmentGroupsControllerFindAllResponse = (Array<EquipmentGroup>);
+export type EquipmentGroupsControllerFindAllData = {
+    query?: {
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+    };
+};
+
+export type EquipmentGroupsControllerFindAllResponse = (SearchEquipmentGroupResponse);
 
 export type EquipmentGroupsControllerFindAllError = unknown;
 
@@ -954,7 +1327,20 @@ export type QualityLevelsControllerCreateResponse = (QualityLevel);
 
 export type QualityLevelsControllerCreateError = (unknown);
 
-export type QualityLevelsControllerFindAllResponse = (Array<QualityLevel>);
+export type QualityLevelsControllerFindAllData = {
+    query?: {
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+    };
+};
+
+export type QualityLevelsControllerFindAllResponse = (SearchQualityLevelResponse);
 
 export type QualityLevelsControllerFindAllError = unknown;
 
@@ -997,7 +1383,20 @@ export type UnitsControllerCreateResponse = (Unit);
 
 export type UnitsControllerCreateError = (unknown);
 
-export type UnitsControllerFindAllResponse = (Array<Unit>);
+export type UnitsControllerFindAllData = {
+    query?: {
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+    };
+};
+
+export type UnitsControllerFindAllResponse = (SearchUnitResponseDto);
 
 export type UnitsControllerFindAllError = unknown;
 
@@ -1094,6 +1493,14 @@ export type ActivityLogsControllerSearchData = {
          */
         instanceId?: string;
         /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+        /**
          * Số biên bản (sửa chữa) hoặc Số QĐ (thanh lý)
          */
         reportOrDecisionNumber?: string;
@@ -1104,7 +1511,7 @@ export type ActivityLogsControllerSearchData = {
     };
 };
 
-export type ActivityLogsControllerSearchResponse = (Array<ActivityLog>);
+export type ActivityLogsControllerSearchResponse = (SearchLogResponseDto);
 
 export type ActivityLogsControllerSearchError = unknown;
 
@@ -1126,7 +1533,20 @@ export type SyncEquipmentControllerCreateResponse = (Equipment);
 
 export type SyncEquipmentControllerCreateError = unknown;
 
-export type SyncEquipmentControllerFindAllResponse = (Array<Equipment>);
+export type SyncEquipmentControllerFindAllData = {
+    query?: {
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+    };
+};
+
+export type SyncEquipmentControllerFindAllResponse = (SearchSyncEquipmentResponse);
 
 export type SyncEquipmentControllerFindAllError = unknown;
 
@@ -1218,9 +1638,17 @@ export type EquipmentInstancesControllerSearchData = {
          */
         groupId?: string;
         /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
          * Tìm theo tên trang bị (hỗ trợ tìm kiếm gần đúng)
          */
         name?: string;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
         /**
          * ID của Phân cấp chất lượng
          */
@@ -1244,7 +1672,7 @@ export type EquipmentInstancesControllerSearchData = {
     };
 };
 
-export type EquipmentInstancesControllerSearchResponse = (Array<EquipmentInstance>);
+export type EquipmentInstancesControllerSearchResponse = (SearchInstanceResponseDto);
 
 export type EquipmentInstancesControllerSearchError = unknown;
 

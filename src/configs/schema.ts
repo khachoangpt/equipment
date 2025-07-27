@@ -246,6 +246,16 @@ const componentDetailSchema = z.object({
 })
 type ComponentDetailSchema = z.infer<typeof componentDetailSchema>
 
+const generalSettingsSchema = z.object({
+	pageSize: z.coerce
+		.number({
+			required_error: 'Chưa nhập kích thước trang',
+			invalid_type_error: 'Kích thước trang phải là số',
+		})
+		.min(1, 'Kích thước trang phải lớn hơn 0'),
+})
+type GeneralSettingsSchema = z.infer<typeof generalSettingsSchema>
+
 export {
 	loginSchema,
 	accountSchema,
@@ -258,6 +268,7 @@ export {
 	createEquipmentMaintenanceSchema,
 	createEquipmentDisposalSchema,
 	componentDetailSchema,
+	generalSettingsSchema,
 }
 
 export type {
@@ -272,4 +283,5 @@ export type {
 	CreateEquipmentMaintenanceSchema,
 	CreateEquipmentDisposalSchema,
 	ComponentDetailSchema,
+	GeneralSettingsSchema,
 }

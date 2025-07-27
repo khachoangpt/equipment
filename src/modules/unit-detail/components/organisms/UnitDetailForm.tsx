@@ -35,7 +35,7 @@ const EditUnitForm = ({ id }: Props) => {
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions(),
 		select: (data) =>
-			(data as any)?.map((unit: any) => ({
+			data?.data?.map((unit) => ({
 				label: unit.name,
 				value: unit._id,
 			})),

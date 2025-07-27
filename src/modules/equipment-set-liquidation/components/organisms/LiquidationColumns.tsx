@@ -6,9 +6,6 @@ export const columns: ColumnDef<ActivityLog>[] = [
 	{
 		accessorKey: 'index',
 		header: 'STT',
-		cell: ({ row }) => {
-			return <div>{row.index + 1}</div>
-		},
 	},
 	{
 		accessorKey: 'details.decisionNumber',

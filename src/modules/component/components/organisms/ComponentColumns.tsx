@@ -17,9 +17,6 @@ export const columns: ColumnDef<any>[] = [
 	{
 		accessorKey: 'index',
 		header: 'STT',
-		cell: ({ row }) => {
-			return <div>{row.index + 1}</div>
-		},
 	},
 	{
 		accessorKey: 'name',
@@ -58,9 +55,9 @@ export const columns: ColumnDef<any>[] = [
 								queryKey: componentsControllerFindAllQueryKey(),
 							})
 						},
-						onError: () => {
+						onError: (error) => {
 							setOpen(false)
-							toast.error('Xóa khônng thành công')
+							toast.error((error.response?.data as any)?.message)
 						},
 					},
 				)

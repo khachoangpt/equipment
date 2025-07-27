@@ -19,9 +19,6 @@ export const columns: ColumnDef<any>[] = [
 	{
 		accessorKey: 'index',
 		header: 'STT',
-		cell: ({ row }) => {
-			return <div>{row.index + 1}</div>
-		},
 	},
 	{
 		accessorKey: 'name',
@@ -60,8 +57,8 @@ export const columns: ColumnDef<any>[] = [
 								queryKey: qualityLevelsControllerFindAllQueryKey(),
 							})
 						},
-						onError: () => {
-							toast.error('Xóa không thành công')
+						onError: (error) => {
+							toast.error((error.response?.data as any)?.message)
 							setOpenDelete(false)
 						},
 					},
@@ -75,8 +72,8 @@ export const columns: ColumnDef<any>[] = [
 						path: { id: row.original._id },
 					},
 					{
-						onError: () => {
-							toast.error('Chỉnh sửa khônng thành công')
+						onError: (error) => {
+							toast.error((error.response?.data as any)?.message)
 							setOpenDetail(false)
 						},
 						onSuccess: () => {

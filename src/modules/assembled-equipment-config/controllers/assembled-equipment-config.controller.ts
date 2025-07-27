@@ -45,7 +45,11 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 	const { data: components } = useQuery({
 		...componentsControllerFindAllOptions(),
 		select: (data) =>
-			data.map((item) => ({ value: item._id, label: item.name, ...item })),
+			data?.data?.map((item) => ({
+				value: item._id,
+				label: item.name,
+				...item,
+			})),
 	})
 	const { mutate: createConfig } = useMutation({
 		...assembledEquipmentControllerCreateConfigMutation(),
@@ -123,8 +127,8 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 					},
 				},
 				{
-					onError: () => {
-						toast.error('Tạo không thành công')
+					onError: (error) => {
+						toast.error((error.response?.data as any)?.message)
 					},
 					onSuccess: (config: any) => {
 						if (data?.documentUrls?.length && data?.documentUrls?.length > 0) {
@@ -134,8 +138,8 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 									path: { id: config?._id },
 								},
 								{
-									onError: () => {
-										toast.error('Tạo khong thành cong')
+									onError: (error) => {
+										toast.error((error.response?.data as any)?.message)
 									},
 								},
 							)
@@ -164,8 +168,8 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 					},
 				},
 				{
-					onError: () => {
-						toast.error('Cập nhật không thành công')
+					onError: (error) => {
+						toast.error((error.response?.data as any)?.message)
 					},
 					onSuccess: (config: any) => {
 						if (

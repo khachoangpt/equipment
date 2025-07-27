@@ -63,8 +63,10 @@ const useAccountDetailController = ({ id }: Props) => {
 					},
 				},
 				{
-					onError: () => {
-						toast.error('Tạo không thành công')
+					onError: (error) => {
+						toast.error(
+							(error.response?.data as any)?.message ?? 'Có lỗi xảy ra',
+						)
 					},
 					onSuccess: () => {
 						toast.success('Tạo thành công')
@@ -83,8 +85,8 @@ const useAccountDetailController = ({ id }: Props) => {
 					},
 				},
 				{
-					onError: () => {
-						toast.error('Cập nhật không thành công')
+					onError: (error) => {
+						toast.error((error.response?.data as any)?.message)
 					},
 					onSuccess: () => {
 						toast.success('Cập nhật thành công')

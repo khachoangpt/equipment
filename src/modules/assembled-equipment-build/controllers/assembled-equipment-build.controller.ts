@@ -100,8 +100,8 @@ const useAssembledEquipmentBuildController = ({ id }: Props) => {
 					},
 				},
 				{
-					onError: () => {
-						toast.error('Cập nhật không thành công')
+					onError: (error) => {
+						toast.error((error.response?.data as any)?.message)
 					},
 					onSuccess: () => {
 						toast.success('Cập nhật thành công')

@@ -208,6 +208,12 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['assembled-equipment', 'component', 'create'],
 	},
+	generalSettings: {
+		title: 'General Settings',
+		href: '/general-settings',
+		isAuth: true,
+		pattern: ['general-settings'],
+	},
 	home: {
 		title: 'Home',
 		href: '/',

@@ -50,11 +50,13 @@ const ComponentDetailForm = ({ id }: Props) => {
 		...componentsControllerUpdateMutation(),
 	})
 	const { data: units } = useQuery({
-		...unitsControllerFindAllOptions(),
+		...unitsControllerFindAllOptions({
+			query: { limit: 1000000, page: 1 },
+		}),
 	})
 	const { data: typeGroups } = useQuery({
 		...equipmentGroupsControllerFindAllOptions({
-			query: { type: 'EQUIPMENT_GROUP' },
+			query: { type: 'EQUIPMENT_GROUP', limit: 1000000, page: 1 },
 		}),
 	})
 
@@ -85,8 +87,8 @@ const ComponentDetailForm = ({ id }: Props) => {
 							queryKey: componentsControllerFindAllQueryKey(),
 						})
 					},
-					onError: () => {
-						toast.error('Tạo không thành công')
+					onError: (error) => {
+						toast.error((error.response?.data as any)?.message)
 					},
 				},
 			)
@@ -119,8 +121,8 @@ const ComponentDetailForm = ({ id }: Props) => {
 						})
 						router.push(pageList.assembledEquipmentComponent.href)
 					},
-					onError: () => {
-						toast.error('Cập nhật không thành công')
+					onError: (error) => {
+						toast.error((error.response?.data as any)?.message)
 					},
 				},
 			)
@@ -140,7 +142,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 									<FormLabel>Danh mục</FormLabel>
 									<FormControl>
 										<Combobox
-											options={(typeGroups || []).map((e) => ({
+											options={(typeGroups?.data || []).map((e) => ({
 												value: e._id,
 												label: e.name,
 											}))}
@@ -232,7 +234,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 												<SelectValue placeholder="Đơn vị cấp" />
 											</SelectTrigger>
 											<SelectContent>
-												{units?.map((unit) => (
+												{units?.data?.map((unit) => (
 													<SelectItem key={unit._id} value={unit._id}>
 														{unit.name}
 													</SelectItem>
@@ -257,7 +259,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 												<SelectValue placeholder="Đơn vị nhận" />
 											</SelectTrigger>
 											<SelectContent>
-												{units?.map((unit) => (
+												{units?.data?.map((unit) => (
 													<SelectItem key={unit._id} value={unit._id}>
 														{unit.name}
 													</SelectItem>
@@ -287,7 +289,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 													<SelectValue placeholder="Đơn vị đánh giá" />
 												</SelectTrigger>
 												<SelectContent>
-													{units?.map((unit) => (
+													{units?.data?.map((unit) => (
 														<SelectItem key={unit._id} value={unit._id}>
 															{unit.name}
 														</SelectItem>

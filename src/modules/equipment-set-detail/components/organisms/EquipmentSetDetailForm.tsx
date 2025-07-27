@@ -57,15 +57,24 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 	})
 	const { data: syncEquipments } = useQuery({
 		...syncEquipmentControllerFindAllOptions(),
+		select(data) {
+			return data?.data
+		},
 	})
 	const { mutate: update } = useMutation({
 		...equipmentInstancesControllerUpdateMutation(),
 	})
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions(),
+		select(data) {
+			return data?.data
+		},
 	})
 	const { data: quantityList } = useQuery({
 		...qualityLevelsControllerFindAllOptions(),
+		select(data) {
+			return data?.data
+		},
 	})
 	const { uploadFile } = useUploadFile()
 
@@ -132,8 +141,8 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 									},
 								},
 								{
-									onError: () => {
-										toast.error('Tạo không thành công')
+									onError: (error) => {
+										toast.error((error.response?.data as any)?.message)
 									},
 								},
 							)
@@ -145,8 +154,8 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 							queryKey: equipmentInstancesControllerSearchQueryKey(),
 						})
 					},
-					onError: () => {
-						toast.error('Tạo không thành công')
+					onError: (error) => {
+						toast.error((error.response?.data as any)?.message)
 					},
 				},
 			)
@@ -176,8 +185,8 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 									},
 								},
 								{
-									onError: () => {
-										toast.error('Tạo không thành công')
+									onError: (error) => {
+										toast.error((error.response?.data as any)?.message)
 									},
 								},
 							)
@@ -188,8 +197,8 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 						})
 						router.push(pageList.equipmentSet.href)
 					},
-					onError: () => {
-						toast.error('Cập nhật không thành công')
+					onError: (error) => {
+						toast.error((error.response?.data as any)?.message)
 					},
 				},
 			)

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { queryClient } from '@/configs/query-client'
 import type { CategoryEquipmentSetDetailSchema } from '@/configs/schema'
+import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
@@ -20,8 +21,25 @@ import { columns } from './EquipmentSetCategoryTableColumns'
 
 const EquipmentSetCategory = () => {
 	const [open, setOpen] = useState<boolean>(false)
+	const [page, setPage] = useState(1)
+	const { settings, isFetchingGeneralSettings } = useGetGeneralSettings()
 	const { data: equipmentSetCategories } = useQuery({
-		...syncEquipmentControllerFindAllOptions(),
+		...syncEquipmentControllerFindAllOptions({
+			query: { limit: settings?.pagingSize, page },
+		}),
+		select: (data) => {
+			return {
+				...data,
+				data: data?.data?.map((item, index) => ({
+					...item,
+					index: settings?.pagingSize
+						? (page - 1) * settings?.pagingSize + index + 1
+						: index + 1,
+				})),
+			}
+		},
+		enabled: !isFetchingGeneralSettings,
+		placeholderData: (prev) => prev,
 	})
 	const { mutate: create } = useMutation({
 		...syncEquipmentControllerCreateMutation(),
@@ -41,8 +59,8 @@ const EquipmentSetCategory = () => {
 				},
 			},
 			{
-				onError: () => {
-					toast.error('Tạo không thành công')
+				onError: (error) => {
+					toast.error((error.response?.data as any)?.message)
 					setOpen(false)
 				},
 				onSuccess: () => {
@@ -65,7 +83,16 @@ const EquipmentSetCategory = () => {
 					Thêm
 				</Button>
 			</div>
-			<DataTable columns={columns} data={equipmentSetCategories ?? []} />
+			<DataTable
+				columns={columns}
+				data={equipmentSetCategories?.data ?? []}
+				onChangePage={setPage}
+				pagination={{
+					page,
+					totalCount: equipmentSetCategories?.total ?? 0,
+					pageSize: settings?.pagingSize ?? 10,
+				}}
+			/>
 			<DialogAddCategoryEquipmentSet
 				open={open}
 				onOpenChange={setOpen}

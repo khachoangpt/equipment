@@ -10,7 +10,14 @@ import {
 } from '@/components/ui/sidebar'
 import { pageList } from '@/configs/routes'
 import type { SidebarItem } from '@/types'
-import { BriefcaseBusiness, Home, School, Users, Wrench } from 'lucide-react'
+import {
+	BriefcaseBusiness,
+	Home,
+	School,
+	Settings,
+	Users,
+	Wrench,
+} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import CollapsibleSidebar from './CollapsibleSidebar'
@@ -97,6 +104,13 @@ const AppSidebar = () => {
 			label: 'Tài khoản',
 			href: pageList.account.href,
 			icon: <Users />,
+			items: [],
+		},
+		{
+			id: 'cai-dat-chung',
+			label: 'Cài đặt chung',
+			href: pageList.generalSettings.href,
+			icon: <Settings />,
 			items: [],
 		},
 	]

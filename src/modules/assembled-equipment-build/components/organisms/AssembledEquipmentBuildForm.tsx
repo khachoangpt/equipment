@@ -47,11 +47,15 @@ const AssembledEquipmentBuildForm = ({ id }: Props) => {
 	// 	}),
 	// })
 	const { data: configs } = useQuery({
-		...assembledEquipmentControllerFindAllConfigsOptions(),
+		...assembledEquipmentControllerFindAllConfigsOptions({
+			query: { limit: 1000000, page: 1 },
+		}),
 	})
 
 	const { data: units } = useQuery({
-		...unitsControllerFindAllOptions(),
+		...unitsControllerFindAllOptions({
+			query: { limit: 1000000, page: 1 },
+		}),
 	})
 	const { mutate: checkBuild } = useMutation({
 		...assembledEquipmentControllerCheckBuildAvailabilityMutation(),
@@ -173,7 +177,7 @@ const AssembledEquipmentBuildForm = ({ id }: Props) => {
 									<FormLabel>Tên trang bị</FormLabel>
 									<FormControl>
 										<Combobox
-											options={((configs as any) || []).map((e: any) => ({
+											options={(configs?.data || []).map((e: any) => ({
 												value: e.equipmentId,
 												label: e.name,
 											}))}
@@ -212,7 +216,7 @@ const AssembledEquipmentBuildForm = ({ id }: Props) => {
 												<SelectValue placeholder="Đơn vị xây dựng" />
 											</SelectTrigger>
 											<SelectContent>
-												{units?.map((unit) => (
+												{units?.data?.map((unit) => (
 													<SelectItem key={unit._id} value={unit._id}>
 														{unit.name}
 													</SelectItem>

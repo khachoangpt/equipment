@@ -91,7 +91,7 @@ const DialogAddCategoryEquipmentSet = ({
 												<SelectValue placeholder="Nhóm loại" />
 											</SelectTrigger>
 											<SelectContent>
-												{typeGroups?.map((typeGroup) => (
+												{typeGroups?.data?.map((typeGroup) => (
 													<SelectItem key={typeGroup._id} value={typeGroup._id}>
 														{typeGroup.name}
 													</SelectItem>

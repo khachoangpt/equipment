@@ -56,13 +56,16 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 		...equipmentInstancesControllerUpdateMutation(),
 	})
 	const { data: buildActivities } = useQuery({
-		...assembledEquipmentControllerFindAllBuildActivitiesOptions(),
-		select: (data: any) =>
-			data?.map((e: any) => ({
+		...assembledEquipmentControllerFindAllBuildActivitiesOptions({
+			query: { limit: 1000000, page: 1 },
+		}),
+		select: (data: any) => {
+			return data?.data?.map((e: any) => ({
 				value: e?.config?._id,
 				label: e?.config?.name,
 				...e,
-			})),
+			}))
+		},
 	})
 
 	const router = useRouter()
@@ -81,8 +84,8 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 					},
 				},
 				{
-					onError: () => {
-						toast.error('Tạo trang bị khônng thành công')
+					onError: (error) => {
+						toast.error((error.response?.data as any)?.message)
 					},
 					onSuccess: () => {
 						toast.success('Tạo trang bị thành công')
@@ -104,8 +107,8 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 					},
 				},
 				{
-					onError: () => {
-						toast.error('Cập nhật trang bị khônng thành công')
+					onError: (error) => {
+						toast.error((error.response?.data as any)?.message)
 					},
 					onSuccess: () => {
 						toast.success('Cập nhật trang bị thành công')
@@ -240,7 +243,7 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 												<SelectValue placeholder="Đơn vị cấp" />
 											</SelectTrigger>
 											<SelectContent>
-												{units?.map((unit) => (
+												{units?.data?.map((unit) => (
 													<SelectItem key={unit._id} value={unit._id}>
 														{unit.name}
 													</SelectItem>
@@ -265,7 +268,7 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 												<SelectValue placeholder="Đơn vị nhận" />
 											</SelectTrigger>
 											<SelectContent>
-												{units?.map((unit) => (
+												{units?.data?.map((unit) => (
 													<SelectItem key={unit._id} value={unit._id}>
 														{unit.name}
 													</SelectItem>
@@ -295,7 +298,7 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 													<SelectValue placeholder="Đơn vị đánh giá" />
 												</SelectTrigger>
 												<SelectContent>
-													{units?.map((unit) => (
+													{units?.data?.map((unit) => (
 														<SelectItem key={unit._id} value={unit._id}>
 															{unit.name}
 														</SelectItem>

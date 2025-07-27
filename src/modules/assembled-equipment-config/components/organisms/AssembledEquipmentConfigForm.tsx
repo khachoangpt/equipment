@@ -35,13 +35,23 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 	const { control } = form
 	const router = useRouter()
 	const { data: syncEquipments } = useQuery({
-		...syncEquipmentControllerFindAllOptions(),
+		...syncEquipmentControllerFindAllOptions({
+			query: {
+				page: 1,
+				limit: 1000000,
+			},
+		}),
 	})
 
 	const { data: components } = useQuery({
-		...componentsControllerFindAllOptions(),
+		...componentsControllerFindAllOptions({
+			query: {
+				page: 1,
+				limit: 1000000,
+			},
+		}),
 		select: (data) =>
-			data.map((item) => ({ value: item._id, label: item.name, ...item })),
+			data.data.map((item) => ({ value: item._id, label: item.name, ...item })),
 	})
 
 	const columns: ColumnDef<{
@@ -116,7 +126,7 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 									<FormLabel>Danh mục</FormLabel>
 									<FormControl>
 										<Combobox
-											options={(syncEquipments || []).map((e) => ({
+											options={(syncEquipments?.data || [])?.map((e) => ({
 												value: e._id,
 												label: e.name,
 											}))}
