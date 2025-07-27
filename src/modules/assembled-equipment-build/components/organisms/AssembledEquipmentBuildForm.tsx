@@ -94,16 +94,15 @@ const AssembledEquipmentBuildForm = ({ id }: Props) => {
 	]
 
 	useEffect(() => {
-		const equipmentId = form.watch('equipmentId')
-		if (equipmentId) {
-			const config = (configs as any)?.find(
-				(item: any) => item.equipmentId === equipmentId,
+		const configId = form.watch('configId')
+		if (configId) {
+			const config = (configs?.data as any)?.find(
+				(item: any) => item._id === configId,
 			)
+			form.setValue('equipmentId', config?.equipmentId)
 
-			if (config) {
-				form.setValue('configId', config?._id)
-
-				if (form.watch('equipmentId')) {
+			if (config && form.watch('quantity')) {
+				if (form.watch('configId')) {
 					checkBuild(
 						{
 							body: {
@@ -139,9 +138,11 @@ const AssembledEquipmentBuildForm = ({ id }: Props) => {
 						},
 					)
 				}
+			} else {
+				form.setValue('componentList', [])
 			}
 		}
-	}, [form.watch('equipmentId'), form.watch('quantity')])
+	}, [form.watch('configId'), form.watch('quantity')])
 
 	return (
 		<div>
@@ -171,14 +172,14 @@ const AssembledEquipmentBuildForm = ({ id }: Props) => {
 						<div /> */}
 						<FormField
 							control={control}
-							name="equipmentId"
+							name="configId"
 							render={({ field: { value, onChange } }) => (
 								<FormItem>
 									<FormLabel>Tên trang bị</FormLabel>
 									<FormControl>
 										<Combobox
 											options={(configs?.data || []).map((e: any) => ({
-												value: e.equipmentId,
+												value: e._id,
 												label: e.name,
 											}))}
 											value={value}
