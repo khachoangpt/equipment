@@ -61,7 +61,7 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 		}),
 		select: (data) => {
 			return data?.data?.map((e) => ({
-				value: (e?.config as any)?._id,
+				value: (e as any)?._id,
 				label: (e?.config as any)?.name,
 				config: e?.config as any,
 				quantity: e?.quantity,
