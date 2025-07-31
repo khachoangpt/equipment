@@ -68,7 +68,7 @@ export const columns: ColumnDef<any>[] = [
 		enableResizing: false,
 		size: 1,
 		cell: ({ row }) => {
-			const [open, setOpen] = useState<boolean>(false)
+			const [openDelete, setOpenDelete] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
 				...equipmentInstancesControllerRemoveMutation(),
 			})
@@ -78,14 +78,14 @@ export const columns: ColumnDef<any>[] = [
 					{ path: { id: row.original._id } },
 					{
 						onSuccess: () => {
-							setOpen(false)
+							setOpenDelete(false)
 							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
 								queryKey: equipmentInstancesControllerSearchQueryKey(),
 							})
 						},
 						onError: (error) => {
-							setOpen(false)
+							setOpenDelete(false)
 							toast.error((error.response?.data as any)?.message)
 						},
 					},
@@ -104,15 +104,16 @@ export const columns: ColumnDef<any>[] = [
 					</Link>
 					<p
 						className="text-red-600 cursor-pointer"
-						onClick={() => setOpen(true)}
+						onClick={() => setOpenDelete(true)}
 					>
 						Xoá
 					</p>
+
 					<DialogConfirmDelete
 						title="Xoá trang bị"
 						description="Bạn có chắc chắn muốn xoá trang bị này"
-						open={open}
-						onOpenChange={setOpen}
+						open={openDelete}
+						onOpenChange={setOpenDelete}
 						onConfirm={handleDelete}
 					/>
 				</div>

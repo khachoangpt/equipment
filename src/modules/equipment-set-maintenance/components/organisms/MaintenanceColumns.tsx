@@ -17,7 +17,7 @@ export const columns: ColumnDef<ActivityLog>[] = [
 		id: 'equipment',
 		accessorKey: 'instanceId',
 		header: 'Serial trang bị',
-		cell: ({ row }) => row.original.instanceId.serialNumber,
+		cell: ({ row }) => row.original.instanceId?.serialNumber,
 	},
 	{
 		id: 'repairLocation',

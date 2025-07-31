@@ -5,8 +5,9 @@ export type ActivityLog = {
      * Mongo document ID
      */
     _id: string;
-    instanceId: EquipmentInstance;
-    activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý';
+    instanceId?: EquipmentInstance;
+    componentId?: Component;
+    activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị';
     createdBy: User;
     /**
      * Chi tiết hoạt động, cấu trúc thay đổi theo activityType
@@ -19,7 +20,18 @@ export type ActivityLog = {
     updatedAt: string;
 };
 
-export type activityType = 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý';
+export type activityType = 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị';
+
+export type AddComponentStockDto = {
+    /**
+     * Số lượng vật tư/linh kiện nhập thêm
+     */
+    quantity: number;
+    /**
+     * Ghi chú cho lần nhập kho này
+     */
+    notes?: string;
+};
 
 export type AssembledProductConfig = {
     [key: string]: unknown;
@@ -1022,6 +1034,17 @@ export type ComponentsControllerRemoveResponse = (Component);
 
 export type ComponentsControllerRemoveError = (unknown);
 
+export type ComponentsControllerAddComponentStockData = {
+    body: AddComponentStockDto;
+    path: {
+        id: string;
+    };
+};
+
+export type ComponentsControllerAddComponentStockResponse = (unknown);
+
+export type ComponentsControllerAddComponentStockError = unknown;
+
 export type AssembledEquipmentControllerCreateConfigData = {
     body: CreateAssembledProductConfigDto;
 };
@@ -1485,7 +1508,11 @@ export type ActivityLogsControllerSearchData = {
         /**
          * Loại hoạt động cần tìm kiếm (Bắt buộc)
          */
-        activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý';
+        activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị';
+        /**
+         * ID của linh kiện (nếu có)
+         */
+        componentId?: string;
         /**
          * ID của người tạo
          */

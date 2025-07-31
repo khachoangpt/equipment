@@ -12,6 +12,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import DialogImportComponent from './DialogImportComponent'
 
 export const columns: ColumnDef<any>[] = [
 	{
@@ -40,6 +41,7 @@ export const columns: ColumnDef<any>[] = [
 		size: 1,
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
+			const [openDelete, setOpenDelete] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
 				...componentsControllerRemoveMutation(),
 			})
@@ -49,14 +51,14 @@ export const columns: ColumnDef<any>[] = [
 					{ path: { id: row.original._id } },
 					{
 						onSuccess: () => {
-							setOpen(false)
+							setOpenDelete(false)
 							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
 								queryKey: componentsControllerFindAllQueryKey(),
 							})
 						},
 						onError: (error) => {
-							setOpen(false)
+							setOpenDelete(false)
 							toast.error((error.response?.data as any)?.message)
 						},
 					},
@@ -65,6 +67,12 @@ export const columns: ColumnDef<any>[] = [
 
 			return (
 				<div className="flex items-center justify-end gap-x-3">
+					<div
+						className="cursor-pointer text-primary"
+						onClick={() => setOpen(true)}
+					>
+						Nhập thêm
+					</div>
 					<Link
 						href={
 							pageList.assembleEquipmentDetailComponent({
@@ -77,15 +85,20 @@ export const columns: ColumnDef<any>[] = [
 					</Link>
 					<p
 						className="text-red-600 cursor-pointer"
-						onClick={() => setOpen(true)}
+						onClick={() => setOpenDelete(true)}
 					>
 						Xoá
 					</p>
+					<DialogImportComponent
+						id={row.original._id}
+						open={open}
+						onOpenChange={setOpen}
+					/>
 					<DialogConfirmDelete
 						title="Xoá vật tư/linh kiện"
 						description="Bạn có chắc chắn muốn xoá vật tư/linh kiện này"
-						open={open}
-						onOpenChange={setOpen}
+						open={openDelete}
+						onOpenChange={setOpenDelete}
 						onConfirm={handleDelete}
 					/>
 				</div>
