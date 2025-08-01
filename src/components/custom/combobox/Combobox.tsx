@@ -33,7 +33,7 @@ const Combobox = ({ onChange, value, options }: Props) => {
 				<Button
 					variant="outline"
 					aria-expanded={open}
-					className="justify-between font-normal"
+					className="justify-between font-normal w-full"
 				>
 					{value ? (
 						options.find((option) => option.value === value)?.label

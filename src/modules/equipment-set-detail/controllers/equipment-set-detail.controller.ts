@@ -50,7 +50,7 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 				productionDate: data.productionDate,
 				entryPlanNumber: data.entryPlanNumber,
 				supplySource: data.supplySource,
-				qualityLevelId: data.qualityLevelId._id,
+				qualityLevelId: data.qualityLevelId?._id,
 				status: data.status,
 				equipmentId: data.equipmentId._id,
 				serialNumber: data.serialNumber,

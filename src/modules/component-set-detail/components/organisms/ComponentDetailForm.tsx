@@ -659,7 +659,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 							type="button"
 							variant="secondary"
 							onClick={() => {
-								router.push(pageList.assembledEquipment.href)
+								router.push(pageList.assembledEquipmentComponent.href)
 							}}
 						>
 							Quay lại

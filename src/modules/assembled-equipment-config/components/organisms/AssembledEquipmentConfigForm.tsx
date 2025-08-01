@@ -490,16 +490,18 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 								control={control}
 								name="selectedComponentName"
 								render={({ field }) => (
-									<FormItem className="flex">
+									<FormItem className="flex w-full">
 										<FormLabel className="flex-none w-24">
 											Vật tư/linh kiện
 										</FormLabel>
 										<FormControl>
-											<Combobox
-												onChange={field.onChange}
-												options={components || []}
-												value={field.value}
-											/>
+											<div className="w-full">
+												<Combobox
+													onChange={field.onChange}
+													options={components || []}
+													value={field.value}
+												/>
+											</div>
 										</FormControl>
 										<FormMessage />
 									</FormItem>

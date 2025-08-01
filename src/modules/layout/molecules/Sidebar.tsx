@@ -11,6 +11,7 @@ import {
 import { pageList } from '@/configs/routes'
 import type { SidebarItem } from '@/types'
 import {
+	Activity,
 	BriefcaseBusiness,
 	Home,
 	School,
@@ -47,21 +48,6 @@ const AppSidebar = () => {
 					label: 'Danh mục',
 					href: pageList.equipmentSetCategory.href,
 				},
-				{
-					label: 'Bàn giao trang bị',
-					id: 'ban-giao-trang-bi',
-					href: pageList.equipmentSetHandover.href,
-				},
-				{
-					label: 'Bảo dưỡng / Sửa chữa',
-					id: 'bao-dung-sua-chua',
-					href: pageList.equipmentSetMaintenance.href,
-				},
-				{
-					label: 'Thanh lý',
-					id: 'thanh-ly',
-					href: pageList.equipmentSetLiquidation.href,
-				},
 			],
 		},
 		{
@@ -89,6 +75,29 @@ const AppSidebar = () => {
 					id: 'xay-dung-trang-bi-lap-ghep',
 					label: 'Xây dựng trang bị',
 					href: pageList.assembledEquipmentBuild.href,
+				},
+			],
+		},
+		{
+			id: 'hoat-dong',
+			label: 'Hoạt động',
+			href: pageList.home.href,
+			icon: <Activity />,
+			items: [
+				{
+					label: 'Bàn giao trang bị',
+					id: 'ban-giao-trang-bi',
+					href: pageList.equipmentSetHandover.href,
+				},
+				{
+					label: 'Bảo dưỡng / Sửa chữa',
+					id: 'bao-dung-sua-chua',
+					href: pageList.equipmentSetMaintenance.href,
+				},
+				{
+					label: 'Thanh lý',
+					id: 'thanh-ly',
+					href: pageList.equipmentSetLiquidation.href,
 				},
 			],
 		},
