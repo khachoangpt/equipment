@@ -577,7 +577,11 @@ const ComponentDetailForm = ({ id }: Props) => {
 								{previewImages?.map((image) => (
 									<div key={image.url} className="relative">
 										<img
-											src={genImageUrl(image.url)}
+											src={genImageUrl(
+												image._id
+													? `assembly-equipments/components/images/${image._id}`
+													: image.url,
+											)}
 											alt=""
 											className="w-40 h-auto object-contain"
 										/>
@@ -617,7 +621,11 @@ const ComponentDetailForm = ({ id }: Props) => {
 								{previewDocuments?.map((document) => (
 									<div key={document.url} className="relative">
 										<Link
-											href={genImageUrl(document.url)}
+											href={genImageUrl(
+												document._id
+													? `assembly-equipments/components/images/${document._id}`
+													: document.url,
+											)}
 											target="_blank"
 											className="px-4 py-2 flex items-center gap-2 bg-primary text-white rounded-md"
 										>

@@ -517,7 +517,11 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 									{previewImages?.map((image) => (
 										<div key={image.url} className="relative">
 											<img
-												src={genImageUrl(image.url)}
+												src={genImageUrl(
+													image._id
+														? `equipments/instances/images/${image._id}`
+														: image.url,
+												)}
 												alt=""
 												className="w-40 h-auto object-contain"
 											/>
