@@ -142,7 +142,7 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 						componentList: data?.componentList?.map((item: any) => ({
 							componentId: item?.componentId,
 							quantity: Number(item?.quantity),
-							notes: item?.note,
+							notes: item?.note ?? '',
 						})),
 						equipmentId: data?.equipmentId,
 						name: data?.name,
@@ -227,7 +227,7 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 						componentList: data?.componentList?.map((item: any) => ({
 							componentId: item?.componentId,
 							quantity: Number(item?.quantity),
-							notes: item?.note,
+							notes: item?.note ?? '',
 						})),
 						equipmentId: data?.equipmentId,
 						name: data?.name,

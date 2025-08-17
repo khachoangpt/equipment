@@ -83,6 +83,12 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 							? new Date(data.productionDate).toISOString()
 							: undefined,
 						quantity: Number(data.quantity),
+						evaluatingUnitId: data.evaluatingUnitId
+							? data.evaluatingUnitId
+							: undefined,
+						evaluationResult: data.evaluationResult
+							? data.evaluationResult
+							: undefined,
 					},
 				},
 				{
@@ -106,6 +112,12 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 							? new Date(data.productionDate).toISOString()
 							: undefined,
 						quantity: Number(data.quantity),
+						evaluatingUnitId: data.evaluatingUnitId
+							? data.evaluatingUnitId
+							: undefined,
+						evaluationResult: data.evaluationResult
+							? data.evaluationResult
+							: undefined,
 					},
 				},
 				{

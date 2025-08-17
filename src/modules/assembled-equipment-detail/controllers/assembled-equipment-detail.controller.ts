@@ -39,7 +39,7 @@ const useAssembledEquipmentDetailController = ({ id }: Props) => {
 
 			form.reset({
 				buildActivityId: equipment?.buildActivityId ?? '',
-				equipmentId: equipment?.equipmentId ?? '',
+				equipmentId: equipment?.equipmentId?._id ?? '',
 				unitOfMeasure: equipment?.unitOfMeasure ?? '',
 				quantity: equipment?.quantity ?? 0,
 				productionDate: equipment?.productionDate ?? new Date().toISOString(),
