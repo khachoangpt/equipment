@@ -80,7 +80,6 @@ export type CreateAssembledProductConfigDto = {
     unitOfMeasure: string;
     technicalFeatures?: string;
     componentList: Array<RequiredComponentDto>;
-    documentAttachments: Array<(string)>;
     notes?: string;
 };
 
@@ -137,10 +136,6 @@ export type CreateComponentDto = {
      * Danh sách các sản phẩm hoàn chỉnh có thể tích hợp
      */
     compatibleProducts?: Array<(string)>;
-    /**
-     * Danh sách URL tài liệu đính kèm
-     */
-    attachments?: Array<(string)>;
     notes?: string;
 };
 
@@ -723,8 +718,8 @@ export type UpdateAssembledProductConfigDto = {
     unitOfMeasure?: string;
     technicalFeatures?: string;
     componentList?: Array<RequiredComponentDto>;
-    documentAttachments?: Array<(string)>;
     notes?: string;
+    documentAttachments?: Array<ImageAttachment>;
 };
 
 export type UpdateBuildActivityDto = {
@@ -780,11 +775,8 @@ export type UpdateComponentDto = {
      * Danh sách các sản phẩm hoàn chỉnh có thể tích hợp
      */
     compatibleProducts?: Array<(string)>;
-    /**
-     * Danh sách URL tài liệu đính kèm
-     */
-    attachments?: Array<(string)>;
     notes?: string;
+    documentAttachments?: Array<DocumentAttachment>;
 };
 
 export type UpdateEquipmentDto = {

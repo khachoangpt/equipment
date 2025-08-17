@@ -127,12 +127,11 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 						<div
 							className="text-red-600 cursor-pointer"
 							onClick={() => {
-								const componentList = form
-									.getValues('componentList')
-									.filter(
-										(item) =>
-											item.componentId !== (original as any).componentId,
-									)
+								const componentList = (
+									form.getValues('componentList') ?? []
+								).filter(
+									(item) => item.componentId !== (original as any).componentId,
+								)
 								form.setValue('componentList', componentList)
 							}}
 						>
@@ -257,7 +256,7 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 												value: e._id,
 												label: e.name,
 											}))}
-											value={value}
+											value={value || ''}
 											onChange={onChange}
 										/>
 									</FormControl>
@@ -553,7 +552,7 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 						>
 							Quay lại
 						</Button>
-						<Button onClick={form.handleSubmit(onSubmit)}>
+						<Button onClick={form.handleSubmit(onSubmit as any)}>
 							{id ? 'Sửa' : 'Thêm'}
 						</Button>
 					</div>

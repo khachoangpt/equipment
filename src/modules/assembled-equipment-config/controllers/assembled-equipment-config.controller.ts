@@ -1,4 +1,7 @@
-import type { CreateAssembledProductConfigDto } from '@/client'
+import type {
+	CreateAssembledProductConfigDto,
+	UpdateAssembledProductConfigDto,
+} from '@/client'
 import {
 	assembledEquipmentControllerCreateConfigMutation,
 	assembledEquipmentControllerFindConfigByIdOptions,
@@ -18,7 +21,7 @@ type Props = {
 }
 
 const useAssembledEquipmentConfigController = ({ id }: Props) => {
-	const defaultValues: CreateAssembledProductConfigDto & {
+	const defaultValues: UpdateAssembledProductConfigDto & {
 		selectedComponentName: string
 		selectedComponentQuantity: string
 		selectedComponentNote: string
@@ -44,7 +47,7 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 		selectedComponentQuantity: '',
 	}
 	const form = useForm<
-		CreateAssembledProductConfigDto & {
+		UpdateAssembledProductConfigDto & {
 			selectedComponentName: string
 			selectedComponentQuantity: string
 			selectedComponentNote: string
@@ -112,9 +115,9 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 		const component = components?.find(
 			(item) => item.value === form.watch('selectedComponentName'),
 		)
-		const componentList = form
-			.getValues('componentList')
-			.filter((item) => item.componentId !== component?._id)
+		const componentList = (form.getValues('componentList') ?? []).filter(
+			(item) => item.componentId !== component?._id,
+		)
 		form.setValue('componentList', [
 			...componentList,
 			{
@@ -152,7 +155,6 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 						unitOfMeasure: data?.unitOfMeasure,
 						notes: data?.notes,
 						technicalFeatures: data?.technicalFeatures,
-						documentAttachments: [],
 					},
 				},
 				{

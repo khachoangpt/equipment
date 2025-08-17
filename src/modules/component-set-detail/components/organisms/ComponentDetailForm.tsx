@@ -165,7 +165,10 @@ const ComponentDetailForm = ({ id }: Props) => {
 						storageLocation: data?.storageLocation ?? '',
 						technicalFeatures: data?.technicalFeatures ?? '',
 						notes: data?.note ?? '',
-						attachments: [...(data.images ?? []), ...(data.documents ?? [])],
+						documentAttachments: [
+							...(data.images ?? []),
+							...(data.documents ?? []),
+						],
 					},
 				},
 				{
