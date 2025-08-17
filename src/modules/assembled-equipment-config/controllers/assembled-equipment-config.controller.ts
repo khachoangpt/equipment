@@ -25,6 +25,7 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 		imageFiles?: any
 		documentFiles?: any
 		images?: any
+		documentAttachments?: any
 		documents?: any
 	} = {
 		componentList: [],
@@ -32,7 +33,7 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 		imageFiles: [],
 		documents: [],
 		documentFiles: [],
-		documentUrls: [],
+		documentAttachments: [],
 		equipmentId: '',
 		name: '',
 		unitOfMeasure: '',
@@ -86,7 +87,9 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 				name: (config as any).name,
 				unitOfMeasure: (config as any).unitOfMeasure,
 				technicalFeatures: (config as any).technicalFeatures,
-				documentUrls: (config as any).images?.map((item: any) => item.url),
+				documentAttachments: (config as any).images?.map(
+					(item: any) => item.url,
+				),
 				notes: (config as any).notes,
 				componentList: (config as any).componentList.map((item: any) => ({
 					componentId: item?.component?._id,
@@ -149,7 +152,7 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 						unitOfMeasure: data?.unitOfMeasure,
 						notes: data?.notes,
 						technicalFeatures: data?.technicalFeatures,
-						documentUrls: [],
+						documentAttachments: [],
 					},
 				},
 				{
@@ -234,7 +237,10 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 						unitOfMeasure: data?.unitOfMeasure,
 						notes: data?.notes,
 						technicalFeatures: data?.technicalFeatures,
-						documentUrls: [...(data.images ?? []), ...(data.documents ?? [])],
+						documentAttachments: [
+							...(data.images ?? []),
+							...(data.documents ?? []),
+						],
 					},
 				},
 				{

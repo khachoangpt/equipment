@@ -80,7 +80,7 @@ export type CreateAssembledProductConfigDto = {
     unitOfMeasure: string;
     technicalFeatures?: string;
     componentList: Array<RequiredComponentDto>;
-    documentUrls: Array<(string)>;
+    documentAttachments: Array<(string)>;
     notes?: string;
 };
 
@@ -723,7 +723,7 @@ export type UpdateAssembledProductConfigDto = {
     unitOfMeasure?: string;
     technicalFeatures?: string;
     componentList?: Array<RequiredComponentDto>;
-    documentUrls?: Array<(string)>;
+    documentAttachments?: Array<(string)>;
     notes?: string;
 };
 
