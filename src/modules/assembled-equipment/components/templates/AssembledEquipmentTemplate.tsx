@@ -6,7 +6,6 @@ import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
-import SearchEquipmentSet from '@/modules/equipment-set/components/organisms/SearchEquipmentSet'
 import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
@@ -15,7 +14,7 @@ import { useState } from 'react'
 import { columns } from '../organisms/columns'
 
 const AssembledEquipmentTemplate = () => {
-	const [open, setOpen] = useState<boolean>(true)
+	// const [open, setOpen] = useState<boolean>(true)
 	const [page, setPage] = useState(1)
 	const { settings, isFetchingGeneralSettings } = useGetGeneralSettings()
 	const [searchQuery] = useQueryStates({
@@ -83,7 +82,7 @@ const AssembledEquipmentTemplate = () => {
 					</Link>
 				</div>
 				<div className="mb-5">
-					<SearchEquipmentSet onOpenChange={setOpen} open={open} />
+					{/* <SearchEquipmentSet onOpenChange={setOpen} open={open} /> */}
 				</div>
 				<DataTable
 					onChangePage={setPage}
