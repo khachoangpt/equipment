@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import DialogImportComponent from './DialogImportComponent'
+import DialogImportHistoryComponent from './DialogImportHistoryComponent'
 
 export const columns: ColumnDef<any>[] = [
 	{
@@ -41,6 +42,7 @@ export const columns: ColumnDef<any>[] = [
 		size: 1,
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
+			const [openHistory, setOpenHistory] = useState<boolean>(false)
 			const [openDelete, setOpenDelete] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
 				...componentsControllerRemoveMutation(),
@@ -67,6 +69,12 @@ export const columns: ColumnDef<any>[] = [
 
 			return (
 				<div className="flex items-center justify-end gap-x-3">
+					<div
+						className="cursor-pointer text-gray-600"
+						onClick={() => setOpenHistory(true)}
+					>
+						Lịch sử nhập
+					</div>
 					<div
 						className="cursor-pointer text-primary"
 						onClick={() => setOpen(true)}
@@ -100,6 +108,11 @@ export const columns: ColumnDef<any>[] = [
 						open={openDelete}
 						onOpenChange={setOpenDelete}
 						onConfirm={handleDelete}
+					/>
+					<DialogImportHistoryComponent
+						id={row.original._id}
+						open={openHistory}
+						onOpenChange={setOpenHistory}
 					/>
 				</div>
 			)

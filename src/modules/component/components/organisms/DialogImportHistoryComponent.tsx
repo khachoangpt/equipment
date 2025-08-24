@@ -1,8 +1,4 @@
-import {
-	componentsControllerAddComponentStockMutation,
-	componentsControllerFindAllQueryKey,
-} from '@/client/@tanstack/react-query.gen'
-import { Button } from '@/components/ui/button'
+import { activityLogsControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import {
 	Dialog,
 	DialogContent,
@@ -10,20 +6,10 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog'
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { queryClient } from '@/configs/query-client'
-import { useMutation } from '@tanstack/react-query'
-import { type SubmitHandler, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import {} from '@/components/ui/form'
+import DataTable from '@/modules/common/components/organisms/DataTable'
+import { importComponentColumns } from '@/modules/component-set-detail/components/organisms/importComponentColumns'
+import { useQuery } from '@tanstack/react-query'
 
 type Props = {
 	open: boolean
@@ -31,48 +17,25 @@ type Props = {
 	id: string
 }
 
-const DialogImportComponent = ({ open, onOpenChange, id }: Props) => {
-	const { mutate } = useMutation({
-		...componentsControllerAddComponentStockMutation(),
+const DialogImportHistoryComponent = ({ open, onOpenChange, id }: Props) => {
+	const { data } = useQuery({
+		...activityLogsControllerSearchOptions({
+			query: { activityType: 'Tăng số lượng thiết bị' },
+		}),
+		select: (data) => {
+			return data.data.filter((item) => {
+				return item.componentId?._id === id
+			})
+		},
 	})
-	const form = useForm<{ quantity: number; notes: string }>({
-		defaultValues: { quantity: 0, notes: '' },
-	})
-
-	const onConfirm: SubmitHandler<{ quantity: number; notes: string }> = (
-		data,
-	) => {
-		mutate(
-			{
-				path: { id },
-				body: {
-					quantity: Number(data.quantity),
-					notes: data.notes,
-				},
-			},
-			{
-				onError: (error) => {
-					toast.error((error.response?.data as any)?.message)
-				},
-				onSuccess: async () => {
-					await queryClient.invalidateQueries({
-						queryKey: componentsControllerFindAllQueryKey(),
-					})
-					toast.success('Thêm thành công')
-					onOpenChange(false)
-					form.reset()
-				},
-			},
-		)
-	}
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Nhập thêm linh kiện</DialogTitle>
+					<DialogTitle>Lịch sử nhập thêm linh kiện</DialogTitle>
 					<DialogDescription className="hidden" />
-					<div className="mt-5 space-y-6">
+					{/* <div className="mt-5 space-y-6">
 						<Form {...form}>
 							<FormField
 								rules={{
@@ -134,11 +97,12 @@ const DialogImportComponent = ({ open, onOpenChange, id }: Props) => {
 								</Button>
 							</div>
 						</Form>
-					</div>
+					</div> */}
+					<DataTable columns={importComponentColumns} data={data || []} />
 				</DialogHeader>
 			</DialogContent>
 		</Dialog>
 	)
 }
 
-export default DialogImportComponent
+export default DialogImportHistoryComponent
