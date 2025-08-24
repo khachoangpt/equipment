@@ -14,7 +14,6 @@ import {
 	Activity,
 	BriefcaseBusiness,
 	Home,
-	School,
 	Settings,
 	Users,
 	Wrench,
@@ -42,11 +41,6 @@ const AppSidebar = () => {
 					id: 'khoi-tao-trang-bi-trang-bi-dong-bo',
 					label: 'Trang bị',
 					href: pageList.equipmentSet.href,
-				},
-				{
-					id: 'danh-muc-trang-bi-dong-bo',
-					label: 'Danh mục',
-					href: pageList.equipmentSetCategory.href,
 				},
 			],
 		},
@@ -102,13 +96,6 @@ const AppSidebar = () => {
 			],
 		},
 		{
-			id: 'don-vi',
-			label: 'Đơn vị',
-			href: pageList.unit.href,
-			icon: <School />,
-			items: [],
-		},
-		{
 			id: 'tai-khoan',
 			label: 'Tài khoản',
 			href: pageList.account.href,
@@ -120,7 +107,23 @@ const AppSidebar = () => {
 			label: 'Cài đặt chung',
 			href: pageList.generalSettings.href,
 			icon: <Settings />,
-			items: [],
+			items: [
+				{
+					id: 'thiet-lap-phan-trang',
+					label: 'Thiết lập phân trang',
+					href: pageList.generalSettings.href,
+				},
+				{
+					id: 'danh-muc-trang-bi-dong-bo',
+					label: 'Danh mục',
+					href: pageList.equipmentSetCategory.href,
+				},
+				{
+					id: 'don-vi',
+					label: 'Đơn vị',
+					href: pageList.unit.href,
+				},
+			],
 		},
 	]
 	const pathname = usePathname()

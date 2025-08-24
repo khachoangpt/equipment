@@ -1,5 +1,5 @@
 import { pageList } from '@/configs/routes'
-import { BriefcaseBusiness, School, User, Wrench } from 'lucide-react'
+import { BriefcaseBusiness, User, Wrench } from 'lucide-react'
 import FeatureCard from '../molecules/FeatureCard'
 
 const HomeTemplate = () => {
@@ -24,13 +24,6 @@ const HomeTemplate = () => {
 				<User className="absolute h-40 w-40 translate-y-10 translate-x-20 opacity-15" />
 			),
 			href: pageList.account.href,
-		},
-		{
-			label: 'Đơn vị',
-			icon: (
-				<School className="absolute h-40 w-40 translate-y-10 translate-x-20 opacity-15" />
-			),
-			href: pageList.unit.href,
 		},
 	]
 

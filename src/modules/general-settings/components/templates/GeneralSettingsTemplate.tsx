@@ -15,7 +15,7 @@ import PageTitle from '@/modules/common/components/molecules/PageTitle'
 import useGeneralSettingsController from '../../controllers/general-settings.controller'
 
 const GeneralSettingsTemplate = () => {
-	const pageTitle = 'Cài đặt chung'
+	const pageTitle = 'Thiết lập phân trang'
 	const { form, onSubmit } = useGeneralSettingsController()
 
 	return (
