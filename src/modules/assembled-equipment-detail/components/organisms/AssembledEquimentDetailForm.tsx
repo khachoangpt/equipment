@@ -89,6 +89,7 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 						evaluationResult: data.evaluationResult
 							? data.evaluationResult
 							: undefined,
+						usingUnitId: data.usingUnitId ? data.usingUnitId : undefined,
 					},
 				},
 				{
@@ -118,6 +119,7 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 						evaluationResult: data.evaluationResult
 							? data.evaluationResult
 							: undefined,
+						usingUnitId: data.usingUnitId ? data.usingUnitId : undefined,
 					},
 				},
 				{
