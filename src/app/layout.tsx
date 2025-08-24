@@ -5,7 +5,7 @@ import { RobotoFont } from '@/configs/fonts'
 import QueryProvider from '@/providers/query.provider'
 import type { Metadata } from 'next'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import type { ReactNode } from 'react'
+import { type ReactNode, Suspense } from 'react'
 
 type RootLayoutProps = Readonly<{ children: ReactNode }>
 
@@ -18,9 +18,11 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 	return (
 		<html lang="vi">
 			<body className={cn('overflow-hidden antialiased', RobotoFont.className)}>
-				<QueryProvider>
-					<NuqsAdapter>{children}</NuqsAdapter>
-				</QueryProvider>
+				<NuqsAdapter>
+					<QueryProvider>
+						<Suspense>{children}</Suspense>
+					</QueryProvider>
+				</NuqsAdapter>
 
 				<Toaster richColors position="top-center" />
 			</body>
