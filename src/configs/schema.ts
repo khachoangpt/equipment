@@ -135,14 +135,30 @@ const searchEquipmentSetSchema = z.object({
 type SearchEquipmentSetSchema = z.infer<typeof searchEquipmentSetSchema>
 
 const createEquipmentSetHandoverSchema = z.object({
-	code: z.string({ required_error: 'Chưa nhập số biên bản' }),
-	senderPerson: z.string({ required_error: 'Chưa nhập người giao' }),
-	receiverPerson: z.string({ required_error: 'Chưa nhập người nhận' }),
-	receiverUnit: z.string({ required_error: 'Chưa nhập đơn vị nhận' }),
+	reportNumber: z
+		.string({ required_error: 'Chưa nhập số biên bản' })
+		.trim()
+		.min(1, 'Chưa nhập số biên bản'),
+	sender: z.string().optional(),
+	receiver: z.string().optional(),
+	approver: z.string().optional(),
+	handoverApprovedBy: z.string().optional(),
+	handoverRejectedBy: z.string().optional(),
+	fromUnitId: z.string().optional(),
+	toUnitId: z.string().optional(),
 	handoverDate: z.string({ required_error: 'Chưa nhập ngày giao' }),
-	equipment: z.string({ required_error: 'Chưa nhập trang bị' }),
-	note: z.string().optional(),
 	comment: z.string().optional(),
+	items: z.array(
+		z.object({
+			instanceId: z.string().trim().min(1, 'Chưa nhập ID của trang bị'),
+			quantity: z.number({
+				required_error: 'Chưa nhập số lượng',
+				coerce: true,
+				invalid_type_error: 'Số lượng không hợp lệ',
+			}),
+			notes: z.string().optional(),
+		}),
+	),
 })
 type CreateEquipmentSetHandoverSchema = z.infer<
 	typeof createEquipmentSetHandoverSchema
@@ -185,6 +201,10 @@ const createEquipmentDisposalSchema = z.object({
 		.string({ required_error: 'Chưa nhập số quyết định thanh lý' })
 		.trim()
 		.min(1, 'Chưa nhập số quyết định thanh lý'),
+	invoiceNumber: z
+		.string({ required_error: 'Chưa nhập số hóa đơn thanh lý' })
+		.trim()
+		.min(1, 'Chưa nhập số hóa đơn thanh lý'),
 	equipment: z
 		.string({ required_error: 'Chưa nhập trang bị' })
 		.trim()
@@ -198,6 +218,7 @@ const createEquipmentDisposalSchema = z.object({
 		.string({ required_error: 'Chưa nhập người ký quyết định' })
 		.trim()
 		.min(1, 'Chưa nhập người ký quyết định'),
+
 	notes: z.string().optional(),
 })
 type CreateEquipmentDisposalSchema = z.infer<
@@ -254,6 +275,32 @@ const generalSettingsSchema = z.object({
 })
 type GeneralSettingsSchema = z.infer<typeof generalSettingsSchema>
 
+const searchEquipmentHandoverSchema = z.object({
+	reportNumber: z.string().optional(),
+	fromUnitId: z.string().optional(),
+	toUnitId: z.string().optional(),
+	handoverDateStart: z.string().optional(),
+	handoverDateEnd: z.string().optional(),
+	createdById: z.string().optional(),
+	receiverId: z.string().optional(),
+	equipmentQuery: z.string().optional(),
+})
+type SearchEquipmentHandoverSchema = z.infer<
+	typeof searchEquipmentHandoverSchema
+>
+
+const searchEquipmentDisposeSchema = z.object({
+	createdById: z.string().optional(),
+	decisionNumber: z.string().optional(),
+	disposalDateEnd: z.string().optional(),
+	disposalDateStart: z.string().optional(),
+	equipmentQuery: z.string().optional(),
+	search: z.string().optional(),
+	signer: z.string().optional(),
+	unitId: z.string().optional(),
+})
+type SearchEquipmentDisposeSchema = z.infer<typeof searchEquipmentDisposeSchema>
+
 export {
 	loginSchema,
 	accountSchema,
@@ -267,6 +314,8 @@ export {
 	createEquipmentDisposalSchema,
 	componentDetailSchema,
 	generalSettingsSchema,
+	searchEquipmentHandoverSchema,
+	searchEquipmentDisposeSchema,
 }
 
 export type {
@@ -282,4 +331,6 @@ export type {
 	CreateEquipmentDisposalSchema,
 	ComponentDetailSchema,
 	GeneralSettingsSchema,
+	SearchEquipmentHandoverSchema,
+	SearchEquipmentDisposeSchema,
 }

@@ -1,71 +1,74 @@
 'use client'
-import type { ActivityLog } from '@/client'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const columns: ColumnDef<ActivityLog>[] = [
+export const columns: ColumnDef<any>[] = [
 	{
 		accessorKey: 'index',
 		header: 'STT',
 	},
 	{
-		accessorKey: 'details.decisionNumber',
+		accessorKey: 'decisionNumber',
 		header: 'Số quyết định',
 	},
 	{
 		accessorKey: 'details.disposalDate',
 		header: 'Ngày thanh lý',
 		cell: ({ row }) =>
-			new Date(row.original.details.disposalDate as string).toLocaleDateString(
+			new Date(row.original?.disposalDate as string).toLocaleDateString(
 				'vi-VN',
 			),
 	},
 	{
-		accessorKey: 'details.createdBy',
-		header: 'Người lập',
-	},
-	{
-		accessorKey: 'details.signer',
+		accessorKey: 'signer',
 		header: 'Người ký',
 	},
 	{
 		accessorKey: 'instanceId.serialNumber',
-		header: 'Serial trang bị',
+		header: 'Trang bị',
 	},
 	{
 		accessorKey: 'notes',
 		header: 'Ghi chú',
 	},
-	// {
-	// 	id: 'actions',
-	// 	enableResizing: false,
-	// 	size: 1,
-	// 	cell: () => {
-	// 		const [open, setOpen] = useState<boolean>(false)
+	{
+		id: 'actions',
+		enableResizing: false,
+		size: 1,
+		cell: () => {
+			// const [open, setOpen] = useState<boolean>(false)
 
-	// 		const handleDelete = () => {
-	// 			setOpen(false)
-	// 		}
+			// const handleDelete = () => {
+			// 	setOpen(false)
+			// }
 
-	// 		return (
-	// 			<div className="flex items-center justify-end gap-x-3">
-	// 				<Link href={'#'} className="text-blue-600">
-	// 					Chỉnh sửa
-	// 				</Link>
-	// 				<p
-	// 					className="text-red-600 cursor-pointer"
-	// 					onClick={() => setOpen(true)}
-	// 				>
-	// 					Xoá
-	// 				</p>
-	// 				<DialogConfirmDelete
-	// 					title="Xoá hoạt động thanh lý"
-	// 					description="Bạn có chắc chắn muốn xoá hoạt động thanh lý này"
-	// 					open={open}
-	// 					onOpenChange={setOpen}
-	// 					onConfirm={handleDelete}
-	// 				/>
-	// 			</div>
-	// 		)
-	// 	},
-	// },
+			return (
+				<div className="flex items-center justify-end gap-x-3">
+					{/* <Button
+						variant={'ghost'}
+						disabled={isPending}
+						onClick={handleGenerateReport}
+						className="text-green-600 cursor-pointer"
+					>
+						Xuất PDF
+					</Button> */}
+					{/* <Link href={'#'} className="text-blue-600">
+						Chỉnh sửa
+					</Link>
+					<p
+						className="text-red-600 cursor-pointer"
+						onClick={() => setOpen(true)}
+					>
+						Xoá
+					</p>
+					<DialogConfirmDelete
+						title="Xoá hoạt động bàn giao"
+						description="Bạn có chắc chắn muốn xoá hoạt động bàn giao này"
+						open={open}
+						onOpenChange={setOpen}
+						onConfirm={handleDelete}
+					/> */}
+				</div>
+			)
+		},
+	},
 ]

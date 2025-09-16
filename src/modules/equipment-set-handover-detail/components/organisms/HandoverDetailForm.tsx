@@ -1,9 +1,6 @@
 'use client'
-
 import {
-	equipmentInstancesControllerHandoverMutation,
 	equipmentInstancesControllerSearchOptions,
-	equipmentInstancesControllerSearchQueryKey,
 	unitsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import Combobox from '@/components/custom/combobox/Combobox'
@@ -27,13 +24,12 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
-import type { CreateEquipmentSetHandoverSchema } from '@/configs/schema'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import DataTable from '@/modules/common/components/organisms/DataTable'
+import { useQuery } from '@tanstack/react-query'
+import type { ColumnDef } from '@tanstack/react-table'
+import { ArrowBigLeftDash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import type { SubmitHandler } from 'react-hook-form'
-import { toast } from 'sonner'
 import useHandoverDetailController from '../../controllers/handover-detail.controller'
 
 type Props = {
@@ -41,12 +37,10 @@ type Props = {
 }
 
 const HandoverDetailForm = ({ id }: Props) => {
-	const { form } = useHandoverDetailController({ id })
+	const { form, onSubmit } = useHandoverDetailController({ id })
 	const { control } = form
 	const router = useRouter()
-	const { mutate: create } = useMutation({
-		...equipmentInstancesControllerHandoverMutation(),
-	})
+
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions({ query: { limit: 1000000, page: 1 } }),
 	})
@@ -61,34 +55,80 @@ const HandoverDetailForm = ({ id }: Props) => {
 			})),
 	})
 
-	const onSubmit: SubmitHandler<CreateEquipmentSetHandoverSchema> = (data) => {
-		create(
-			{
-				path: { id: data?.equipment },
-				body: {
-					sender: data.senderPerson,
-					receiver: data.receiverPerson,
-					reportNumber: data.code,
-					toUnitId: data.receiverUnit,
-					notes: data.note,
-					handoverDate: new Date(data.handoverDate).toISOString(),
-					comment: data.comment,
-				},
-			},
-			{
-				onError: (error) => {
-					toast.error((error.response?.data as any)?.message)
-				},
-				onSuccess: () => {
-					toast.success('Tạo thành công')
-					queryClient.invalidateQueries({
-						queryKey: equipmentInstancesControllerSearchQueryKey(),
-					})
-					router.push(pageList.equipmentSetHandover.href)
-				},
-			},
+	const handleSelectEquipment = () => {
+		const component = equipments?.find(
+			(item) => item.value === form.watch('selectedEquipmentName'),
 		)
+		const componentList = (form.getValues('items') ?? []).filter(
+			(item) => item.instanceId !== component?.value,
+		)
+		form.setValue('items', [
+			...componentList,
+			{
+				instanceId: component?.value,
+				componentName: component?.label,
+				unitOfMeasure: 'Bộ',
+				quantity: Number(form.watch('selectedEquipmentQuantity')),
+				note: form.watch('selectedEquipmentNote'),
+			} as any,
+		])
 	}
+
+	const columns: ColumnDef<{
+		index: number
+		componentName: string
+		unitOfMeasure: string
+		quantity: number
+		note: string
+	}>[] = [
+		{
+			accessorKey: 'index',
+			header: 'STT',
+			cell: ({ row }) => {
+				return <div>{row.index + 1}</div>
+			},
+		},
+		{
+			accessorKey: 'componentName',
+			header: 'Tên',
+		},
+		// {
+		// 	accessorKey: 'unitOfMeasure',
+		// 	header: 'Đơn vị tính',
+		// },
+		{
+			accessorKey: 'quantity',
+			header: 'Số lượng',
+		},
+		{
+			accessorKey: 'note',
+			header: 'Ghi chú',
+		},
+		{
+			id: 'actions',
+			enableSorting: false,
+			enableHiding: false,
+			cell: ({ row }) => {
+				const original = row.original
+
+				return (
+					<div className="flex items-center gap-x-2">
+						<div
+							className="text-red-600 cursor-pointer"
+							onClick={() => {
+								const componentList = (form.getValues('items') ?? []).filter(
+									(item) => item.instanceId !== (original as any).instanceId,
+								)
+								form.setValue('items', componentList)
+							}}
+						>
+							Xoá
+						</div>
+					</div>
+				)
+			},
+		},
+	]
 
 	return (
 		<div>
@@ -97,7 +137,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 					<div className="grid gap-y-5 gap-x-20 grid-cols-2">
 						<FormField
 							control={control}
-							name="code"
+							name="reportNumber"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Số biên bản</FormLabel>
@@ -110,12 +150,12 @@ const HandoverDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="senderPerson"
+							name="sender"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Người bàn giao</FormLabel>
+									<FormLabel>Người gửi</FormLabel>
 									<FormControl>
-										<Input placeholder="Người bàn giao" {...field} />
+										<Input placeholder="Người gửi" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -123,7 +163,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="receiverPerson"
+							name="receiver"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Người nhận</FormLabel>
@@ -136,7 +176,57 @@ const HandoverDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="receiverUnit"
+							name="handoverApprovedBy"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Người phê duyệt bàn giao</FormLabel>
+									<FormControl>
+										<Input placeholder="Người phê duyệt bàn giao" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="handoverRejectedBy"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Người từ chối bàn giao</FormLabel>
+									<FormControl>
+										<Input placeholder="Người từ chối bàn giao" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="fromUnitId"
+							render={({ field: { value, onChange } }) => (
+								<FormItem>
+									<FormLabel>Đơn vị giao</FormLabel>
+									<FormControl>
+										<Select value={value} onValueChange={onChange}>
+											<SelectTrigger className="w-full">
+												<SelectValue />
+											</SelectTrigger>
+											<SelectContent>
+												{units?.data?.map((unit) => (
+													<SelectItem key={unit._id} value={unit._id}>
+														{unit.name}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="toUnitId"
 							render={({ field: { value, onChange } }) => (
 								<FormItem>
 									<FormLabel>Đơn vị nhận</FormLabel>
@@ -176,36 +266,6 @@ const HandoverDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="equipment"
-							render={({ field: { value, onChange } }) => (
-								<FormItem key={value}>
-									<FormLabel>Trang bị</FormLabel>
-									<FormControl>
-										<Combobox
-											options={equipments || []}
-											value={value}
-											onChange={onChange}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={control}
-							name="note"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Ghi chú</FormLabel>
-									<FormControl>
-										<Textarea placeholder="Ghi chú" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={control}
 							name="comment"
 							render={({ field }) => (
 								<FormItem>
@@ -217,6 +277,99 @@ const HandoverDetailForm = ({ id }: Props) => {
 								</FormItem>
 							)}
 						/>
+						{/* <FormField
+							control={control}
+							name="items"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Trang bị bàn giao</FormLabel>
+									<FormControl>
+										<MultiSelect
+											options={equipments || []}
+											onValueChange={field.onChange}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/> */}
+					</div>
+					<div className="flex gap-x-5 items-center mt-10">
+						<FormField
+							control={form.control}
+							name="items"
+							render={({ field: { value } }) => (
+								<FormItem className="mt-5">
+									<FormLabel>Trang bị</FormLabel>
+									<FormControl>
+										<DataTable
+											columns={columns}
+											data={value ? (value as any) : []}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button
+							type="button"
+							onClick={handleSelectEquipment}
+							disabled={
+								!(
+									form.watch('selectedEquipmentName') &&
+									form.watch('selectedEquipmentQuantity')
+								)
+							}
+						>
+							<ArrowBigLeftDash className="size-7" />
+						</Button>
+						<Card className="h-full w-1/3 flex-none">
+							<FormField
+								control={control}
+								name="selectedEquipmentName"
+								render={({ field }) => (
+									<FormItem className="flex w-full">
+										<FormLabel className="flex-none w-24">Tên</FormLabel>
+										<FormControl>
+											<div className="w-full">
+												<Combobox
+													onChange={field.onChange}
+													options={equipments || []}
+													value={field.value}
+												/>
+											</div>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={control}
+								name="selectedEquipmentQuantity"
+								render={({ field }) => (
+									<FormItem className="flex">
+										<FormLabel className="flex-none w-24">Số lượng</FormLabel>
+										<FormControl>
+											<Input type="text" placeholder="Số lượng" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={control}
+								name="selectedEquipmentNote"
+								render={({ field }) => (
+									<FormItem className="flex items-start">
+										<FormLabel className="flex-none w-24">Ghi chú</FormLabel>
+										<FormControl>
+											<Textarea placeholder="Ghi chú" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</Card>
 					</div>
 					<div className="mt-10 flex items-center justify-end gap-x-5">
 						<Button

@@ -2,8 +2,8 @@
 
 import type { OptionsLegacyParser } from '@hey-api/client-axios';
 import { queryOptions, type UseMutationOptions, infiniteQueryOptions, type InfiniteData } from '@tanstack/react-query';
-import { client, AppService, AssemblyEquipmentsComponentsService, AssemblyEquipmentsProductProfilesService, AuthService, CategoriesEquipmentGroupsService, CategoriesQualityLevelsService, CoreUnitsService, CoreUsersService, OperationsActivityLogsService, SyncEquipmentsCatalogService, SyncEquipmentsInstancesService } from '../sdk.gen';
-import type { ComponentsControllerCreateData, ComponentsControllerCreateError, ComponentsControllerCreateResponse, ComponentsControllerFindAllData, ComponentsControllerFindAllError, ComponentsControllerFindAllResponse, ComponentsControllerUploadFilesData, ComponentsControllerUploadFilesError, ComponentsControllerUploadFilesResponse, ComponentsControllerGetImageData, ComponentsControllerFindOneData, ComponentsControllerUpdateData, ComponentsControllerUpdateError, ComponentsControllerUpdateResponse, ComponentsControllerRemoveData, ComponentsControllerRemoveError, ComponentsControllerRemoveResponse, ComponentsControllerAddComponentStockData, ComponentsControllerAddComponentStockError, ComponentsControllerAddComponentStockResponse, AssembledEquipmentControllerCreateConfigData, AssembledEquipmentControllerCreateConfigError, AssembledEquipmentControllerCreateConfigResponse, AssembledEquipmentControllerFindAllConfigsData, AssembledEquipmentControllerFindAllConfigsError, AssembledEquipmentControllerFindAllConfigsResponse, AssembledEquipmentControllerUploadFilesData, AssembledEquipmentControllerUploadFilesError, AssembledEquipmentControllerUploadFilesResponse, AssembledEquipmentControllerGetImageData, AssembledEquipmentControllerFindConfigByIdData, AssembledEquipmentControllerUpdateConfigData, AssembledEquipmentControllerUpdateConfigError, AssembledEquipmentControllerUpdateConfigResponse, AssembledEquipmentControllerRemoveConfigData, AssembledEquipmentControllerRemoveConfigError, AssembledEquipmentControllerRemoveConfigResponse, AssembledEquipmentControllerCheckBuildAvailabilityData, AssembledEquipmentControllerCheckBuildAvailabilityError, AssembledEquipmentControllerCheckBuildAvailabilityResponse, AssembledEquipmentControllerCreateBuildActivityData, AssembledEquipmentControllerCreateBuildActivityError, AssembledEquipmentControllerCreateBuildActivityResponse, AssembledEquipmentControllerFindAllBuildActivitiesData, AssembledEquipmentControllerFindAllBuildActivitiesError, AssembledEquipmentControllerFindAllBuildActivitiesResponse, AssembledEquipmentControllerFindbuildActivityByIdData, AssembledEquipmentControllerUpdateBuildActivityData, AssembledEquipmentControllerUpdateBuildActivityError, AssembledEquipmentControllerUpdateBuildActivityResponse, AssembledEquipmentControllerRemoveBuildActivityData, AssembledEquipmentControllerRemoveBuildActivityError, AssembledEquipmentControllerRemoveBuildActivityResponse, SettingsControllerCreateData, SettingsControllerCreateError, SettingsControllerCreateResponse, SettingsControllerFindOneData, SettingsControllerUpdateData, SettingsControllerUpdateError, SettingsControllerUpdateResponse, ProductProfilesControllerCreateData, ProductProfilesControllerCreateError, ProductProfilesControllerCreateResponse, ProductProfilesControllerFindAllData, ProductProfilesControllerFindAllError, ProductProfilesControllerFindAllResponse, ProductProfilesControllerFindOneData, ProductProfilesControllerUpdateData, ProductProfilesControllerUpdateError, ProductProfilesControllerUpdateResponse, ProductProfilesControllerRemoveData, ProductProfilesControllerRemoveError, ProductProfilesControllerRemoveResponse, AuthControllerLoginData, AuthControllerLoginError, AuthControllerLoginResponse, EquipmentGroupsControllerCreateData, EquipmentGroupsControllerCreateError, EquipmentGroupsControllerCreateResponse, EquipmentGroupsControllerFindAllData, EquipmentGroupsControllerFindAllError, EquipmentGroupsControllerFindAllResponse, EquipmentGroupsControllerFindOneData, EquipmentGroupsControllerUpdateData, EquipmentGroupsControllerUpdateError, EquipmentGroupsControllerUpdateResponse, EquipmentGroupsControllerRemoveData, EquipmentGroupsControllerRemoveError, EquipmentGroupsControllerRemoveResponse, QualityLevelsControllerCreateData, QualityLevelsControllerCreateError, QualityLevelsControllerCreateResponse, QualityLevelsControllerFindAllData, QualityLevelsControllerFindAllError, QualityLevelsControllerFindAllResponse, QualityLevelsControllerFindOneData, QualityLevelsControllerUpdateData, QualityLevelsControllerUpdateError, QualityLevelsControllerUpdateResponse, QualityLevelsControllerRemoveData, QualityLevelsControllerRemoveError, QualityLevelsControllerRemoveResponse, UnitsControllerCreateData, UnitsControllerCreateError, UnitsControllerCreateResponse, UnitsControllerFindAllData, UnitsControllerFindAllError, UnitsControllerFindAllResponse, UnitsControllerFindOneData, UnitsControllerUpdateData, UnitsControllerUpdateError, UnitsControllerUpdateResponse, UnitsControllerRemoveData, UnitsControllerRemoveError, UnitsControllerRemoveResponse, UsersControllerCreateData, UsersControllerCreateError, UsersControllerCreateResponse, UsersControllerFindOneData, UsersControllerUpdateData, UsersControllerUpdateError, UsersControllerUpdateResponse, UsersControllerRemoveData, UsersControllerRemoveError, UsersControllerRemoveResponse, ActivityLogsControllerSearchData, ActivityLogsControllerSearchError, ActivityLogsControllerSearchResponse, ActivityLogsControllerFindByInstanceData, SyncEquipmentControllerCreateData, SyncEquipmentControllerCreateError, SyncEquipmentControllerCreateResponse, SyncEquipmentControllerFindAllData, SyncEquipmentControllerFindAllError, SyncEquipmentControllerFindAllResponse, SyncEquipmentControllerFindOneData, SyncEquipmentControllerUpdateData, SyncEquipmentControllerUpdateError, SyncEquipmentControllerUpdateResponse, SyncEquipmentControllerRemoveData, SyncEquipmentControllerRemoveError, SyncEquipmentControllerRemoveResponse, EquipmentInstancesControllerCreateData, EquipmentInstancesControllerCreateError, EquipmentInstancesControllerCreateResponse, EquipmentInstancesControllerUploadFilesData, EquipmentInstancesControllerUploadFilesError, EquipmentInstancesControllerUploadFilesResponse, EquipmentInstancesControllerGetImageData, EquipmentInstancesControllerSearchData, EquipmentInstancesControllerSearchError, EquipmentInstancesControllerSearchResponse, EquipmentInstancesControllerFindOneData, EquipmentInstancesControllerUpdateData, EquipmentInstancesControllerUpdateError, EquipmentInstancesControllerUpdateResponse, EquipmentInstancesControllerRemoveData, EquipmentInstancesControllerRemoveError, EquipmentInstancesControllerRemoveResponse, EquipmentInstancesControllerHandoverData, EquipmentInstancesControllerHandoverError, EquipmentInstancesControllerHandoverResponse, EquipmentInstancesControllerRepairData, EquipmentInstancesControllerRepairError, EquipmentInstancesControllerRepairResponse, EquipmentInstancesControllerDisposeData, EquipmentInstancesControllerDisposeError, EquipmentInstancesControllerDisposeResponse } from '../types.gen';
+import { client, AppService, AssemblyEquipmentsComponentsService, AssemblyEquipmentsProductProfilesService, AuthService, CategoriesEquipmentGroupsService, CategoriesQualityLevelsService, CoreUnitsService, CoreUsersService, EquipmentDisposeService, HandoverEquipmentService, OperationsActivityLogsService, SyncEquipmentsCatalogService, SyncEquipmentsInstancesService } from '../sdk.gen';
+import type { ComponentsControllerCreateData, ComponentsControllerCreateError, ComponentsControllerCreateResponse, ComponentsControllerFindAllData, ComponentsControllerFindAllError, ComponentsControllerFindAllResponse, ComponentsControllerUploadFilesData, ComponentsControllerUploadFilesError, ComponentsControllerUploadFilesResponse, ComponentsControllerGetImageData, ComponentsControllerFindOneData, ComponentsControllerUpdateData, ComponentsControllerUpdateError, ComponentsControllerUpdateResponse, ComponentsControllerRemoveData, ComponentsControllerRemoveError, ComponentsControllerRemoveResponse, ComponentsControllerAddComponentStockData, ComponentsControllerAddComponentStockError, ComponentsControllerAddComponentStockResponse, AssembledEquipmentControllerCreateConfigData, AssembledEquipmentControllerCreateConfigError, AssembledEquipmentControllerCreateConfigResponse, AssembledEquipmentControllerFindAllConfigsData, AssembledEquipmentControllerFindAllConfigsError, AssembledEquipmentControllerFindAllConfigsResponse, AssembledEquipmentControllerUploadFilesData, AssembledEquipmentControllerUploadFilesError, AssembledEquipmentControllerUploadFilesResponse, AssembledEquipmentControllerGetImageData, AssembledEquipmentControllerFindConfigByIdData, AssembledEquipmentControllerUpdateConfigData, AssembledEquipmentControllerUpdateConfigError, AssembledEquipmentControllerUpdateConfigResponse, AssembledEquipmentControllerRemoveConfigData, AssembledEquipmentControllerRemoveConfigError, AssembledEquipmentControllerRemoveConfigResponse, AssembledEquipmentControllerCheckBuildAvailabilityData, AssembledEquipmentControllerCheckBuildAvailabilityError, AssembledEquipmentControllerCheckBuildAvailabilityResponse, AssembledEquipmentControllerCreateBuildActivityData, AssembledEquipmentControllerCreateBuildActivityError, AssembledEquipmentControllerCreateBuildActivityResponse, AssembledEquipmentControllerFindAllBuildActivitiesData, AssembledEquipmentControllerFindAllBuildActivitiesError, AssembledEquipmentControllerFindAllBuildActivitiesResponse, AssembledEquipmentControllerFindbuildActivityByIdData, AssembledEquipmentControllerUpdateBuildActivityData, AssembledEquipmentControllerUpdateBuildActivityError, AssembledEquipmentControllerUpdateBuildActivityResponse, AssembledEquipmentControllerRemoveBuildActivityData, AssembledEquipmentControllerRemoveBuildActivityError, AssembledEquipmentControllerRemoveBuildActivityResponse, SettingsControllerCreateData, SettingsControllerCreateError, SettingsControllerCreateResponse, SettingsControllerFindOneData, SettingsControllerUpdateData, SettingsControllerUpdateError, SettingsControllerUpdateResponse, ProductProfilesControllerCreateData, ProductProfilesControllerCreateError, ProductProfilesControllerCreateResponse, ProductProfilesControllerFindAllData, ProductProfilesControllerFindAllError, ProductProfilesControllerFindAllResponse, ProductProfilesControllerFindOneData, ProductProfilesControllerUpdateData, ProductProfilesControllerUpdateError, ProductProfilesControllerUpdateResponse, ProductProfilesControllerRemoveData, ProductProfilesControllerRemoveError, ProductProfilesControllerRemoveResponse, AuthControllerLoginData, AuthControllerLoginError, AuthControllerLoginResponse, EquipmentGroupsControllerCreateData, EquipmentGroupsControllerCreateError, EquipmentGroupsControllerCreateResponse, EquipmentGroupsControllerFindAllData, EquipmentGroupsControllerFindAllError, EquipmentGroupsControllerFindAllResponse, EquipmentGroupsControllerFindOneData, EquipmentGroupsControllerUpdateData, EquipmentGroupsControllerUpdateError, EquipmentGroupsControllerUpdateResponse, EquipmentGroupsControllerRemoveData, EquipmentGroupsControllerRemoveError, EquipmentGroupsControllerRemoveResponse, QualityLevelsControllerCreateData, QualityLevelsControllerCreateError, QualityLevelsControllerCreateResponse, QualityLevelsControllerFindAllData, QualityLevelsControllerFindAllError, QualityLevelsControllerFindAllResponse, QualityLevelsControllerFindOneData, QualityLevelsControllerUpdateData, QualityLevelsControllerUpdateError, QualityLevelsControllerUpdateResponse, QualityLevelsControllerRemoveData, QualityLevelsControllerRemoveError, QualityLevelsControllerRemoveResponse, UnitsControllerCreateData, UnitsControllerCreateError, UnitsControllerCreateResponse, UnitsControllerFindAllData, UnitsControllerFindAllError, UnitsControllerFindAllResponse, UnitsControllerFindOneData, UnitsControllerUpdateData, UnitsControllerUpdateError, UnitsControllerUpdateResponse, UnitsControllerRemoveData, UnitsControllerRemoveError, UnitsControllerRemoveResponse, UsersControllerCreateData, UsersControllerCreateError, UsersControllerCreateResponse, UsersControllerFindOneData, UsersControllerUpdateData, UsersControllerUpdateError, UsersControllerUpdateResponse, UsersControllerRemoveData, UsersControllerRemoveError, UsersControllerRemoveResponse, EquipmentDisposeControllerDisposeData, EquipmentDisposeControllerDisposeError, EquipmentDisposeControllerDisposeResponse, EquipmentDisposeControllerSearchData, EquipmentDisposeControllerSearchError, EquipmentDisposeControllerSearchResponse, EquipmentDisposeControllerFindOneData, EquipmentDisposeControllerUpdateData, EquipmentDisposeControllerUpdateError, EquipmentDisposeControllerUpdateResponse, EquipmentDisposeControllerRemoveData, EquipmentDisposeControllerRemoveError, EquipmentDisposeControllerRemoveResponse, EquipmentDisposeControllerFindByInstanceIdData, EquipmentDisposeControllerGenerateLiquidationFormLayoutError, EquipmentDisposeControllerGenerateLiquidationFormLayoutResponse, EquipmentHandoverControllerHandoverData, EquipmentHandoverControllerHandoverError, EquipmentHandoverControllerHandoverResponse, EquipmentHandoverControllerSearchData, EquipmentHandoverControllerSearchError, EquipmentHandoverControllerSearchResponse, EquipmentHandoverControllerGenerateHandoverReportFromLogData, EquipmentHandoverControllerGenerateHandoverReportFromLogError, EquipmentHandoverControllerGenerateHandoverReportFromLogResponse, ActivityLogsControllerSearchData, ActivityLogsControllerSearchError, ActivityLogsControllerSearchResponse, ActivityLogsControllerFindByInstanceData, SyncEquipmentControllerCreateData, SyncEquipmentControllerCreateError, SyncEquipmentControllerCreateResponse, SyncEquipmentControllerFindAllData, SyncEquipmentControllerFindAllError, SyncEquipmentControllerFindAllResponse, SyncEquipmentControllerFindOneData, SyncEquipmentControllerUpdateData, SyncEquipmentControllerUpdateError, SyncEquipmentControllerUpdateResponse, SyncEquipmentControllerRemoveData, SyncEquipmentControllerRemoveError, SyncEquipmentControllerRemoveResponse, EquipmentInstancesControllerCreateData, EquipmentInstancesControllerCreateError, EquipmentInstancesControllerCreateResponse, EquipmentInstancesControllerUploadFilesData, EquipmentInstancesControllerUploadFilesError, EquipmentInstancesControllerUploadFilesResponse, EquipmentInstancesControllerGetImageData, EquipmentInstancesControllerSearchData, EquipmentInstancesControllerSearchError, EquipmentInstancesControllerSearchResponse, EquipmentInstancesControllerFindOneData, EquipmentInstancesControllerUpdateData, EquipmentInstancesControllerUpdateError, EquipmentInstancesControllerUpdateResponse, EquipmentInstancesControllerRemoveData, EquipmentInstancesControllerRemoveError, EquipmentInstancesControllerRemoveResponse, EquipmentInstancesControllerRepairData, EquipmentInstancesControllerRepairError, EquipmentInstancesControllerRepairResponse, EquipmentInstancesControllerDisposeData, EquipmentInstancesControllerDisposeError, EquipmentInstancesControllerDisposeResponse } from '../types.gen';
 import type { AxiosError } from 'axios';
 
 type QueryKey<TOptions extends OptionsLegacyParser> = [
@@ -1357,6 +1357,298 @@ export const usersControllerRemoveMutation = (options?: Partial<OptionsLegacyPar
     return mutationOptions;
 };
 
+export const equipmentDisposeControllerDisposeQueryKey = (options: OptionsLegacyParser<EquipmentDisposeControllerDisposeData>) => [
+    createQueryKey('equipmentDisposeControllerDispose', options)
+];
+
+export const equipmentDisposeControllerDisposeOptions = (options: OptionsLegacyParser<EquipmentDisposeControllerDisposeData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await EquipmentDisposeService.equipmentDisposeControllerDispose({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentDisposeControllerDisposeQueryKey(options)
+    });
+};
+
+export const equipmentDisposeControllerDisposeMutation = (options?: Partial<OptionsLegacyParser<EquipmentDisposeControllerDisposeData>>) => {
+    const mutationOptions: UseMutationOptions<EquipmentDisposeControllerDisposeResponse, AxiosError<EquipmentDisposeControllerDisposeError>, OptionsLegacyParser<EquipmentDisposeControllerDisposeData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await EquipmentDisposeService.equipmentDisposeControllerDispose({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const equipmentDisposeControllerSearchQueryKey = (options?: OptionsLegacyParser<EquipmentDisposeControllerSearchData>) => [
+    createQueryKey('equipmentDisposeControllerSearch', options)
+];
+
+export const equipmentDisposeControllerSearchOptions = (options?: OptionsLegacyParser<EquipmentDisposeControllerSearchData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await EquipmentDisposeService.equipmentDisposeControllerSearch({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentDisposeControllerSearchQueryKey(options)
+    });
+};
+
+export const equipmentDisposeControllerSearchInfiniteQueryKey = (options?: OptionsLegacyParser<EquipmentDisposeControllerSearchData>): QueryKey<OptionsLegacyParser<EquipmentDisposeControllerSearchData>> => [
+    createQueryKey('equipmentDisposeControllerSearch', options, true)
+];
+
+export const equipmentDisposeControllerSearchInfiniteOptions = (options?: OptionsLegacyParser<EquipmentDisposeControllerSearchData>) => {
+    return infiniteQueryOptions<EquipmentDisposeControllerSearchResponse, AxiosError<EquipmentDisposeControllerSearchError>, InfiniteData<EquipmentDisposeControllerSearchResponse>, QueryKey<OptionsLegacyParser<EquipmentDisposeControllerSearchData>>, number | Pick<QueryKey<OptionsLegacyParser<EquipmentDisposeControllerSearchData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+    // @ts-ignore
+    {
+        queryFn: async ({ pageParam, queryKey, signal }) => {
+            // @ts-ignore
+            const page: Pick<QueryKey<OptionsLegacyParser<EquipmentDisposeControllerSearchData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
+                query: {
+                    page: pageParam
+                }
+            };
+            const params = createInfiniteParams(queryKey, page);
+            const { data } = await EquipmentDisposeService.equipmentDisposeControllerSearch({
+                ...options,
+                ...params,
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentDisposeControllerSearchInfiniteQueryKey(options)
+    });
+};
+
+export const equipmentDisposeControllerFindOneQueryKey = (options: OptionsLegacyParser<EquipmentDisposeControllerFindOneData>) => [
+    createQueryKey('equipmentDisposeControllerFindOne', options)
+];
+
+export const equipmentDisposeControllerFindOneOptions = (options: OptionsLegacyParser<EquipmentDisposeControllerFindOneData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await EquipmentDisposeService.equipmentDisposeControllerFindOne({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentDisposeControllerFindOneQueryKey(options)
+    });
+};
+
+export const equipmentDisposeControllerUpdateMutation = (options?: Partial<OptionsLegacyParser<EquipmentDisposeControllerUpdateData>>) => {
+    const mutationOptions: UseMutationOptions<EquipmentDisposeControllerUpdateResponse, AxiosError<EquipmentDisposeControllerUpdateError>, OptionsLegacyParser<EquipmentDisposeControllerUpdateData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await EquipmentDisposeService.equipmentDisposeControllerUpdate({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const equipmentDisposeControllerRemoveMutation = (options?: Partial<OptionsLegacyParser<EquipmentDisposeControllerRemoveData>>) => {
+    const mutationOptions: UseMutationOptions<EquipmentDisposeControllerRemoveResponse, AxiosError<EquipmentDisposeControllerRemoveError>, OptionsLegacyParser<EquipmentDisposeControllerRemoveData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await EquipmentDisposeService.equipmentDisposeControllerRemove({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const equipmentDisposeControllerFindByInstanceIdQueryKey = (options: OptionsLegacyParser<EquipmentDisposeControllerFindByInstanceIdData>) => [
+    createQueryKey('equipmentDisposeControllerFindByInstanceId', options)
+];
+
+export const equipmentDisposeControllerFindByInstanceIdOptions = (options: OptionsLegacyParser<EquipmentDisposeControllerFindByInstanceIdData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await EquipmentDisposeService.equipmentDisposeControllerFindByInstanceId({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentDisposeControllerFindByInstanceIdQueryKey(options)
+    });
+};
+
+export const equipmentDisposeControllerGenerateLiquidationFormLayoutQueryKey = (options?: OptionsLegacyParser) => [
+    createQueryKey('equipmentDisposeControllerGenerateLiquidationFormLayout', options)
+];
+
+export const equipmentDisposeControllerGenerateLiquidationFormLayoutOptions = (options?: OptionsLegacyParser) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await EquipmentDisposeService.equipmentDisposeControllerGenerateLiquidationFormLayout({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentDisposeControllerGenerateLiquidationFormLayoutQueryKey(options)
+    });
+};
+
+export const equipmentDisposeControllerGenerateLiquidationFormLayoutMutation = (options?: Partial<OptionsLegacyParser>) => {
+    const mutationOptions: UseMutationOptions<EquipmentDisposeControllerGenerateLiquidationFormLayoutResponse, AxiosError<EquipmentDisposeControllerGenerateLiquidationFormLayoutError>, OptionsLegacyParser> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await EquipmentDisposeService.equipmentDisposeControllerGenerateLiquidationFormLayout({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const equipmentHandoverControllerHandoverQueryKey = (options: OptionsLegacyParser<EquipmentHandoverControllerHandoverData>) => [
+    createQueryKey('equipmentHandoverControllerHandover', options)
+];
+
+export const equipmentHandoverControllerHandoverOptions = (options: OptionsLegacyParser<EquipmentHandoverControllerHandoverData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await HandoverEquipmentService.equipmentHandoverControllerHandover({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentHandoverControllerHandoverQueryKey(options)
+    });
+};
+
+export const equipmentHandoverControllerHandoverMutation = (options?: Partial<OptionsLegacyParser<EquipmentHandoverControllerHandoverData>>) => {
+    const mutationOptions: UseMutationOptions<EquipmentHandoverControllerHandoverResponse, AxiosError<EquipmentHandoverControllerHandoverError>, OptionsLegacyParser<EquipmentHandoverControllerHandoverData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await HandoverEquipmentService.equipmentHandoverControllerHandover({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const equipmentHandoverControllerSearchQueryKey = (options?: OptionsLegacyParser<EquipmentHandoverControllerSearchData>) => [
+    createQueryKey('equipmentHandoverControllerSearch', options)
+];
+
+export const equipmentHandoverControllerSearchOptions = (options?: OptionsLegacyParser<EquipmentHandoverControllerSearchData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await HandoverEquipmentService.equipmentHandoverControllerSearch({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentHandoverControllerSearchQueryKey(options)
+    });
+};
+
+export const equipmentHandoverControllerSearchInfiniteQueryKey = (options?: OptionsLegacyParser<EquipmentHandoverControllerSearchData>): QueryKey<OptionsLegacyParser<EquipmentHandoverControllerSearchData>> => [
+    createQueryKey('equipmentHandoverControllerSearch', options, true)
+];
+
+export const equipmentHandoverControllerSearchInfiniteOptions = (options?: OptionsLegacyParser<EquipmentHandoverControllerSearchData>) => {
+    return infiniteQueryOptions<EquipmentHandoverControllerSearchResponse, AxiosError<EquipmentHandoverControllerSearchError>, InfiniteData<EquipmentHandoverControllerSearchResponse>, QueryKey<OptionsLegacyParser<EquipmentHandoverControllerSearchData>>, number | Pick<QueryKey<OptionsLegacyParser<EquipmentHandoverControllerSearchData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+    // @ts-ignore
+    {
+        queryFn: async ({ pageParam, queryKey, signal }) => {
+            // @ts-ignore
+            const page: Pick<QueryKey<OptionsLegacyParser<EquipmentHandoverControllerSearchData>>[0], 'body' | 'headers' | 'path' | 'query'> = typeof pageParam === 'object' ? pageParam : {
+                query: {
+                    page: pageParam
+                }
+            };
+            const params = createInfiniteParams(queryKey, page);
+            const { data } = await HandoverEquipmentService.equipmentHandoverControllerSearch({
+                ...options,
+                ...params,
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentHandoverControllerSearchInfiniteQueryKey(options)
+    });
+};
+
+export const equipmentHandoverControllerGenerateHandoverReportFromLogQueryKey = (options: OptionsLegacyParser<EquipmentHandoverControllerGenerateHandoverReportFromLogData>) => [
+    createQueryKey('equipmentHandoverControllerGenerateHandoverReportFromLog', options)
+];
+
+export const equipmentHandoverControllerGenerateHandoverReportFromLogOptions = (options: OptionsLegacyParser<EquipmentHandoverControllerGenerateHandoverReportFromLogData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await HandoverEquipmentService.equipmentHandoverControllerGenerateHandoverReportFromLog({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: equipmentHandoverControllerGenerateHandoverReportFromLogQueryKey(options)
+    });
+};
+
+export const equipmentHandoverControllerGenerateHandoverReportFromLogMutation = (options?: Partial<OptionsLegacyParser<EquipmentHandoverControllerGenerateHandoverReportFromLogData>>) => {
+    const mutationOptions: UseMutationOptions<EquipmentHandoverControllerGenerateHandoverReportFromLogResponse, AxiosError<EquipmentHandoverControllerGenerateHandoverReportFromLogError>, OptionsLegacyParser<EquipmentHandoverControllerGenerateHandoverReportFromLogData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await HandoverEquipmentService.equipmentHandoverControllerGenerateHandoverReportFromLog({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
 export const activityLogsControllerSearchQueryKey = (options: OptionsLegacyParser<ActivityLogsControllerSearchData>) => [
     createQueryKey('activityLogsControllerSearch', options)
 ];
@@ -1719,39 +2011,6 @@ export const equipmentInstancesControllerRemoveMutation = (options?: Partial<Opt
     const mutationOptions: UseMutationOptions<EquipmentInstancesControllerRemoveResponse, AxiosError<EquipmentInstancesControllerRemoveError>, OptionsLegacyParser<EquipmentInstancesControllerRemoveData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await SyncEquipmentsInstancesService.equipmentInstancesControllerRemove({
-                ...options,
-                ...localOptions,
-                throwOnError: true
-            });
-            return data;
-        }
-    };
-    return mutationOptions;
-};
-
-export const equipmentInstancesControllerHandoverQueryKey = (options: OptionsLegacyParser<EquipmentInstancesControllerHandoverData>) => [
-    createQueryKey('equipmentInstancesControllerHandover', options)
-];
-
-export const equipmentInstancesControllerHandoverOptions = (options: OptionsLegacyParser<EquipmentInstancesControllerHandoverData>) => {
-    return queryOptions({
-        queryFn: async ({ queryKey, signal }) => {
-            const { data } = await SyncEquipmentsInstancesService.equipmentInstancesControllerHandover({
-                ...options,
-                ...queryKey[0],
-                signal,
-                throwOnError: true
-            });
-            return data;
-        },
-        queryKey: equipmentInstancesControllerHandoverQueryKey(options)
-    });
-};
-
-export const equipmentInstancesControllerHandoverMutation = (options?: Partial<OptionsLegacyParser<EquipmentInstancesControllerHandoverData>>) => {
-    const mutationOptions: UseMutationOptions<EquipmentInstancesControllerHandoverResponse, AxiosError<EquipmentInstancesControllerHandoverError>, OptionsLegacyParser<EquipmentInstancesControllerHandoverData>> = {
-        mutationFn: async (localOptions) => {
-            const { data } = await SyncEquipmentsInstancesService.equipmentInstancesControllerHandover({
                 ...options,
                 ...localOptions,
                 throwOnError: true

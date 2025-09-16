@@ -1,9 +1,10 @@
 'use client'
 
 import {
-	activityLogsControllerSearchQueryKey,
-	equipmentInstancesControllerDisposeMutation,
+	equipmentDisposeControllerDisposeMutation,
+	equipmentDisposeControllerSearchQueryKey,
 	equipmentInstancesControllerSearchOptions,
+	usersControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import Combobox from '@/components/custom/combobox/Combobox'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
@@ -18,7 +19,6 @@ import {
 	FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -38,7 +38,7 @@ const LiquidationDetailForm = ({ id }: Props) => {
 	const { control } = form
 	const router = useRouter()
 	const { mutate: create } = useMutation({
-		...equipmentInstancesControllerDisposeMutation(),
+		...equipmentDisposeControllerDisposeMutation(),
 	})
 	const { data: equipments } = useQuery({
 		...equipmentInstancesControllerSearchOptions({
@@ -51,13 +51,26 @@ const LiquidationDetailForm = ({ id }: Props) => {
 			})),
 	})
 
+	const { data: accounts } = useQuery({
+		...usersControllerFindAllOptions({
+			query: { limit: 1000000, page: 1 },
+		}),
+		select: (data) => {
+			return data?.map((account) => ({
+				label: account.fullName || account.username,
+				value: account._id,
+			}))
+		},
+	})
+
 	const onSubmit: SubmitHandler<CreateEquipmentDisposalSchema> = (data) => {
 		create(
 			{
-				path: { id: data.equipment },
 				body: {
-					createdBy: data.createdBy,
 					decisionNumber: data.decisionNumber,
+					invoiceNumber: data.invoiceNumber,
+					instanceId: data.equipment as any,
+					createdById: data.createdBy as any,
 					disposalDate: new Date(data.disposalDate).toISOString(),
 					signer: data.signer,
 					notes: data.notes,
@@ -70,9 +83,7 @@ const LiquidationDetailForm = ({ id }: Props) => {
 				onSuccess: () => {
 					toast.success('Tạo thành công')
 					queryClient.invalidateQueries({
-						queryKey: activityLogsControllerSearchQueryKey({
-							query: { activityType: 'Thanh lý' },
-						}),
+						queryKey: equipmentDisposeControllerSearchQueryKey(),
 					})
 					router.push(pageList.equipmentSetLiquidation.href)
 				},
@@ -86,6 +97,107 @@ const LiquidationDetailForm = ({ id }: Props) => {
 				<Form {...form}>
 					<div className="grid gap-y-5 gap-x-20 grid-cols-2">
 						<FormField
+							control={control}
+							name="decisionNumber"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Số quyết định</FormLabel>
+									<FormControl>
+										<Input placeholder="Số quyết định" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="invoiceNumber"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Số hóa đơn</FormLabel>
+									<FormControl>
+										<Input placeholder="Số hóa đơn" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="equipment"
+							render={({ field: { value, onChange } }) => (
+								<FormItem key={value}>
+									<FormLabel>Trang bị</FormLabel>
+									<FormControl>
+										<Combobox
+											options={equipments || []}
+											value={value}
+											onChange={onChange}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="createdBy"
+							render={({ field: { value, onChange } }) => (
+								<FormItem key={value}>
+									<FormLabel>Người lập</FormLabel>
+									<FormControl>
+										<Combobox
+											options={accounts || []}
+											value={value}
+											onChange={onChange}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="disposalDate"
+							render={({ field: { onChange, value } }) => (
+								<FormItem>
+									<FormLabel>Ngày thanh lý</FormLabel>
+									<FormControl>
+										<DatePicker
+											onChange={(e) => onChange(e.toISOString())}
+											value={value ? new Date(value || 0) : undefined}
+										/>
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="signer"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Người ký</FormLabel>
+									<FormControl>
+										<Input placeholder="Người ký" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="notes"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Ghi chú</FormLabel>
+									<FormControl>
+										<Textarea placeholder="Ghi chú" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						{/* <FormField
 							control={control}
 							name="decisionNumber"
 							render={({ field }) => (
@@ -169,7 +281,7 @@ const LiquidationDetailForm = ({ id }: Props) => {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 					</div>
 					<div className="mt-10 flex items-center justify-end gap-x-5">
 						<Button

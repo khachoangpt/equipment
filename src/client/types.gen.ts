@@ -139,6 +139,34 @@ export type CreateComponentDto = {
     notes?: string;
 };
 
+export type CreateEquipmentDisposeDto = {
+    /**
+     * ID của trang bị
+     */
+    instanceId: (ObjectId);
+    /**
+     * Số quyết định thanh lý
+     */
+    decisionNumber: string;
+    /**
+     * Ngày thanh lý
+     */
+    disposalDate: string;
+    /**
+     * Người lập
+     */
+    createdById: (ObjectId);
+    /**
+     * Người ký quyết định
+     */
+    signer: string;
+    /**
+     * Số hóa đơn
+     */
+    invoiceNumber?: string;
+    notes?: string;
+};
+
 export type CreateEquipmentDto = {
     name: string;
     /**
@@ -211,6 +239,72 @@ export type CreateEquipmentInstanceDto = {
      */
     images: Array<(string)>;
     type?: string;
+    /**
+     * Ghi chú
+     */
+    notes?: string;
+};
+
+export type CreateHandoverEquipmentDto = {
+    /**
+     * Số biên bản bàn giao
+     */
+    reportNumber: string;
+    /**
+     * Namw của người nhận
+     */
+    receiver?: string;
+    /**
+     * Name của người phê duyệt
+     */
+    approver?: string;
+    /**
+     * Name của người thực hiện bàn giao
+     */
+    sender?: string;
+    /**
+     * Name của người phê duyệt bàn giao
+     */
+    handoverApprovedBy?: string;
+    /**
+     * Name của người từ chối bàn giao
+     */
+    handoverRejectedBy?: string;
+    /**
+     * ID của đơn vị giao
+     */
+    fromUnitId: (ObjectId);
+    /**
+     * ID của đơn vị nhận
+     */
+    toUnitId: (ObjectId);
+    /**
+     * Ngày bàn giao
+     */
+    handoverDate: string;
+    /**
+     * Ghi chú thêm
+     */
+    comment?: string;
+    /**
+     * Danh sách các trang bị bàn giao
+     */
+    items: Array<CreateHandoverItemDto>;
+};
+
+export type CreateHandoverItemDto = {
+    /**
+     * ID của trang bị
+     */
+    instanceId: (ObjectId);
+    /**
+     * Số lượng bàn giao
+     */
+    quantity: number;
+    /**
+     * Đơn vị tính
+     */
+    unitOfMeasure: string;
     /**
      * Ghi chú
      */
@@ -305,6 +399,41 @@ export type Equipment = {
     updatedAt: string;
 };
 
+export type EquipmentDispose = {
+    /**
+     * Mongo document ID
+     */
+    _id: string;
+    /**
+     * ID của trang bị
+     */
+    instanceId: (EquipmentInstance);
+    /**
+     * Số quyết định thanh lý
+     */
+    decisionNumber: string;
+    /**
+     * Ngày thanh lý
+     */
+    disposalDate: string;
+    /**
+     * Người lập
+     */
+    createdById: (User);
+    /**
+     * Người ký quyết định
+     */
+    signer: string;
+    /**
+     * Số hóa đơn
+     */
+    invoiceNumber?: string;
+    /**
+     * Ghi chú
+     */
+    notes?: string;
+};
+
 export type EquipmentGroup = {
     /**
      * Mongo document ID
@@ -364,20 +493,78 @@ export type EquipmentInstance = {
     notes?: string;
 };
 
-export type HandoverDto = {
+export type HandoverEquipment = {
     /**
-     * ID của đơn vị nhận trang bị
+     * Mongo document ID
      */
-    toUnitId: string;
-    reportNumber: string;
-    receiver: string;
-    sender: string;
+    _id: string;
     /**
-     * Ngày bán giao
+     * Số biên bản bàn giao
+     */
+    reportNumber: string;
+    /**
+     * ID của người tạo
+     */
+    createdById: (User);
+    /**
+     * ID của người nhận
+     */
+    receiver?: (User);
+    /**
+     * ID của người phê duyệt
+     */
+    approver?: (User);
+    /**
+     * ID của người thực hiện bàn giao
+     */
+    sender?: (User);
+    /**
+     * ID của người phê duyệt bàn giao
+     */
+    handoverApprovedBy?: string;
+    /**
+     * ID của người từ chối bàn giao
+     */
+    handoverRejectedBy?: string;
+    /**
+     * ID của đơn vị giao
+     */
+    fromUnitId: (Unit);
+    /**
+     * ID của đơn vị nhận
+     */
+    toUnitId: (Unit);
+    /**
+     * Ngày bàn giao
      */
     handoverDate: string;
-    notes?: string;
+    /**
+     * Ghi chú thêm
+     */
     comment?: string;
+    /**
+     * Danh sách các trang bị bàn giao
+     */
+    items: Array<HandoverItem>;
+};
+
+export type HandoverItem = {
+    /**
+     * ID của trang bị
+     */
+    instanceId: (EquipmentInstance);
+    /**
+     * Số lượng bàn giao cho trang bị này
+     */
+    quantity: number;
+    /**
+     * Đơn vị tính của trang bị
+     */
+    unitOfMeasure: string;
+    /**
+     * Ghi chú riêng cho từng món
+     */
+    notes?: string;
 };
 
 export type ImageAttachment = {
@@ -405,6 +592,25 @@ export type LoginResponseDto = {
 
 export type ObjectId = {
     [key: string]: unknown;
+};
+
+export type PaginationResponseDto = {
+    /**
+     * Tổng số mục
+     */
+    total: number;
+    /**
+     * Tổng số trang
+     */
+    totalPages: number;
+    /**
+     * Số trang hiện tại
+     */
+    page: number;
+    /**
+     * Số lượng mục trên mỗi trang
+     */
+    limit: number;
 };
 
 export type ProductProfile = {
@@ -777,6 +983,34 @@ export type UpdateComponentDto = {
     compatibleProducts?: Array<(string)>;
     notes?: string;
     documentAttachments?: Array<DocumentAttachment>;
+};
+
+export type UpdateEquipmentDisposeDto = {
+    /**
+     * ID của trang bị
+     */
+    instanceId?: (ObjectId);
+    /**
+     * Số quyết định thanh lý
+     */
+    decisionNumber?: string;
+    /**
+     * Ngày thanh lý
+     */
+    disposalDate?: string;
+    /**
+     * Người lập
+     */
+    createdById?: (ObjectId);
+    /**
+     * Người ký quyết định
+     */
+    signer?: string;
+    /**
+     * Số hóa đơn
+     */
+    invoiceNumber?: string;
+    notes?: string;
 };
 
 export type UpdateEquipmentDto = {
@@ -1495,6 +1729,179 @@ export type UsersControllerRemoveResponse = (UserResponseDto);
 
 export type UsersControllerRemoveError = (unknown);
 
+export type EquipmentDisposeControllerDisposeData = {
+    body: CreateEquipmentDisposeDto;
+};
+
+export type EquipmentDisposeControllerDisposeResponse = (EquipmentDispose);
+
+export type EquipmentDisposeControllerDisposeError = (unknown);
+
+export type EquipmentDisposeControllerSearchData = {
+    query?: {
+        /**
+         * Lọc theo ID Người lập
+         */
+        createdById?: string;
+        /**
+         * Lọc theo Số quyết định
+         */
+        decisionNumber?: string;
+        /**
+         * Lọc theo Ngày thanh lý (Tới ngày)
+         */
+        disposalDateEnd?: string;
+        /**
+         * Lọc theo Ngày thanh lý (Từ ngày)
+         */
+        disposalDateStart?: string;
+        /**
+         * Lọc theo tên hoặc serial trang bị
+         */
+        equipmentQuery?: string;
+        /**
+         * Số lượng mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang
+         */
+        page?: number;
+        /**
+         * Tìm kiếm theo số quyết định, người lập, người ký
+         */
+        search?: string;
+        /**
+         * Lọc theo Người ký
+         */
+        signer?: string;
+        /**
+         * Lọc theo ID Đơn vị (của trang bị)
+         */
+        unitId?: string;
+    };
+};
+
+export type EquipmentDisposeControllerSearchResponse = (PaginationResponseDto);
+
+export type EquipmentDisposeControllerSearchError = unknown;
+
+export type EquipmentDisposeControllerFindOneData = {
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentDisposeControllerFindOneResponse = (EquipmentDispose);
+
+export type EquipmentDisposeControllerFindOneError = (unknown);
+
+export type EquipmentDisposeControllerUpdateData = {
+    body: UpdateEquipmentDisposeDto;
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentDisposeControllerUpdateResponse = (EquipmentDispose);
+
+export type EquipmentDisposeControllerUpdateError = (unknown);
+
+export type EquipmentDisposeControllerRemoveData = {
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentDisposeControllerRemoveResponse = (void);
+
+export type EquipmentDisposeControllerRemoveError = (unknown);
+
+export type EquipmentDisposeControllerFindByInstanceIdData = {
+    path: {
+        instanceId: string;
+    };
+};
+
+export type EquipmentDisposeControllerFindByInstanceIdResponse = (EquipmentDispose);
+
+export type EquipmentDisposeControllerFindByInstanceIdError = (unknown);
+
+export type EquipmentDisposeControllerGenerateLiquidationFormLayoutResponse = (unknown);
+
+export type EquipmentDisposeControllerGenerateLiquidationFormLayoutError = unknown;
+
+export type EquipmentHandoverControllerHandoverData = {
+    body: CreateHandoverEquipmentDto;
+};
+
+export type EquipmentHandoverControllerHandoverResponse = (HandoverEquipment);
+
+export type EquipmentHandoverControllerHandoverError = (unknown);
+
+export type EquipmentHandoverControllerSearchData = {
+    query?: {
+        /**
+         * ID người tạo
+         */
+        createdById?: string;
+        /**
+         * Tìm kiếm theo tên trang bị hoặc serial number
+         */
+        equipmentQuery?: string;
+        /**
+         * ID đơn vị giao
+         */
+        fromUnitId?: string;
+        /**
+         * Ngày bàn giao đến
+         */
+        handoverDateEnd?: string;
+        /**
+         * Ngày bàn giao từ
+         */
+        handoverDateStart?: string;
+        /**
+         * ID trang bị
+         */
+        instanceId?: string;
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+        /**
+         * ID người nhận
+         */
+        receiverId?: string;
+        /**
+         * Số biên bản bàn giao
+         */
+        reportNumber?: string;
+        /**
+         * ID đơn vị nhận
+         */
+        toUnitId?: string;
+    };
+};
+
+export type EquipmentHandoverControllerSearchResponse = (unknown);
+
+export type EquipmentHandoverControllerSearchError = unknown;
+
+export type EquipmentHandoverControllerGenerateHandoverReportFromLogData = {
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentHandoverControllerGenerateHandoverReportFromLogResponse = (unknown);
+
+export type EquipmentHandoverControllerGenerateHandoverReportFromLogError = unknown;
+
 export type ActivityLogsControllerSearchData = {
     query: {
         /**
@@ -1731,17 +2138,6 @@ export type EquipmentInstancesControllerRemoveData = {
 export type EquipmentInstancesControllerRemoveResponse = (EquipmentInstance);
 
 export type EquipmentInstancesControllerRemoveError = (unknown);
-
-export type EquipmentInstancesControllerHandoverData = {
-    body: HandoverDto;
-    path: {
-        id: string;
-    };
-};
-
-export type EquipmentInstancesControllerHandoverResponse = (EquipmentInstance);
-
-export type EquipmentInstancesControllerHandoverError = (unknown);
 
 export type EquipmentInstancesControllerRepairData = {
     body: RepairDto;

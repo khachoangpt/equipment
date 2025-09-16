@@ -17,6 +17,7 @@ const useLiquidationDetailController = (_: Props) => {
 		disposalDate: new Date().toISOString(),
 		signer: '',
 		notes: '',
+		invoiceNumber: '',
 	}
 	const form = useForm<CreateEquipmentDisposalSchema>({
 		defaultValues,

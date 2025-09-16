@@ -13,13 +13,17 @@ type Props = {
 
 const useCreateHandoverController = ({ id }: Props) => {
 	const defaultValues: CreateEquipmentSetHandoverSchema = {
-		senderPerson: '',
-		code: '',
-		receiverPerson: '',
-		receiverUnit: '',
-		handoverDate: '',
-		equipment: '',
-		note: '',
+		handoverDate: new Date().toISOString(),
+		items: [],
+		reportNumber: '',
+		approver: '',
+		comment: '',
+		fromUnitId: '',
+		handoverApprovedBy: '',
+		handoverRejectedBy: '',
+		receiver: '',
+		sender: '',
+		toUnitId: '',
 	}
 	const form = useForm<CreateEquipmentSetHandoverSchema>({
 		defaultValues,
@@ -33,14 +37,7 @@ const useCreateHandoverController = ({ id }: Props) => {
 			(handover) => handover.id === id,
 		)
 		if (handoverFound) {
-			form.reset({
-				code: handoverFound.code,
-				receiverPerson: handoverFound.receiverPerson,
-				receiverUnit: handoverFound.receiverUnit,
-				handoverDate: handoverFound.handoverDate,
-				equipment: handoverFound.equipmentName,
-				note: handoverFound.note,
-			})
+			form.reset({})
 		}
 	}, [id])
 
