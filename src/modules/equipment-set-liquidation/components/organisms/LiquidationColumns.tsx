@@ -23,8 +23,11 @@ export const columns: ColumnDef<any>[] = [
 		header: 'Người ký',
 	},
 	{
-		accessorKey: 'instanceId.serialNumber',
+		accessorKey: 'instanceId',
 		header: 'Trang bị',
+		cell: ({ row }) => {
+			return `(${row.original?.instanceId?.serialNumber}) ${row.original?.instanceId?.name}`
+		},
 	},
 	{
 		accessorKey: 'notes',

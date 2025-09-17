@@ -289,26 +289,7 @@ export type CreateHandoverEquipmentDto = {
     /**
      * Danh sách các trang bị bàn giao
      */
-    items: Array<CreateHandoverItemDto>;
-};
-
-export type CreateHandoverItemDto = {
-    /**
-     * ID của trang bị
-     */
-    instanceId: (ObjectId);
-    /**
-     * Số lượng bàn giao
-     */
-    quantity: number;
-    /**
-     * Đơn vị tính
-     */
-    unitOfMeasure: string;
-    /**
-     * Ghi chú
-     */
-    notes?: string;
+    items: Array<(string)>;
 };
 
 export type CreateProductProfileDto = {
