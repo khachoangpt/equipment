@@ -1,14 +1,18 @@
 'use client'
 
+import { AssemblyEquipmentsComponentsService } from '@/client'
 import {
 	assembledEquipmentControllerFindAllBuildActivitiesQueryKey,
 	assembledEquipmentControllerRemoveBuildActivityMutation,
 } from '@/client/@tanstack/react-query.gen'
+import { Button } from '@/components/ui/button'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
+import { COOKIES } from '@/constants'
 import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
 import { useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
+import { getCookie } from 'cookies-next/client'
 import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -60,8 +64,34 @@ export const columns: ColumnDef<any>[] = [
 				)
 			}
 
+			const handleGenerateReport = async (id: string) => {
+				const jwt = getCookie(COOKIES.JWT)
+				const { data: res } =
+					await AssemblyEquipmentsComponentsService.assembledEquipmentControllerGenerateAssemblyCheckPdf(
+						{
+							path: { id },
+							responseType: 'arraybuffer',
+							baseURL: process.env.NEXT_PUBLIC_API_URL,
+							headers: { Authorization: `Bearer ${jwt}` },
+							throwOnError: false,
+						},
+					)
+
+				handleDownload(
+					res as string,
+					`Bao_cao_trang_bi_lap_ghep_${row.original._id}.pdf`,
+				)
+			}
+
 			return (
 				<div className="flex items-center justify-end gap-x-3">
+					<Button
+						variant={'ghost'}
+						onClick={() => handleGenerateReport(row.original._id)}
+						className="text-green-600 cursor-pointer p-0"
+					>
+						Xuất PDF
+					</Button>
 					<Link
 						href={
 							pageList.assembledEquipmentBuildDetail({
@@ -90,3 +120,15 @@ export const columns: ColumnDef<any>[] = [
 		},
 	},
 ]
+
+const handleDownload = (pdfContent: string, fileName = 'document.pdf') => {
+	const blob = new Blob([pdfContent], { type: 'application/pdf' })
+	const url = URL.createObjectURL(blob)
+
+	const link = document.createElement('a')
+	link.href = url
+	link.download = fileName
+	link.click()
+
+	URL.revokeObjectURL(url)
+}

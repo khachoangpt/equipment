@@ -1371,6 +1371,16 @@ export type AssembledEquipmentControllerFindAllBuildActivitiesResponse = (Search
 
 export type AssembledEquipmentControllerFindAllBuildActivitiesError = unknown;
 
+export type AssembledEquipmentControllerGenerateAssemblyCheckPdfData = {
+    path: {
+        id: string;
+    };
+};
+
+export type AssembledEquipmentControllerGenerateAssemblyCheckPdfResponse = (unknown);
+
+export type AssembledEquipmentControllerGenerateAssemblyCheckPdfError = unknown;
+
 export type AssembledEquipmentControllerFindbuildActivityByIdData = {
     path: {
         id: string;
