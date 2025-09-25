@@ -11,10 +11,13 @@ import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { parseAsString, useQueryStates } from 'nuqs'
 import { useState } from 'react'
+import DialogStatisticEquipment from '../organisms/DialogStatisticEquipment'
 import { columns } from '../organisms/columns'
 
 const AssembledEquipmentTemplate = () => {
 	// const [open, setOpen] = useState<boolean>(true)
+	const [openStatisticHandover, setOpenStatisticHandover] =
+		useState<boolean>(false)
 	const [page, setPage] = useState(1)
 	const { settings, isFetchingGeneralSettings } = useGetGeneralSettings()
 	const [searchQuery] = useQueryStates({
@@ -74,12 +77,17 @@ const AssembledEquipmentTemplate = () => {
 					<div className="flex items-end gap-x-2">
 						<h3 className="font-bold text-2xl">Trang bị lắp ghép</h3>
 					</div>
-					<Link href={pageList.createAssembledEquipment.href}>
-						<Button>
-							<Plus />
-							Thêm
+					<div className="flex items-center gap-x-2">
+						<Button onClick={() => setOpenStatisticHandover(true)}>
+							Thống kê
 						</Button>
-					</Link>
+						<Link href={pageList.createAssembledEquipment.href}>
+							<Button>
+								<Plus />
+								Thêm
+							</Button>
+						</Link>
+					</div>
 				</div>
 				<div className="mb-5">
 					{/* <SearchEquipmentSet onOpenChange={setOpen} open={open} /> */}
@@ -95,6 +103,10 @@ const AssembledEquipmentTemplate = () => {
 					data={assembledEquipments?.data || []}
 				/>
 			</Card>
+			<DialogStatisticEquipment
+				open={openStatisticHandover}
+				onOpenChange={setOpenStatisticHandover}
+			/>
 		</div>
 	)
 }
