@@ -11,11 +11,14 @@ import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { parseAsString, useQueryStates } from 'nuqs'
 import { useState } from 'react'
+import DialogStatisticHandover from '../organisms/DialogStatisticHandover'
 import { columns } from '../organisms/HandOverColumns'
 import SearchEquipmentHandover from '../organisms/SearchEquipmentHandover'
 
 const HandOverTemplate = () => {
 	const [open, setOpen] = useState<boolean>(true)
+	const [openStatisticHandover, setOpenStatisticHandover] =
+		useState<boolean>(false)
 	const [page, setPage] = useState(1)
 	const { settings, isFetchingGeneralSettings } = useGetGeneralSettings()
 	const [searchQuery] = useQueryStates({
@@ -74,12 +77,17 @@ const HandOverTemplate = () => {
 					<div className="flex items-end gap-x-2">
 						<h3 className="font-bold text-2xl">Bàn giao trang bị</h3>
 					</div>
-					<Link href={pageList.createEquipmentSetHandover.href}>
-						<Button>
-							<Plus />
-							Thêm
+					<div className="flex items-center gap-x-2">
+						<Button onClick={() => setOpenStatisticHandover(true)}>
+							Thống kê
 						</Button>
-					</Link>
+						<Link href={pageList.createEquipmentSetHandover.href}>
+							<Button>
+								<Plus />
+								Thêm
+							</Button>
+						</Link>
+					</div>
 				</div>
 				<div className="mb-5">
 					<SearchEquipmentHandover onOpenChange={setOpen} open={open} />
@@ -95,6 +103,10 @@ const HandOverTemplate = () => {
 					}}
 				/>
 			</Card>
+			<DialogStatisticHandover
+				open={openStatisticHandover}
+				onOpenChange={setOpenStatisticHandover}
+			/>
 		</div>
 	)
 }

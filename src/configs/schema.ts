@@ -305,6 +305,16 @@ const searchEquipmentDisposeSchema = z.object({
 })
 type SearchEquipmentDisposeSchema = z.infer<typeof searchEquipmentDisposeSchema>
 
+const statisticHandoverSchema = z.object({
+	startDate: z
+		.string({ required_error: 'Chưa nhập ngày bắt đầu' })
+		.min(1, 'Chưa nhập ngày bắt đầu'),
+	endDate: z
+		.string({ required_error: 'Chưa nhập ngày kết thuc' })
+		.min(1, 'Chưa nhập ngày kết thuc'),
+})
+type StatisticHandoverSchema = z.infer<typeof statisticHandoverSchema>
+
 export {
 	loginSchema,
 	accountSchema,
@@ -320,6 +330,7 @@ export {
 	generalSettingsSchema,
 	searchEquipmentHandoverSchema,
 	searchEquipmentDisposeSchema,
+	statisticHandoverSchema,
 }
 
 export type {
@@ -337,4 +348,5 @@ export type {
 	GeneralSettingsSchema,
 	SearchEquipmentHandoverSchema,
 	SearchEquipmentDisposeSchema,
+	StatisticHandoverSchema,
 }
