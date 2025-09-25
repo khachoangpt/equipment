@@ -119,6 +119,8 @@ const equipmentSetDetailSchema = z.object({
 		.optional(),
 	images: z.array(z.any()).optional(),
 	imageFiles: z.array(z.any()).optional(),
+	technicalSpecifications: z.string().optional(),
+	featureConfiguration: z.string().optional(),
 })
 type EquipmentSetDetailSchema = z.infer<typeof equipmentSetDetailSchema>
 
@@ -131,6 +133,8 @@ const searchEquipmentSetSchema = z.object({
 	usingUnitId: z.string().optional(),
 	countryOfOrigin: z.string().optional(),
 	groupId: z.string().optional(),
+	featureConfiguration: z.string().optional(),
+	technicalSpecifications: z.string().optional(),
 })
 type SearchEquipmentSetSchema = z.infer<typeof searchEquipmentSetSchema>
 

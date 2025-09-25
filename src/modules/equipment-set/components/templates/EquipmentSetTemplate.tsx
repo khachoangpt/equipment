@@ -27,6 +27,8 @@ const EquipmentSetTemplate = () => {
 		usingUnitId: parseAsString.withDefault(''),
 		countryOfOrigin: parseAsString.withDefault(''),
 		groupId: parseAsString.withDefault(''),
+		featureConfiguration: parseAsString.withDefault(''),
+		technicalSpecifications: parseAsString.withDefault(''),
 	})
 	const { data: equipmentSets } = useQuery({
 		...equipmentInstancesControllerSearchOptions({
@@ -52,6 +54,12 @@ const EquipmentSetTemplate = () => {
 					? searchQuery.countryOfOrigin
 					: undefined,
 				groupId: searchQuery.groupId ? searchQuery.groupId : undefined,
+				featureConfiguration: searchQuery.featureConfiguration
+					? searchQuery.featureConfiguration
+					: undefined,
+				technicalSpecifications: searchQuery.technicalSpecifications
+					? searchQuery.technicalSpecifications
+					: undefined,
 			},
 		}),
 		select: (data) => {

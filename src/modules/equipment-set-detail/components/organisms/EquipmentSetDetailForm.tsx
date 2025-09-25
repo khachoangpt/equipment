@@ -492,6 +492,32 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								</FormItem>
 							)}
 						/>
+						<FormField
+							control={form.control}
+							name="featureConfiguration"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Cấu hình tính năng</FormLabel>
+									<FormControl>
+										<Textarea placeholder="Cấu hình tính năng" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="technicalSpecifications"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Thông số kỹ thuật</FormLabel>
+									<FormControl>
+										<Textarea placeholder="Thông số kỹ thuật" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 						<div>
 							<FormField
 								control={form.control}

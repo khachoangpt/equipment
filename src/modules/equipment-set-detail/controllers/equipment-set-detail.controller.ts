@@ -30,6 +30,8 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 		status: '',
 		images: [],
 		imageFiles: [],
+		featureConfiguration: '',
+		technicalSpecifications: '',
 	}
 	const form = useForm<EquipmentSetDetailSchema>({
 		defaultValues,
@@ -60,6 +62,8 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 				importingUnitId: data.importingUnitId._id,
 				quantity: data.quantity,
 				images: data.images ?? [],
+				featureConfiguration: data.featureConfiguration,
+				technicalSpecifications: data.technicalSpecifications,
 			})
 		}
 	}, [id, isFetching])

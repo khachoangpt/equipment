@@ -240,6 +240,14 @@ export type CreateEquipmentInstanceDto = {
     images: Array<(string)>;
     type?: string;
     /**
+     * Các thông số kỹ thuật chi tiết (dạng key-value, lưu dưới dạng chuỗi JSON)
+     */
+    technicalSpecifications?: string;
+    /**
+     * Các tính năng cấu hình thêm (dạng key-value, lưu dưới dạng chuỗi JSON)
+     */
+    featureConfiguration?: string;
+    /**
      * Ghi chú
      */
     notes?: string;
@@ -287,10 +295,19 @@ export type CreateHandoverEquipmentDto = {
      */
     comment?: string;
     /**
+     * Loại hoạt động: handover (bàn giao) hoặc recall (thu hồi)
+     */
+    type?: 'handover' | 'recall';
+    /**
      * Danh sách các trang bị bàn giao
      */
     items: Array<(string)>;
 };
+
+/**
+ * Loại hoạt động: handover (bàn giao) hoặc recall (thu hồi)
+ */
+export type type = 'handover' | 'recall';
 
 export type CreateProductProfileDto = {
     profileName: string;
@@ -469,6 +486,14 @@ export type EquipmentInstance = {
      */
     storageLocation?: string;
     /**
+     * Các thông số kỹ thuật chi tiết (dạng key-value, lưu dưới dạng chuỗi JSON)
+     */
+    technicalSpecifications?: string;
+    /**
+     * Các tính năng cấu hình thêm (dạng key-value, lưu dưới dạng chuỗi JSON)
+     */
+    featureConfiguration?: string;
+    /**
      * Ghi chú
      */
     notes?: string;
@@ -490,15 +515,15 @@ export type HandoverEquipment = {
     /**
      * ID của người nhận
      */
-    receiver?: (User);
+    receiver?: string;
     /**
      * ID của người phê duyệt
      */
-    approver?: (User);
+    approver?: string;
     /**
      * ID của người thực hiện bàn giao
      */
-    sender?: (User);
+    sender?: string;
     /**
      * ID của người phê duyệt bàn giao
      */
@@ -527,6 +552,10 @@ export type HandoverEquipment = {
      * Danh sách các trang bị bàn giao
      */
     items: Array<HandoverItem>;
+    /**
+     * Loại hoạt động: handover (bàn giao) hoặc recall (thu hồi)
+     */
+    type?: 'handover' | 'recall';
 };
 
 export type HandoverItem = {
@@ -1067,6 +1096,14 @@ export type UpdateEquipmentInstanceDto = {
     images?: Array<(string)>;
     type?: string;
     /**
+     * Các thông số kỹ thuật chi tiết (dạng key-value, lưu dưới dạng chuỗi JSON)
+     */
+    technicalSpecifications?: string;
+    /**
+     * Các tính năng cấu hình thêm (dạng key-value, lưu dưới dạng chuỗi JSON)
+     */
+    featureConfiguration?: string;
+    /**
      * Ghi chú
      */
     notes?: string;
@@ -1380,6 +1417,10 @@ export type AssembledEquipmentControllerGenerateAssemblyCheckPdfData = {
 export type AssembledEquipmentControllerGenerateAssemblyCheckPdfResponse = (unknown);
 
 export type AssembledEquipmentControllerGenerateAssemblyCheckPdfError = unknown;
+
+export type AssembledEquipmentControllerGenerateInventoryReportLayoutResponse = (unknown);
+
+export type AssembledEquipmentControllerGenerateInventoryReportLayoutError = unknown;
 
 export type AssembledEquipmentControllerFindbuildActivityByIdData = {
     path: {
@@ -1893,6 +1934,62 @@ export type EquipmentHandoverControllerGenerateHandoverReportFromLogResponse = (
 
 export type EquipmentHandoverControllerGenerateHandoverReportFromLogError = unknown;
 
+export type EquipmentHandoverControllerGenerateHandoverEvaluationReportByDateData = {
+    query: {
+        /**
+         * Ngày kết thúc (YYYY-MM-DD)
+         */
+        endDate: string;
+        /**
+         * Ngày bắt đầu (YYYY-MM-DD)
+         */
+        startDate: string;
+    };
+};
+
+export type EquipmentHandoverControllerGenerateHandoverEvaluationReportByDateResponse = (unknown);
+
+export type EquipmentHandoverControllerGenerateHandoverEvaluationReportByDateError = unknown;
+
+export type EquipmentHandoverControllerGenerateAnnualReceptionReportData = {
+    query: {
+        /**
+         * Năm cần tạo báo cáo
+         */
+        year: number;
+    };
+};
+
+export type EquipmentHandoverControllerGenerateAnnualReceptionReportResponse = (unknown);
+
+export type EquipmentHandoverControllerGenerateAnnualReceptionReportError = unknown;
+
+export type EquipmentHandoverControllerGenerateAnnualHandoverReportLayoutData = {
+    query: {
+        /**
+         * Năm cần tạo báo cáo danh mục trang bị bàn giao
+         */
+        year: number;
+    };
+};
+
+export type EquipmentHandoverControllerGenerateAnnualHandoverReportLayoutResponse = (unknown);
+
+export type EquipmentHandoverControllerGenerateAnnualHandoverReportLayoutError = unknown;
+
+export type EquipmentHandoverControllerGenerateAnnualRecallReportLayoutData = {
+    query: {
+        /**
+         * Năm cần tạo báo cáo
+         */
+        year: number;
+    };
+};
+
+export type EquipmentHandoverControllerGenerateAnnualRecallReportLayoutResponse = (unknown);
+
+export type EquipmentHandoverControllerGenerateAnnualRecallReportLayoutError = unknown;
+
 export type ActivityLogsControllerSearchData = {
     query: {
         /**
@@ -2056,6 +2153,7 @@ export type EquipmentInstancesControllerSearchData = {
          * Tìm theo số kế hoạch nhập
          */
         entryPlanNumber?: string;
+        featureConfiguration?: string;
         /**
          * ID của Nhóm loại trang bị
          */
@@ -2084,6 +2182,7 @@ export type EquipmentInstancesControllerSearchData = {
          * Tìm theo trạng thái (ví dụ: "Trong kho")
          */
         status?: string;
+        technicalSpecifications?: string;
         /**
          * Tìm theo loại trang bị (ví dụ: "SYNCHRONIZED_EQUIPMENT")
          */

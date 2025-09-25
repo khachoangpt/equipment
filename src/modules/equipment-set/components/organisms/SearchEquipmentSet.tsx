@@ -42,6 +42,8 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 		usingUnitId: parseAsString.withDefault(''),
 		countryOfOrigin: parseAsString.withDefault(''),
 		groupId: parseAsString.withDefault(''),
+		featureConfiguration: parseAsString.withDefault(''),
+		technicalSpecifications: parseAsString.withDefault(''),
 	})
 	const { data: quantityList } = useQuery({
 		...qualityLevelsControllerFindAllOptions(),
@@ -164,9 +166,9 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								name="countryOfOrigin"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Nguồn cấp</FormLabel>
+										<FormLabel>Nước sản xuất</FormLabel>
 										<FormControl>
-											<Input placeholder="Nguồn cấp" {...field} />
+											<Input placeholder="Nước sản xuất" {...field} />
 										</FormControl>
 									</FormItem>
 								)}
@@ -193,6 +195,30 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 													))}
 												</SelectContent>
 											</Select>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={control}
+								name="featureConfiguration"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Cấu hình tính năng</FormLabel>
+										<FormControl>
+											<Input placeholder="Cấu hình tính năng" {...field} />
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={control}
+								name="technicalSpecifications"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Thông số kỹ thuật</FormLabel>
+										<FormControl>
+											<Input placeholder="Thông số kỹ thuật" {...field} />
 										</FormControl>
 									</FormItem>
 								)}

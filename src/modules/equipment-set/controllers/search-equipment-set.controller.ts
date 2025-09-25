@@ -17,6 +17,8 @@ const useSearchEquipmentSetController = () => {
 		usingUnitId: '',
 		countryOfOrigin: '',
 		groupId: '',
+		featureConfiguration: '',
+		technicalSpecifications: '',
 	}
 	const form = useForm({
 		defaultValues,
@@ -31,6 +33,8 @@ const useSearchEquipmentSetController = () => {
 		usingUnitId: parseAsString.withDefault(''),
 		countryOfOrigin: parseAsString.withDefault(''),
 		groupId: parseAsString.withDefault(''),
+		featureConfiguration: parseAsString.withDefault(''),
+		technicalSpecifications: parseAsString.withDefault(''),
 	})
 
 	useEffect(() => {
@@ -42,6 +46,11 @@ const useSearchEquipmentSetController = () => {
 		form.setValue('usingUnitId', searchQuery.usingUnitId)
 		form.setValue('countryOfOrigin', searchQuery.countryOfOrigin)
 		form.setValue('groupId', searchQuery.groupId)
+		form.setValue('featureConfiguration', searchQuery.featureConfiguration)
+		form.setValue(
+			'technicalSpecifications',
+			searchQuery.technicalSpecifications,
+		)
 	}, [searchQuery])
 
 	const onSubmit: SubmitHandler<SearchEquipmentSetSchema> = (data) => {
