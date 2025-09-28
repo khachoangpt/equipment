@@ -56,6 +56,7 @@ const EquipmentSetCategory = () => {
 					field: data.field,
 					initialPrice: data.defaultAmount,
 					notes: data.note,
+					countryOfOrigin: data.countryOfOrigin,
 				},
 			},
 			{

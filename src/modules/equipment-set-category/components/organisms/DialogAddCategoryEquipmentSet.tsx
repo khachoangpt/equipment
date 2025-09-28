@@ -118,6 +118,19 @@ const DialogAddCategoryEquipmentSet = ({
 						/>
 						<FormField
 							control={control}
+							name="countryOfOrigin"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Nước sản xuât</FormLabel>
+									<FormControl>
+										<Input placeholder="Nước sản xuât" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
 							name="defaultAmount"
 							render={({ field: { onChange, value } }) => (
 								<FormItem>
