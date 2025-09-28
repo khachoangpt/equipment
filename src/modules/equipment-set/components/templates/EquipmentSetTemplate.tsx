@@ -55,10 +55,10 @@ const EquipmentSetTemplate = () => {
 					: undefined,
 				groupId: searchQuery.groupId ? searchQuery.groupId : undefined,
 				featureConfiguration: searchQuery.featureConfiguration
-					? searchQuery.featureConfiguration
+					? (searchQuery.featureConfiguration as any)
 					: undefined,
 				technicalSpecifications: searchQuery.technicalSpecifications
-					? searchQuery.technicalSpecifications
+					? (searchQuery.technicalSpecifications as any)
 					: undefined,
 			},
 		}),

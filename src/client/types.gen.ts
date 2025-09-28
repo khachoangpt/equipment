@@ -141,31 +141,59 @@ export type CreateComponentDto = {
 
 export type CreateEquipmentDisposeDto = {
     /**
-     * ID của trang bị
-     */
-    instanceId: (ObjectId);
-    /**
      * Số quyết định thanh lý
      */
     decisionNumber: string;
-    /**
-     * Ngày thanh lý
-     */
-    disposalDate: string;
-    /**
-     * Người lập
-     */
-    createdById: (ObjectId);
     /**
      * Người ký quyết định
      */
     signer: string;
     /**
+     * ID của người phê duyệt
+     */
+    approver?: string;
+    /**
+     * ID của người phê duyệt thanh lý
+     */
+    disposalApprovedBy?: string;
+    /**
+     * ID của người từ chối thanh lý
+     */
+    disposalRejectedBy?: string;
+    /**
+     * ID của đơn vị thanh lý
+     */
+    fromUnitId: (ObjectId);
+    /**
+     * Ngày thanh lý
+     */
+    disposalDate: string;
+    /**
      * Số hóa đơn
      */
     invoiceNumber?: string;
+    /**
+     * Ghi chú
+     */
     notes?: string;
+    /**
+     * Ghi chú thêm
+     */
+    comment?: string;
+    /**
+     * Danh sách các trang bị thanh lý
+     */
+    items: Array<(string)>;
+    /**
+     * Loại hoạt động: disposal (thanh lý) hoặc liquidation (tiêu hủy)
+     */
+    type?: 'disposal' | 'liquidation';
 };
+
+/**
+ * Loại hoạt động: disposal (thanh lý) hoặc liquidation (tiêu hủy)
+ */
+export type type = 'disposal' | 'liquidation';
 
 export type CreateEquipmentDto = {
     name: string;
@@ -259,7 +287,7 @@ export type CreateHandoverEquipmentDto = {
      */
     reportNumber: string;
     /**
-     * Namw của người nhận
+     * Name của người nhận
      */
     receiver?: string;
     /**
@@ -307,7 +335,7 @@ export type CreateHandoverEquipmentDto = {
 /**
  * Loại hoạt động: handover (bàn giao) hoặc recall (thu hồi)
  */
-export type type = 'handover' | 'recall';
+export type type2 = 'handover' | 'recall';
 
 export type CreateProductProfileDto = {
     profileName: string;
@@ -321,6 +349,82 @@ export type CreateQualityLevelDto = {
     code: string;
     note?: string;
 };
+
+export type CreateRepairEquipmentDto = {
+    /**
+     * Số biên bản sửa chữa
+     */
+    reportNumber: string;
+    /**
+     * Tên người gửi đi sửa
+     */
+    sender?: string;
+    /**
+     * Tên người nhận lại sau sửa chữa
+     */
+    receiver?: string;
+    /**
+     * Tên người phê duyệt sửa chữa
+     */
+    approver?: string;
+    /**
+     * Tên người phê duyệt sửa chữa
+     */
+    repairApprovedBy?: string;
+    /**
+     * Tên người từ chối sửa chữa
+     */
+    repairRejectedBy?: string;
+    /**
+     * ID của đơn vị gửi đi sửa
+     */
+    fromUnitId: (ObjectId);
+    /**
+     * ID của đơn vị sửa chữa
+     */
+    repairUnitId?: (ObjectId);
+    /**
+     * Ngày gửi đi sửa chữa
+     */
+    repairDate: string;
+    /**
+     * Ngày nhận lại
+     */
+    receivedDate?: string;
+    /**
+     * Nơi sửa chữa
+     */
+    repairLocation?: string;
+    /**
+     * Lý do gửi đi sửa chữa
+     */
+    reason: string;
+    /**
+     * Kết quả sửa chữa
+     */
+    repairResult?: string;
+    /**
+     * Ghi chú thêm
+     */
+    notes?: string;
+    /**
+     * Ghi chú thêm
+     */
+    comment?: string;
+    /**
+     * Loại hoạt động: repair (sửa chữa) hoặc maintenance (bảo trì)
+     */
+    type?: 'repair' | 'maintenance';
+    /**
+     * Danh sách các trang bị sửa chữa
+     */
+    items: Array<(string)>;
+};
+
+/**
+ * Loại hoạt động: repair (sửa chữa) hoặc maintenance (bảo trì)
+ */
+export type type3 = 'repair' | 'maintenance';
 
 export type CreateSettingDto = {
     pagingSize?: number;
@@ -368,6 +472,25 @@ export type DisposeDto = {
     notes?: string;
 };
 
+export type DisposeItem = {
+    /**
+     * ID của trang bị
+     */
+    instanceId: (EquipmentInstance);
+    /**
+     * Số lượng thanh lý cho trang bị này
+     */
+    quantity: number;
+    /**
+     * Đơn vị tính của trang bị
+     */
+    unitOfMeasure: string;
+    /**
+     * Ghi chú riêng cho từng món
+     */
+    notes?: string;
+};
+
 export type DocumentAttachment = {
     /**
      * Mongo document ID
@@ -403,17 +526,9 @@ export type EquipmentDispose = {
      */
     _id: string;
     /**
-     * ID của trang bị
-     */
-    instanceId: (EquipmentInstance);
-    /**
      * Số quyết định thanh lý
      */
     decisionNumber: string;
-    /**
-     * Ngày thanh lý
-     */
-    disposalDate: string;
     /**
      * Người lập
      */
@@ -423,6 +538,26 @@ export type EquipmentDispose = {
      */
     signer: string;
     /**
+     * ID của người phê duyệt
+     */
+    approver?: string;
+    /**
+     * ID của người phê duyệt thanh lý
+     */
+    disposalApprovedBy?: string;
+    /**
+     * ID của người từ chối thanh lý
+     */
+    disposalRejectedBy?: string;
+    /**
+     * ID của đơn vị thanh lý
+     */
+    fromUnitId: (Unit);
+    /**
+     * Ngày thanh lý
+     */
+    disposalDate: string;
+    /**
      * Số hóa đơn
      */
     invoiceNumber?: string;
@@ -430,6 +565,18 @@ export type EquipmentDispose = {
      * Ghi chú
      */
     notes?: string;
+    /**
+     * Ghi chú thêm
+     */
+    comment?: string;
+    /**
+     * Danh sách các trang bị thanh lý
+     */
+    items: Array<DisposeItem>;
+    /**
+     * Loại hoạt động: disposal (thanh lý) hoặc liquidation (tiêu hủy)
+     */
+    type?: 'disposal' | 'liquidation';
 };
 
 export type EquipmentGroup = {
@@ -600,6 +747,10 @@ export type LoginResponseDto = {
     access_token: string;
 };
 
+export type Object = {
+    [key: string]: unknown;
+};
+
 export type ObjectId = {
     [key: string]: unknown;
 };
@@ -671,6 +822,98 @@ export type RepairDto = {
     result?: string;
     notes?: string;
     comment?: string;
+};
+
+export type RepairEquipment = {
+    /**
+     * Mongo document ID
+     */
+    _id: string;
+    /**
+     * Số biên bản sửa chữa
+     */
+    reportNumber: string;
+    /**
+     * ID của người tạo
+     */
+    createdById: (User);
+    /**
+     * Tên người gửi đi sửa
+     */
+    sender?: string;
+    /**
+     * Tên người nhận lại sau sửa chữa
+     */
+    receiver?: string;
+    /**
+     * Tên người phê duyệt sửa chữa
+     */
+    approver?: string;
+    /**
+     * Người phê duyệt và nhận lại thiết bị
+     */
+    repairApprovedBy?: string;
+    /**
+     * Người từ chối việc sửa chữa
+     */
+    repairRejectedBy?: string;
+    /**
+     * ID của đơn vị gửi đi sửa
+     */
+    fromUnitId: (Unit);
+    /**
+     * ID của đơn vị sửa chữa
+     */
+    repairUnitId?: (Unit);
+    /**
+     * Ngày gửi đi sửa chữa
+     */
+    repairDate: string;
+    /**
+     * Ngày nhận lại
+     */
+    receivedDate?: string;
+    repairLocation?: string;
+    reason: string;
+    /**
+     * Kết quả sửa chữa
+     */
+    repairResult?: string;
+    /**
+     * Ghi chú tổng quan và chi phí
+     */
+    notes?: string;
+    /**
+     * Ghi chú thêm
+     */
+    comment?: string;
+    /**
+     * Danh sách các trang bị sửa chữa
+     */
+    items: Array<RepairItem>;
+    /**
+     * Loại hoạt động: repair (sửa chữa) hoặc maintenance (bảo trì)
+     */
+    type?: 'repair' | 'maintenance';
+};
+
+export type RepairItem = {
+    /**
+     * ID của trang bị
+     */
+    instanceId: (EquipmentInstance);
+    /**
+     * Số lượng gửi đi sửa chữa cho trang bị này
+     */
+    quantity: number;
+    /**
+     * Đơn vị tính của trang bị
+     */
+    unitOfMeasure: string;
+    /**
+     * Ghi chú riêng cho từng món sửa chữa
+     */
+    notes?: string;
 };
 
 export type RequiredComponent = {
@@ -997,30 +1240,53 @@ export type UpdateComponentDto = {
 
 export type UpdateEquipmentDisposeDto = {
     /**
-     * ID của trang bị
-     */
-    instanceId?: (ObjectId);
-    /**
      * Số quyết định thanh lý
      */
     decisionNumber?: string;
-    /**
-     * Ngày thanh lý
-     */
-    disposalDate?: string;
-    /**
-     * Người lập
-     */
-    createdById?: (ObjectId);
     /**
      * Người ký quyết định
      */
     signer?: string;
     /**
+     * ID của người phê duyệt
+     */
+    approver?: string;
+    /**
+     * ID của người phê duyệt thanh lý
+     */
+    disposalApprovedBy?: string;
+    /**
+     * ID của người từ chối thanh lý
+     */
+    disposalRejectedBy?: string;
+    /**
+     * ID của đơn vị thanh lý
+     */
+    fromUnitId?: (ObjectId);
+    /**
+     * Ngày thanh lý
+     */
+    disposalDate?: string;
+    /**
      * Số hóa đơn
      */
     invoiceNumber?: string;
+    /**
+     * Ghi chú
+     */
     notes?: string;
+    /**
+     * Ghi chú thêm
+     */
+    comment?: string;
+    /**
+     * Danh sách các trang bị thanh lý
+     */
+    items?: Array<(string)>;
+    /**
+     * Loại hoạt động: disposal (thanh lý) hoặc liquidation (tiêu hủy)
+     */
+    type?: 'disposal' | 'liquidation';
 };
 
 export type UpdateEquipmentDto = {
@@ -1772,6 +2038,10 @@ export type EquipmentDisposeControllerDisposeError = (unknown);
 export type EquipmentDisposeControllerSearchData = {
     query?: {
         /**
+         * Lọc theo Người phê duyệt
+         */
+        approver?: string;
+        /**
          * Lọc theo ID Người lập
          */
         createdById?: string;
@@ -1779,6 +2049,10 @@ export type EquipmentDisposeControllerSearchData = {
          * Lọc theo Số quyết định
          */
         decisionNumber?: string;
+        /**
+         * Lọc theo Người phê duyệt thanh lý
+         */
+        disposalApprovedBy?: string;
         /**
          * Lọc theo Ngày thanh lý (Tới ngày)
          */
@@ -1788,9 +2062,17 @@ export type EquipmentDisposeControllerSearchData = {
          */
         disposalDateStart?: string;
         /**
+         * Lọc theo Người từ chối thanh lý
+         */
+        disposalRejectedBy?: string;
+        /**
          * Lọc theo tên hoặc serial trang bị
          */
         equipmentQuery?: string;
+        /**
+         * Lọc theo ID Đơn vị thanh lý
+         */
+        fromUnitId?: string;
         /**
          * Số lượng mỗi trang
          */
@@ -1808,9 +2090,9 @@ export type EquipmentDisposeControllerSearchData = {
          */
         signer?: string;
         /**
-         * Lọc theo ID Đơn vị (của trang bị)
+         * Lọc theo loại hoạt động
          */
-        unitId?: string;
+        type?: 'disposal' | 'liquidation';
     };
 };
 
@@ -1863,6 +2145,63 @@ export type EquipmentDisposeControllerGenerateLiquidationFormLayoutResponse = (u
 
 export type EquipmentDisposeControllerGenerateLiquidationFormLayoutError = unknown;
 
+export type EquipmentRepairControllerRepairData = {
+    body: CreateRepairEquipmentDto;
+};
+
+export type EquipmentRepairControllerRepairResponse = (RepairEquipment);
+
+export type EquipmentRepairControllerRepairError = (unknown);
+
+export type EquipmentRepairControllerSearchData = {
+    query?: {
+        /**
+         * ID của người tạo để lọc
+         */
+        createdById?: string;
+        /**
+         * ID của số serial trang bị để lọc
+         */
+        equipmentQuery?: string;
+        /**
+         * ID đơn vị gửi đi sửa để lọc
+         */
+        fromUnitId?: string;
+        /**
+         * ID trang bị cụ thể để lọc
+         */
+        instanceId?: string;
+        /**
+         * Số lượng item trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Số trang để phân trang
+         */
+        page?: number;
+        /**
+         * Ngày kết thúc để lọc sửa chữa
+         */
+        repairDateEnd?: string;
+        /**
+         * Ngày bắt đầu để lọc sửa chữa
+         */
+        repairDateStart?: string;
+        /**
+         * ID đơn vị sửa chữa để lọc
+         */
+        repairUnitId?: string;
+        /**
+         * Số biên bản sửa chữa để lọc
+         */
+        reportNumber?: string;
+    };
+};
+
+export type EquipmentRepairControllerSearchResponse = (unknown);
+
+export type EquipmentRepairControllerSearchError = unknown;
+
 export type EquipmentHandoverControllerHandoverData = {
     body: CreateHandoverEquipmentDto;
 };
@@ -1873,6 +2212,10 @@ export type EquipmentHandoverControllerHandoverError = (unknown);
 
 export type EquipmentHandoverControllerSearchData = {
     query?: {
+        /**
+         * Name người phê duyệt
+         */
+        approver?: string;
         /**
          * ID người tạo
          */
@@ -1885,6 +2228,10 @@ export type EquipmentHandoverControllerSearchData = {
          * ID đơn vị giao
          */
         fromUnitId?: string;
+        /**
+         * Name người phê duyệt bàn giao
+         */
+        handoverApprovedBy?: string;
         /**
          * Ngày bàn giao đến
          */
@@ -1906,13 +2253,17 @@ export type EquipmentHandoverControllerSearchData = {
          */
         page?: number;
         /**
-         * ID người nhận
+         * Name người nhận
          */
-        receiverId?: string;
+        receiver?: string;
         /**
          * Số biên bản bàn giao
          */
         reportNumber?: string;
+        /**
+         * Name người thực hiện bàn giao
+         */
+        sender?: string;
         /**
          * ID đơn vị nhận
          */
@@ -2153,7 +2504,7 @@ export type EquipmentInstancesControllerSearchData = {
          * Tìm theo số kế hoạch nhập
          */
         entryPlanNumber?: string;
-        featureConfiguration?: string;
+        featureConfiguration?: Object;
         /**
          * ID của Nhóm loại trang bị
          */
@@ -2182,7 +2533,7 @@ export type EquipmentInstancesControllerSearchData = {
          * Tìm theo trạng thái (ví dụ: "Trong kho")
          */
         status?: string;
-        technicalSpecifications?: string;
+        technicalSpecifications?: Object;
         /**
          * Tìm theo loại trang bị (ví dụ: "SYNCHRONIZED_EQUIPMENT")
          */

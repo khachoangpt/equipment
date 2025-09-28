@@ -173,10 +173,6 @@ const createEquipmentMaintenanceSchema = z.object({
 		.string({ required_error: 'Chưa nhập số biên bản' })
 		.trim()
 		.min(1, 'Chưa nhập số biên bản'),
-	equipment: z
-		.string({ required_error: 'Chưa nhập trang bị' })
-		.trim()
-		.min(1, 'Chưa nhập trang bị'),
 	repairLocation: z
 		.string({ required_error: 'Chưa nhập nơi sửa chữa' })
 		.trim()
@@ -195,6 +191,18 @@ const createEquipmentMaintenanceSchema = z.object({
 	result: z.string().optional(),
 	notes: z.string().optional(),
 	comment: z.string().optional(),
+	fromUnitId: z.string().optional(),
+	items: z.array(
+		z.object({
+			instanceId: z.string().trim().min(1, 'Chưa nhập ID của trang bị'),
+			quantity: z.number({
+				required_error: 'Chưa nhập số lượng',
+				coerce: true,
+				invalid_type_error: 'Số lượng không hợp lệ',
+			}),
+			notes: z.string().optional(),
+		}),
+	),
 })
 type CreateEquipmentMaintenanceSchema = z.infer<
 	typeof createEquipmentMaintenanceSchema
@@ -209,10 +217,6 @@ const createEquipmentDisposalSchema = z.object({
 		.string({ required_error: 'Chưa nhập số hóa đơn thanh lý' })
 		.trim()
 		.min(1, 'Chưa nhập số hóa đơn thanh lý'),
-	equipment: z
-		.string({ required_error: 'Chưa nhập trang bị' })
-		.trim()
-		.min(1, 'Chưa nhập trang bị'),
 	disposalDate: z.string({ required_error: 'Chưa nhập ngày thanh lý' }),
 	createdBy: z
 		.string({ required_error: 'Chưa nhập người lập' })
@@ -222,7 +226,18 @@ const createEquipmentDisposalSchema = z.object({
 		.string({ required_error: 'Chưa nhập người ký quyết định' })
 		.trim()
 		.min(1, 'Chưa nhập người ký quyết định'),
-
+	fromUnitId: z.string().optional(),
+	items: z.array(
+		z.object({
+			instanceId: z.string().trim().min(1, 'Chưa nhập ID của trang bị'),
+			quantity: z.number({
+				required_error: 'Chưa nhập số lượng',
+				coerce: true,
+				invalid_type_error: 'Số lượng không hợp lệ',
+			}),
+			notes: z.string().optional(),
+		}),
+	),
 	notes: z.string().optional(),
 })
 type CreateEquipmentDisposalSchema = z.infer<

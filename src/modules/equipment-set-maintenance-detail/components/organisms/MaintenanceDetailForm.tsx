@@ -2,8 +2,9 @@
 
 import {
 	activityLogsControllerSearchQueryKey,
-	equipmentInstancesControllerRepairMutation,
 	equipmentInstancesControllerSearchOptions,
+	equipmentRepairControllerRepairMutation,
+	unitsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import Combobox from '@/components/custom/combobox/Combobox'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
@@ -18,12 +19,21 @@ import {
 	FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {} from '@/components/ui/select'
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
 import type { CreateEquipmentMaintenanceSchema } from '@/configs/schema'
+import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import type { ColumnDef } from '@tanstack/react-table'
+import { ArrowBigLeftDash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import type { SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -38,7 +48,10 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 	const { control } = form
 	const router = useRouter()
 	const { mutate: create } = useMutation({
-		...equipmentInstancesControllerRepairMutation(),
+		...equipmentRepairControllerRepairMutation(),
+	})
+	const { data: units } = useQuery({
+		...unitsControllerFindAllOptions({ query: { limit: 1000000, page: 1 } }),
 	})
 	const { data: equipments } = useQuery({
 		...equipmentInstancesControllerSearchOptions({
@@ -51,23 +64,100 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 			})),
 	})
 
+	const columns: ColumnDef<{
+		index: number
+		componentName: string
+		unitOfMeasure: string
+		quantity: number
+		note: string
+	}>[] = [
+		{
+			accessorKey: 'index',
+			header: 'STT',
+			cell: ({ row }) => {
+				return <div>{row.index + 1}</div>
+			},
+		},
+		{
+			accessorKey: 'componentName',
+			header: 'Tên',
+		},
+		// {
+		// 	accessorKey: 'unitOfMeasure',
+		// 	header: 'Đơn vị tính',
+		// },
+		{
+			accessorKey: 'quantity',
+			header: 'Số lượng',
+		},
+		{
+			accessorKey: 'note',
+			header: 'Ghi chú',
+		},
+		{
+			id: 'actions',
+			enableSorting: false,
+			enableHiding: false,
+			cell: ({ row }) => {
+				const original = row.original
+
+				return (
+					<div className="flex items-center gap-x-2">
+						<div
+							className="text-red-600 cursor-pointer"
+							onClick={() => {
+								const componentList = (form.getValues('items') ?? []).filter(
+									(item) => item.instanceId !== (original as any).instanceId,
+								)
+								form.setValue('items', componentList)
+							}}
+						>
+							Xoá
+						</div>
+					</div>
+				)
+			},
+		},
+	]
+
+	const handleSelectEquipment = () => {
+		const component = equipments?.find(
+			(item) => item.value === form.watch('selectedEquipmentName'),
+		)
+		const componentList = (form.getValues('items') ?? []).filter(
+			(item) => item.instanceId !== component?.value,
+		)
+		form.setValue('items', [
+			...componentList,
+			{
+				instanceId: component?.value,
+				componentName: component?.label,
+				unitOfMeasure: 'Bộ',
+				quantity: Number(form.watch('selectedEquipmentQuantity')),
+				note: form.watch('selectedEquipmentNote'),
+			} as any,
+		])
+	}
+
 	const onSubmit: SubmitHandler<CreateEquipmentMaintenanceSchema> = (data) => {
 		create(
 			{
-				path: { id: data.equipment },
 				body: {
+					fromUnitId: data.fromUnitId as any,
+					items: (data.items || []) as any,
 					reason: data.reason,
-					repairLocation: data.repairLocation,
-					reportNumber: data.reportNumber,
-					sender: data.sender,
-					sentDate: new Date(data.sentDate).toISOString(),
+					repairDate: new Date(data.sentDate).toISOString(),
 					receivedDate: data.receivedDate
 						? new Date(data.receivedDate).toISOString()
 						: undefined,
+					reportNumber: data.reportNumber,
 					receiver: data.receiver,
-					notes: data.notes,
-					result: data.result,
+					sender: data.sender,
 					comment: data.comment,
+					notes: data.notes,
+					repairLocation: data.repairLocation,
+					type: 'repair',
+					repairResult: data.result,
 				},
 			},
 			{
@@ -107,16 +197,23 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="equipment"
+							name="fromUnitId"
 							render={({ field: { value, onChange } }) => (
-								<FormItem key={value}>
-									<FormLabel>Trang bị</FormLabel>
+								<FormItem>
+									<FormLabel>Đơn vị</FormLabel>
 									<FormControl>
-										<Combobox
-											options={equipments || []}
-											value={value}
-											onChange={onChange}
-										/>
+										<Select value={value} onValueChange={onChange}>
+											<SelectTrigger className="w-full">
+												<SelectValue />
+											</SelectTrigger>
+											<SelectContent>
+												{units?.data?.map((unit) => (
+													<SelectItem key={unit._id} value={unit._id}>
+														{unit.name}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -245,6 +342,83 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 								</FormItem>
 							)}
 						/>
+					</div>
+					<div className="flex gap-x-5 items-center mt-10">
+						<FormField
+							control={form.control}
+							name="items"
+							render={({ field: { value } }) => (
+								<FormItem className="mt-5">
+									<FormLabel>Trang bị</FormLabel>
+									<FormControl>
+										<DataTable
+											columns={columns}
+											data={value ? (value as any) : []}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button
+							type="button"
+							onClick={handleSelectEquipment}
+							disabled={
+								!(
+									form.watch('selectedEquipmentName') &&
+									form.watch('selectedEquipmentQuantity')
+								)
+							}
+						>
+							<ArrowBigLeftDash className="size-7" />
+						</Button>
+						<Card className="h-full w-1/3 flex-none">
+							<FormField
+								control={control}
+								name="selectedEquipmentName"
+								render={({ field }) => (
+									<FormItem className="flex w-full">
+										<FormLabel className="flex-none w-24">Tên</FormLabel>
+										<FormControl>
+											<div className="w-full">
+												<Combobox
+													onChange={field.onChange}
+													options={equipments || []}
+													value={field.value}
+												/>
+											</div>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={control}
+								name="selectedEquipmentQuantity"
+								render={({ field }) => (
+									<FormItem className="flex">
+										<FormLabel className="flex-none w-24">Số lượng</FormLabel>
+										<FormControl>
+											<Input type="text" placeholder="Số lượng" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={control}
+								name="selectedEquipmentNote"
+								render={({ field }) => (
+									<FormItem className="flex items-start">
+										<FormLabel className="flex-none w-24">Ghi chú</FormLabel>
+										<FormControl>
+											<Textarea placeholder="Ghi chú" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</Card>
 					</div>
 					<div className="mt-10 flex items-center justify-end gap-x-5">
 						<Button

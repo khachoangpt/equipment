@@ -1,8 +1,4 @@
-import {
-	type CreateEquipmentMaintenanceSchema,
-	createEquipmentMaintenanceSchema,
-} from '@/configs/schema'
-import { zodResolver } from '@hookform/resolvers/zod'
+import type { CreateEquipmentMaintenanceSchema } from '@/configs/schema'
 import { useForm } from 'react-hook-form'
 
 type Props = {
@@ -10,9 +6,12 @@ type Props = {
 }
 
 const useMaintenanceDetailController = (_: Props) => {
-	const defaultValues: CreateEquipmentMaintenanceSchema = {
+	const defaultValues: CreateEquipmentMaintenanceSchema & {
+		selectedEquipmentName: string
+		selectedEquipmentQuantity: string
+		selectedEquipmentNote: string
+	} = {
 		reason: '',
-		equipment: '',
 		repairLocation: '',
 		reportNumber: '',
 		sender: '',
@@ -22,10 +21,20 @@ const useMaintenanceDetailController = (_: Props) => {
 		receiver: '',
 		result: '',
 		comment: '',
+		items: [],
+		selectedEquipmentName: '',
+		selectedEquipmentNote: '',
+		selectedEquipmentQuantity: '',
+		fromUnitId: '',
 	}
-	const form = useForm<CreateEquipmentMaintenanceSchema>({
+	const form = useForm<
+		CreateEquipmentMaintenanceSchema & {
+			selectedEquipmentName: string
+			selectedEquipmentQuantity: string
+			selectedEquipmentNote: string
+		}
+	>({
 		defaultValues,
-		resolver: zodResolver(createEquipmentMaintenanceSchema),
 	})
 
 	// useEffect(() => {

@@ -1,8 +1,7 @@
 'use client'
-import type { ActivityLog } from '@/client'
 import type { ColumnDef } from '@tanstack/react-table'
 
-export const columns: ColumnDef<ActivityLog>[] = [
+export const columns: ColumnDef<any>[] = [
 	{
 		accessorKey: 'index',
 		header: 'STT',
@@ -11,27 +10,21 @@ export const columns: ColumnDef<ActivityLog>[] = [
 		id: 'reportNumber',
 		accessorKey: 'details',
 		header: 'Số biên bản',
-		cell: ({ row }) => row.original.details.reportNumber,
-	},
-	{
-		id: 'equipment',
-		accessorKey: 'instanceId',
-		header: 'Serial trang bị',
-		cell: ({ row }) => row.original.instanceId?.serialNumber,
+		cell: ({ row }) => row.original?.reportNumber,
 	},
 	{
 		id: 'repairLocation',
 		accessorKey: 'details',
 		header: 'Nơi bảo dưỡng',
-		cell: ({ row }) => row.original.details.repairLocation,
+		cell: ({ row }) => row.original?.repairLocation,
 	},
 	{
-		id: 'sendDate',
+		id: 'repairDate',
 		accessorKey: 'details',
 		header: 'Ngày gửi',
 		cell: ({ row }) =>
-			row.original.details.sentDate
-				? new Date(row.original.details.sentDate as string).toLocaleDateString(
+			row.original?.repairDate
+				? new Date(row.original.repairDate as string).toLocaleDateString(
 						'vi-VN',
 					)
 				: '',
@@ -41,35 +34,23 @@ export const columns: ColumnDef<ActivityLog>[] = [
 		accessorKey: 'details',
 		header: 'Ngày nhận',
 		cell: ({ row }) =>
-			row.original.details.receivedDate
-				? new Date(
-						row.original.details.receivedDate as string,
-					).toLocaleDateString('vi-VN')
+			row.original?.receivedDate
+				? new Date(row.original.receivedDate as string).toLocaleDateString(
+						'vi-VN',
+					)
 				: '',
-	},
-	{
-		id: 'sender',
-		accessorKey: 'details',
-		header: 'Người gửi',
-		cell: ({ row }) => row.original.details.sender,
-	},
-	{
-		id: 'receiver',
-		accessorKey: 'details',
-		header: 'Người nhận',
-		cell: ({ row }) => row.original.details.receiver,
 	},
 	{
 		id: 'reason',
 		accessorKey: 'details',
 		header: 'Lý do',
-		cell: ({ row }) => row.original.details.reason,
+		cell: ({ row }) => row.original?.reason,
 	},
 	{
 		id: 'result',
 		accessorKey: 'details',
 		header: 'Kết quả',
-		cell: ({ row }) => row.original.details.result,
+		cell: ({ row }) => row.original?.repairResult,
 	},
 	{
 		id: 'notes',
@@ -77,7 +58,7 @@ export const columns: ColumnDef<ActivityLog>[] = [
 		header: 'Ghi chú',
 		cell: ({ row }) => (
 			<div className="whitespace-pre-wrap break-words max-w-[250px]">
-				{row.original.details.notes as string}
+				{row.original?.notes as string}
 			</div>
 		),
 	},
@@ -87,7 +68,7 @@ export const columns: ColumnDef<ActivityLog>[] = [
 		header: 'Nhận xét',
 		cell: ({ row }) => (
 			<div className="whitespace-pre-wrap break-words max-w-[250px]">
-				{row.original.details.comment as string}
+				{row.original?.comment as string}
 			</div>
 		),
 	},

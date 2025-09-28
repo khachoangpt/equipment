@@ -1,6 +1,6 @@
 'use client'
 
-import { activityLogsControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
+import { equipmentRepairControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
@@ -15,14 +15,17 @@ import { columns } from '../organisms/MaintenanceColumns'
 const MaintenanceTemplate = () => {
 	const [page, setPage] = useState(1)
 	const { settings, isFetchingGeneralSettings } = useGetGeneralSettings()
-	const { data: equipmentMaintenances } = useQuery({
-		...activityLogsControllerSearchOptions({
-			query: { activityType: 'Sửa chữa', limit: settings?.pagingSize, page },
+	const { data: equipmentRepair } = useQuery({
+		...equipmentRepairControllerSearchOptions({
+			query: {
+				limit: settings?.pagingSize,
+				page,
+			},
 		}),
-		select: (data) => {
+		select: (data: any) => {
 			return {
 				...data,
-				data: data?.data?.map((item, index) => ({
+				data: data?.data?.map((item: any, index: number) => ({
 					...item,
 					index: settings?.pagingSize
 						? (page - 1) * settings?.pagingSize + index + 1
@@ -50,11 +53,11 @@ const MaintenanceTemplate = () => {
 				</div>
 				<DataTable
 					columns={columns}
-					data={equipmentMaintenances?.data ?? []}
+					data={equipmentRepair?.data ?? []}
 					onChangePage={setPage}
 					pagination={{
 						page,
-						totalCount: equipmentMaintenances?.total ?? 0,
+						totalCount: equipmentRepair?.total ?? 0,
 						pageSize: settings?.pagingSize ?? 10,
 					}}
 				/>
