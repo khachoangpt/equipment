@@ -22,7 +22,16 @@ export const columns: ColumnDef<EquipmentInstance>[] = [
 		header: 'Tên',
 		cell: ({ row }) => {
 			return (
-				<span className="text-right">{row.original.equipmentId?.name}</span>
+				<Link
+					href={
+						pageList.equipmentSetDetail({
+							id: row.original.equipmentId?._id ?? '',
+						}).href
+					}
+					className="text-right"
+				>
+					{row.original.equipmentId?.name}
+				</Link>
 			)
 		},
 	},
