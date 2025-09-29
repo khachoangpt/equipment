@@ -75,8 +75,10 @@ const LiquidationTemplate = () => {
 		...equipmentDisposeControllerGenerateLiquidationFormLayoutMutation(),
 	})
 
-	const handleDownload = (pdfContent: string, fileName = 'document.pdf') => {
-		const blob = new Blob([pdfContent], { type: 'application/pdf' })
+	const handleDownload = (excelContent: string, fileName = 'document.xlsx') => {
+		const blob = new Blob([excelContent], {
+			type: 'application/vnd.openxmlformats-officedocument.spreadsheetml+xlsx',
+		})
 		const url = URL.createObjectURL(blob)
 
 		const link = document.createElement('a')
@@ -92,7 +94,7 @@ const LiquidationTemplate = () => {
 			responseType: 'arraybuffer',
 		})
 
-		handleDownload(res as string, 'Bien_ban_thanh_ly.pdf')
+		handleDownload(res as string, 'Bien_ban_thanh_ly.xlsx')
 	}
 
 	return (
@@ -109,7 +111,7 @@ const LiquidationTemplate = () => {
 							onClick={handleGenerateReport}
 							className="text-green-600 cursor-pointer"
 						>
-							Xuất PDF
+							Xuất Excel
 						</Button>
 						<Link href={pageList.createEquipmentSetLiquidation.href}>
 							<Button>

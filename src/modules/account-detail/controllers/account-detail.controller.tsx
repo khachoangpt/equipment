@@ -65,7 +65,12 @@ const useAccountDetailController = ({ id }: Props) => {
 				{
 					onError: (error) => {
 						toast.error(
-							(error.response?.data as any)?.message ?? 'Có lỗi xảy ra',
+							<div
+								dangerouslySetInnerHTML={{
+									__html:
+										(error.response?.data as any)?.message ?? 'Có lỗi xảy ra',
+								}}
+							/>,
 						)
 					},
 					onSuccess: () => {
@@ -86,7 +91,13 @@ const useAccountDetailController = ({ id }: Props) => {
 				},
 				{
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 					onSuccess: () => {
 						toast.success('Cập nhật thành công')

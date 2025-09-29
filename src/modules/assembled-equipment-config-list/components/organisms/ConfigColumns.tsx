@@ -53,7 +53,13 @@ export const columns: ColumnDef<any>[] = [
 						},
 						onError: (error) => {
 							setOpen(false)
-							toast.error((error.response?.data as any)?.message)
+							toast.error(
+								<div
+									dangerouslySetInnerHTML={{
+										__html: (error.response?.data as any)?.message,
+									}}
+								/>,
+							)
 						},
 					},
 				)
@@ -69,7 +75,7 @@ export const columns: ColumnDef<any>[] = [
 						}
 						className="text-blue-600"
 					>
-						Chỉnh sửa
+						Sửa
 					</Link>
 					<p
 						className="text-red-600 cursor-pointer"

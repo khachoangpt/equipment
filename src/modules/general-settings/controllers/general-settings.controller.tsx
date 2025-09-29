@@ -58,7 +58,13 @@ const useGeneralSettingsController = () => {
 						toast.success('Cập nhật thành công')
 					},
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 				},
 			)
@@ -73,7 +79,13 @@ const useGeneralSettingsController = () => {
 						toast.success('Cập nhật thành công')
 					},
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 				},
 			)

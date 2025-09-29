@@ -29,7 +29,13 @@ const useLoginController = () => {
 					router.push(pageList.home.href)
 				},
 				onError: (error) => {
-					toast.error((error.response?.data as any)?.message)
+					toast.error(
+						<div
+							dangerouslySetInnerHTML={{
+								__html: (error.response?.data as any)?.message,
+							}}
+						/>,
+					)
 				},
 			},
 		)

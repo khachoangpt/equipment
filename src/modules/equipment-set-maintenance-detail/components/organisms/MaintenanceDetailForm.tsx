@@ -162,7 +162,13 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 			},
 			{
 				onError: (error) => {
-					toast.error((error.response?.data as any)?.message)
+					toast.error(
+						<div
+							dangerouslySetInnerHTML={{
+								__html: (error.response?.data as any)?.message,
+							}}
+						/>,
+					)
 				},
 				onSuccess: () => {
 					toast.success('Tạo thành công')

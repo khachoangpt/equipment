@@ -159,7 +159,13 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 				},
 				{
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 					onSuccess: (config: any) => {
 						// if (data?.documentUrls?.length && data?.documentUrls?.length > 0) {
@@ -190,7 +196,13 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 								},
 								{
 									onError: (error) => {
-										toast.error((error.response?.data as any)?.message)
+										toast.error(
+											<div
+												dangerouslySetInnerHTML={{
+													__html: (error.response?.data as any)?.message,
+												}}
+											/>,
+										)
 									},
 								},
 							)
@@ -213,7 +225,13 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 								},
 								{
 									onError: (error) => {
-										toast.error((error.response?.data as any)?.message)
+										toast.error(
+											<div
+												dangerouslySetInnerHTML={{
+													__html: (error.response?.data as any)?.message,
+												}}
+											/>,
+										)
 									},
 								},
 							)
@@ -247,7 +265,13 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 				},
 				{
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 					onSuccess: (config: any) => {
 						// if (
@@ -273,7 +297,13 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 								},
 								{
 									onError: (error) => {
-										toast.error((error.response?.data as any)?.message)
+										toast.error(
+											<div
+												dangerouslySetInnerHTML={{
+													__html: (error.response?.data as any)?.message,
+												}}
+											/>,
+										)
 									},
 								},
 							)
@@ -296,7 +326,13 @@ const useAssembledEquipmentConfigController = ({ id }: Props) => {
 								},
 								{
 									onError: (error) => {
-										toast.error((error.response?.data as any)?.message)
+										toast.error(
+											<div
+												dangerouslySetInnerHTML={{
+													__html: (error.response?.data as any)?.message,
+												}}
+											/>,
+										)
 									},
 								},
 							)

@@ -81,7 +81,13 @@ export const columns: ColumnDef<Equipment>[] = [
 							})
 						},
 						onError: (error) => {
-							toast.error((error.response?.data as any)?.message)
+							toast.error(
+								<div
+									dangerouslySetInnerHTML={{
+										__html: (error.response?.data as any)?.message,
+									}}
+								/>,
+							)
 							setOpenDelete(false)
 						},
 					},
@@ -104,7 +110,13 @@ export const columns: ColumnDef<Equipment>[] = [
 					},
 					{
 						onError: (error) => {
-							toast.error((error.response?.data as any)?.message)
+							toast.error(
+								<div
+									dangerouslySetInnerHTML={{
+										__html: (error.response?.data as any)?.message,
+									}}
+								/>,
+							)
 							setOpenDetail(false)
 						},
 						onSuccess: () => {
@@ -124,7 +136,7 @@ export const columns: ColumnDef<Equipment>[] = [
 						className="text-blue-600 cursor-pointer"
 						onClick={() => setOpenDetail(true)}
 					>
-						Chỉnh sửa
+						Sửa
 					</p>
 					<p
 						className="text-red-600 cursor-pointer"

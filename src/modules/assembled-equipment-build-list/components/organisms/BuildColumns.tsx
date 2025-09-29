@@ -58,7 +58,13 @@ export const columns: ColumnDef<any>[] = [
 						},
 						onError: (error) => {
 							setOpen(false)
-							toast.error((error.response?.data as any)?.message)
+							toast.error(
+								<div
+									dangerouslySetInnerHTML={{
+										__html: (error.response?.data as any)?.message,
+									}}
+								/>,
+							)
 						},
 					},
 				)
@@ -79,7 +85,7 @@ export const columns: ColumnDef<any>[] = [
 
 				handleDownload(
 					res as string,
-					`Bao_cao_trang_bi_lap_ghep_${row.original._id}.pdf`,
+					`Bao_cao_trang_bi_lap_ghep_${row.original._id}.xlsx`,
 				)
 			}
 
@@ -90,7 +96,7 @@ export const columns: ColumnDef<any>[] = [
 						onClick={() => handleGenerateReport(row.original._id)}
 						className="text-green-600 cursor-pointer p-0"
 					>
-						Xuất PDF
+						Xuất Excel
 					</Button>
 					<Link
 						href={
@@ -100,7 +106,7 @@ export const columns: ColumnDef<any>[] = [
 						}
 						className="text-blue-600"
 					>
-						Chỉnh sửa
+						Sửa
 					</Link>
 					<p
 						className="text-red-600 cursor-pointer"
@@ -121,8 +127,10 @@ export const columns: ColumnDef<any>[] = [
 	},
 ]
 
-const handleDownload = (pdfContent: string, fileName = 'document.pdf') => {
-	const blob = new Blob([pdfContent], { type: 'application/pdf' })
+const handleDownload = (excelContent: string, fileName = 'document.xlsx') => {
+	const blob = new Blob([excelContent], {
+		type: 'application/vnd.openxmlformats-officedocument.spreadsheetml+xml',
+	})
 	const url = URL.createObjectURL(blob)
 
 	const link = document.createElement('a')

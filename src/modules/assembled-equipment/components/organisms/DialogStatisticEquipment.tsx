@@ -61,7 +61,7 @@ const DialogStatisticEquipment = ({ onOpenChange, open }: Props) => {
 				onSuccess: (res) => {
 					handleDownload(
 						res as string,
-						`Danh_muc_trang_bi_tiep_nhan_${data.year}.pdf`,
+						`Danh_muc_trang_bi_tiep_nhan_${data.year}.xlsx`,
 					)
 					onOpenChange(false)
 				},
@@ -69,8 +69,10 @@ const DialogStatisticEquipment = ({ onOpenChange, open }: Props) => {
 		)
 	}
 
-	const handleDownload = (pdfContent: string, fileName = 'document.pdf') => {
-		const blob = new Blob([pdfContent], { type: 'application/pdf' })
+	const handleDownload = (pdfContent: string, fileName = 'document.xlsx') => {
+		const blob = new Blob([pdfContent], {
+			type: 'application/vnd.openxmlformats-officedocument.spreadsheetml+xml',
+		})
 		const url = URL.createObjectURL(blob)
 
 		const link = document.createElement('a')

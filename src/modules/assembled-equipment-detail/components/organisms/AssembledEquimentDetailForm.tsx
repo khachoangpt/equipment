@@ -94,7 +94,13 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 				},
 				{
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 					onSuccess: () => {
 						toast.success('Tạo trang bị thành công')
@@ -124,7 +130,13 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 				},
 				{
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 					onSuccess: () => {
 						toast.success('Cập nhật trang bị thành công')

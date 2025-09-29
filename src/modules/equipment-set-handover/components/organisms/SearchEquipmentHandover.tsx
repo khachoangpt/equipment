@@ -36,8 +36,8 @@ const SearchEquipmentHandover = ({ onOpenChange, open }: Props) => {
 		toUnitId: parseAsString.withDefault(''),
 		handoverDateStart: parseAsString.withDefault(''),
 		handoverDateEnd: parseAsString.withDefault(''),
-		createdById: parseAsString.withDefault(''),
-		receiverId: parseAsString.withDefault(''),
+		receiver: parseAsString.withDefault(''),
+		sender: parseAsString.withDefault(''),
 		equipmentQuery: parseAsString.withDefault(''),
 	})
 	const { data: units } = useQuery({
@@ -146,7 +146,7 @@ const SearchEquipmentHandover = ({ onOpenChange, open }: Props) => {
 							</div>
 							<FormField
 								control={control}
-								name="createdById"
+								name="sender"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Người giao</FormLabel>
@@ -158,7 +158,7 @@ const SearchEquipmentHandover = ({ onOpenChange, open }: Props) => {
 							/>
 							<FormField
 								control={control}
-								name="receiverId"
+								name="receiver"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Người nhận</FormLabel>

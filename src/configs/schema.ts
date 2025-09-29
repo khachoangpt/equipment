@@ -305,7 +305,8 @@ const searchEquipmentHandoverSchema = z.object({
 	handoverDateStart: z.string().optional(),
 	handoverDateEnd: z.string().optional(),
 	createdById: z.string().optional(),
-	receiverId: z.string().optional(),
+	receiver: z.string().optional(),
+	sender: z.string().optional(),
 	equipmentQuery: z.string().optional(),
 })
 type SearchEquipmentHandoverSchema = z.infer<

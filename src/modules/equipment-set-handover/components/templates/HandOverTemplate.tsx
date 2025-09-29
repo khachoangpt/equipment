@@ -28,7 +28,8 @@ const HandOverTemplate = () => {
 		handoverDateStart: parseAsString.withDefault(''),
 		handoverDateEnd: parseAsString.withDefault(''),
 		createdById: parseAsString.withDefault(''),
-		receiverId: parseAsString.withDefault(''),
+		receiver: parseAsString.withDefault(''),
+		sender: parseAsString.withDefault(''),
 		equipmentQuery: parseAsString.withDefault(''),
 	})
 	const { data: equipmentHandovers } = useQuery({
@@ -36,9 +37,6 @@ const HandOverTemplate = () => {
 			query: {
 				limit: settings?.pagingSize,
 				page,
-				createdById: searchQuery.createdById
-					? searchQuery.createdById
-					: undefined,
 				equipmentQuery: searchQuery.equipmentQuery
 					? searchQuery.equipmentQuery
 					: undefined,
@@ -49,7 +47,8 @@ const HandOverTemplate = () => {
 				handoverDateStart: searchQuery.handoverDateStart
 					? searchQuery.handoverDateStart
 					: undefined,
-				receiverId: searchQuery.receiverId ? searchQuery.receiverId : undefined,
+				receiver: searchQuery.receiver ? searchQuery.receiver : undefined,
+				sender: searchQuery.sender ? searchQuery.sender : undefined,
 				reportNumber: searchQuery.reportNumber
 					? searchQuery.reportNumber
 					: undefined,

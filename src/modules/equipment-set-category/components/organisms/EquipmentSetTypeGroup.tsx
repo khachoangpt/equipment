@@ -56,7 +56,13 @@ const EquipmentSetTypeGroup = () => {
 			},
 			{
 				onError: (error) => {
-					toast.error((error.response?.data as any)?.message)
+					toast.error(
+						<div
+							dangerouslySetInnerHTML={{
+								__html: (error.response?.data as any)?.message,
+							}}
+						/>,
+					)
 					setOpen(false)
 				},
 				onSuccess: () => {

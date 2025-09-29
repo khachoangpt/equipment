@@ -153,9 +153,9 @@ const HandoverDetailForm = ({ id }: Props) => {
 							name="sender"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Người gửi</FormLabel>
+									<FormLabel>Người giao</FormLabel>
 									<FormControl>
-										<Input placeholder="Người gửi" {...field} />
+										<Input placeholder="Người giao" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

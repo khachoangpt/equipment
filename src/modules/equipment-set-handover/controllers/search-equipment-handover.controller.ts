@@ -15,7 +15,8 @@ const useSearchEquipmentHandoverController = () => {
 		handoverDateStart: '',
 		handoverDateEnd: '',
 		createdById: '',
-		receiverId: '',
+		receiver: '',
+		sender: '',
 		equipmentQuery: '',
 	}
 	const form = useForm({
@@ -28,8 +29,8 @@ const useSearchEquipmentHandoverController = () => {
 		toUnitId: parseAsString.withDefault(''),
 		handoverDateStart: parseAsString.withDefault(''),
 		handoverDateEnd: parseAsString.withDefault(''),
-		createdById: parseAsString.withDefault(''),
-		receiverId: parseAsString.withDefault(''),
+		receiver: parseAsString.withDefault(''),
+		sender: parseAsString.withDefault(''),
 		equipmentQuery: parseAsString.withDefault(''),
 	})
 
@@ -39,8 +40,8 @@ const useSearchEquipmentHandoverController = () => {
 		form.setValue('toUnitId', searchQuery.toUnitId)
 		form.setValue('handoverDateStart', searchQuery.handoverDateStart)
 		form.setValue('handoverDateEnd', searchQuery.handoverDateEnd)
-		form.setValue('createdById', searchQuery.createdById)
-		form.setValue('receiverId', searchQuery.receiverId)
+		form.setValue('receiver', searchQuery.receiver)
+		form.setValue('sender', searchQuery.sender)
 		form.setValue('equipmentQuery', searchQuery.equipmentQuery)
 	}, [searchQuery])
 

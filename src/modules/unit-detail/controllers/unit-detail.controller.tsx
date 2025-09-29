@@ -64,7 +64,13 @@ const useUnitDetailController = ({ id }: Props) => {
 				},
 				{
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 					onSuccess: () => {
 						toast.success('Tạo đơn vị thành công')
@@ -85,7 +91,13 @@ const useUnitDetailController = ({ id }: Props) => {
 				},
 				{
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 					onSuccess: () => {
 						toast.success('Sửa đơn vị thành công')

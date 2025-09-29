@@ -142,7 +142,13 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								},
 								{
 									onError: (error) => {
-										toast.error((error.response?.data as any)?.message)
+										toast.error(
+											<div
+												dangerouslySetInnerHTML={{
+													__html: (error.response?.data as any)?.message,
+												}}
+											/>,
+										)
 									},
 								},
 							)
@@ -155,7 +161,13 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 						})
 					},
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 				},
 			)
@@ -186,7 +198,13 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								},
 								{
 									onError: (error) => {
-										toast.error((error.response?.data as any)?.message)
+										toast.error(
+											<div
+												dangerouslySetInnerHTML={{
+													__html: (error.response?.data as any)?.message,
+												}}
+											/>,
+										)
 									},
 								},
 							)
@@ -198,7 +216,13 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 						router.push(pageList.equipmentSet.href)
 					},
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 				},
 			)

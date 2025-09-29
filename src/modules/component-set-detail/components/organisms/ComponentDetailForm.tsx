@@ -109,7 +109,13 @@ const ComponentDetailForm = ({ id }: Props) => {
 								},
 								{
 									onError: (error) => {
-										toast.error((error.response?.data as any)?.message)
+										toast.error(
+											<div
+												dangerouslySetInnerHTML={{
+													__html: (error.response?.data as any)?.message,
+												}}
+											/>,
+										)
 									},
 								},
 							)
@@ -130,7 +136,13 @@ const ComponentDetailForm = ({ id }: Props) => {
 								},
 								{
 									onError: (error) => {
-										toast.error((error.response?.data as any)?.message)
+										toast.error(
+											<div
+												dangerouslySetInnerHTML={{
+													__html: (error.response?.data as any)?.message,
+												}}
+											/>,
+										)
 									},
 								},
 							)
@@ -142,7 +154,13 @@ const ComponentDetailForm = ({ id }: Props) => {
 						})
 					},
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 				},
 			)
@@ -186,7 +204,13 @@ const ComponentDetailForm = ({ id }: Props) => {
 								},
 								{
 									onError: (error) => {
-										toast.error((error.response?.data as any)?.message)
+										toast.error(
+											<div
+												dangerouslySetInnerHTML={{
+													__html: (error.response?.data as any)?.message,
+												}}
+											/>,
+										)
 									},
 								},
 							)
@@ -207,7 +231,13 @@ const ComponentDetailForm = ({ id }: Props) => {
 								},
 								{
 									onError: (error) => {
-										toast.error((error.response?.data as any)?.message)
+										toast.error(
+											<div
+												dangerouslySetInnerHTML={{
+													__html: (error.response?.data as any)?.message,
+												}}
+											/>,
+										)
 									},
 								},
 							)
@@ -219,7 +249,13 @@ const ComponentDetailForm = ({ id }: Props) => {
 						router.push(pageList.assembledEquipmentComponent.href)
 					},
 					onError: (error) => {
-						toast.error((error.response?.data as any)?.message)
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
 					},
 				},
 			)

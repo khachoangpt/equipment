@@ -1,4 +1,5 @@
 import PageTitle from '@/modules/common/components/molecules/PageTitle'
+import EquipmentSetActivityLogs from '../organisms/EquipmentSetActivityLogs'
 import EquipmentSetDetailForm from '../organisms/EquipmentSetDetailForm'
 
 type Props = {
@@ -12,6 +13,7 @@ const EquipmentSetDetailTemplate = ({ id }: Props) => {
 		<div>
 			<PageTitle title={pageTitle} />
 			<EquipmentSetDetailForm id={id} />
+			<EquipmentSetActivityLogs id={id} />
 		</div>
 	)
 }

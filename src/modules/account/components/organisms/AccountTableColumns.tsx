@@ -54,7 +54,13 @@ export const columns: ColumnDef<any>[] = [
 							})
 						},
 						onError: (error) => {
-							toast.error((error.response?.data as any)?.message)
+							toast.error(
+								<div
+									dangerouslySetInnerHTML={{
+										__html: (error.response?.data as any)?.message,
+									}}
+								/>,
+							)
 							setOpen(false)
 						},
 					},
@@ -67,7 +73,7 @@ export const columns: ColumnDef<any>[] = [
 						href={pageList.accountDetail({ id: row.original._id }).href}
 						className="text-blue-600"
 					>
-						Chỉnh sửa
+						Sửa
 					</Link>
 					<p
 						className="text-red-600 cursor-pointer"
