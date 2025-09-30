@@ -25,7 +25,7 @@ export const columns: ColumnDef<EquipmentInstance>[] = [
 				<Link
 					href={
 						pageList.equipmentSetDetail({
-							id: row.original.equipmentId?._id ?? '',
+							id: row.original?._id ?? '',
 						}).href
 					}
 					className="text-right"
