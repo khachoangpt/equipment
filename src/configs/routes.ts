@@ -214,6 +214,12 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['general-settings'],
 	},
+	activityHistory: {
+		title: 'Activity History',
+		href: '/activity-history',
+		isAuth: true,
+		pattern: ['activity-history'],
+	},
 	home: {
 		title: 'Home',
 		href: '/',

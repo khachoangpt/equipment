@@ -5,11 +5,11 @@ import {
 	equipmentDisposeControllerSearchOptions,
 } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import dayjs from 'dayjs'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { parseAsString, useQueryStates } from 'nuqs'
@@ -24,12 +24,12 @@ const LiquidationTemplate = () => {
 	const [searchQuery] = useQueryStates({
 		createdById: parseAsString.withDefault(''),
 		decisionNumber: parseAsString.withDefault(''),
-		disposalDateEnd: parseAsString.withDefault(''),
-		disposalDateStart: parseAsString.withDefault(''),
+		year: parseAsString.withDefault(''),
 		equipmentQuery: parseAsString.withDefault(''),
 		search: parseAsString.withDefault(''),
 		signer: parseAsString.withDefault(''),
 		unitId: parseAsString.withDefault(''),
+		serialNumber: parseAsString.withDefault(''),
 	})
 	const { data } = useQuery({
 		...equipmentDisposeControllerSearchOptions({
@@ -42,11 +42,11 @@ const LiquidationTemplate = () => {
 				decisionNumber: searchQuery.decisionNumber
 					? searchQuery.decisionNumber
 					: undefined,
-				disposalDateEnd: searchQuery.disposalDateEnd
-					? searchQuery.disposalDateEnd
+				disposalDateStart: searchQuery?.year
+					? dayjs(`${searchQuery.year}-01-01`).toISOString()
 					: undefined,
-				disposalDateStart: searchQuery.disposalDateStart
-					? searchQuery.disposalDateStart
+				disposalDateEnd: searchQuery?.year
+					? dayjs(`${searchQuery.year}-12-31`).toISOString()
 					: undefined,
 				equipmentQuery: searchQuery.equipmentQuery
 					? searchQuery.equipmentQuery
@@ -54,6 +54,9 @@ const LiquidationTemplate = () => {
 				search: searchQuery.search ? searchQuery.search : undefined,
 				signer: searchQuery.signer ? searchQuery.signer : undefined,
 				unitId: searchQuery.unitId ? searchQuery.unitId : undefined,
+				serialNumber: searchQuery.serialNumber
+					? searchQuery.serialNumber
+					: undefined,
 			},
 		}),
 		select: (data: any) => {
@@ -99,42 +102,41 @@ const LiquidationTemplate = () => {
 
 	return (
 		<div className="h-full">
-			<Card>
-				<div className="flex items-center justify-between">
-					<div className="flex items-end gap-x-2">
-						<h3 className="font-bold text-2xl">Thanh lý</h3>
-					</div>
-					<div className="flex items-center gap-x-3">
-						<Button
-							variant={'outline'}
-							disabled={isPending}
-							onClick={handleGenerateReport}
-							className="text-green-600 cursor-pointer"
-						>
-							Xuất Excel
+			<div className="text-center mb-10">
+				<h3 className="font-bold text-3xl">Hoạt động thanh lý</h3>
+			</div>
+			<SearchEquipmentDispose onOpenChange={setOpen} open={open} />
+			<div className="flex justify-between items-center mt-5">
+				<div>
+					<h5 className="font-bold text-lg">Danh sách hoạt động thanh lý</h5>
+				</div>
+				<div className="flex justify-end gap-x-2 mb-2">
+					<Button
+						variant={'outline'}
+						disabled={isPending}
+						onClick={handleGenerateReport}
+						className="text-green-600 cursor-pointer"
+					>
+						Xuất Excel
+					</Button>
+					<Link href={pageList.createEquipmentSetLiquidation.href}>
+						<Button>
+							<Plus />
+							Thêm
 						</Button>
-						<Link href={pageList.createEquipmentSetLiquidation.href}>
-							<Button>
-								<Plus />
-								Thêm
-							</Button>
-						</Link>
-					</div>
+					</Link>
 				</div>
-				<div className="mb-5">
-					<SearchEquipmentDispose onOpenChange={setOpen} open={open} />
-				</div>
-				<DataTable
-					columns={columns}
-					data={data?.data ?? []}
-					onChangePage={setPage}
-					pagination={{
-						page,
-						totalCount: data?.total ?? 0,
-						pageSize: settings?.pagingSize ?? 10,
-					}}
-				/>
-			</Card>
+			</div>
+			<DataTable
+				columns={columns}
+				data={data?.data ?? []}
+				onChangePage={setPage}
+				pagination={{
+					page,
+					totalCount: data?.total ?? 0,
+					pageSize: settings?.pagingSize ?? 10,
+				}}
+			/>
 		</div>
 	)
 }

@@ -1,5 +1,15 @@
 'use client'
+import {
+	equipmentDisposeControllerRemoveMutation,
+	equipmentDisposeControllerSearchQueryKey,
+} from '@/client/@tanstack/react-query.gen'
+import { queryClient } from '@/configs/query-client'
+import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
+import { useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
+import Link from 'next/link'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 export const columns: ColumnDef<any>[] = [
 	{
@@ -11,23 +21,17 @@ export const columns: ColumnDef<any>[] = [
 		header: 'Số quyết định',
 	},
 	{
+		accessorKey: 'unitId',
+		header: 'Đơn vị',
+		cell: ({ row }) => row.original?.unitId?.name,
+	},
+	{
 		accessorKey: 'details.disposalDate',
-		header: 'Ngày thanh lý',
+		header: 'Thời gian',
 		cell: ({ row }) =>
 			new Date(row.original?.disposalDate as string).toLocaleDateString(
 				'vi-VN',
 			),
-	},
-	{
-		accessorKey: 'signer',
-		header: 'Người ký',
-	},
-	{
-		accessorKey: 'instanceId',
-		header: 'Trang bị',
-		cell: ({ row }) => {
-			return `(${row.original?.instanceId?.serialNumber}) ${row.original?.instanceId?.name}`
-		},
 	},
 	{
 		accessorKey: 'notes',
@@ -37,25 +41,43 @@ export const columns: ColumnDef<any>[] = [
 		id: 'actions',
 		enableResizing: false,
 		size: 1,
-		cell: () => {
-			// const [open, setOpen] = useState<boolean>(false)
+		cell: ({ row }) => {
+			const [open, setOpen] = useState<boolean>(false)
+			const { mutate: remove } = useMutation({
+				...equipmentDisposeControllerRemoveMutation(),
+			})
 
-			// const handleDelete = () => {
-			// 	setOpen(false)
-			// }
+			const handleDelete = () => {
+				setOpen(false)
+				remove(
+					{ path: { id: row.original._id } },
+					{
+						onError: (error) => {
+							toast.error(
+								<div
+									dangerouslySetInnerHTML={{
+										__html: (error.response?.data as any)?.message,
+									}}
+								/>,
+							)
+						},
+						onSuccess: () => {
+							toast.success('Xoá thành công')
+							queryClient.invalidateQueries({
+								queryKey: equipmentDisposeControllerSearchQueryKey(),
+							})
+						},
+					},
+				)
+			}
 
 			return (
 				<div className="flex items-center justify-end gap-x-3">
-					{/* <Button
-						variant={'ghost'}
-						disabled={isPending}
-						onClick={handleGenerateReport}
-						className="text-green-600 cursor-pointer"
-					>
-						Xuất PDF
-					</Button> */}
-					{/* <Link href={'#'} className="text-blue-600">
-						Chỉnh sửa
+					<Link href={'#'} className="text-green-600">
+						Xem
+					</Link>
+					<Link href={'#'} className="text-blue-600">
+						Sửa
 					</Link>
 					<p
 						className="text-red-600 cursor-pointer"
@@ -64,12 +86,12 @@ export const columns: ColumnDef<any>[] = [
 						Xoá
 					</p>
 					<DialogConfirmDelete
-						title="Xoá hoạt động bàn giao"
-						description="Bạn có chắc chắn muốn xoá hoạt động bàn giao này"
+						title="Xoá hoạt động thanh lý"
+						description="Bạn có chắc chắn muốn xoá hoạt động thanh lý này?"
 						open={open}
 						onOpenChange={setOpen}
 						onConfirm={handleDelete}
-					/> */}
+					/>
 				</div>
 			)
 		},

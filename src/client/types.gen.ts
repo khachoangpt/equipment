@@ -452,6 +452,42 @@ export type CreateUserDto = {
 
 export type role = 'user' | 'admin';
 
+export type CreateUserHistoryDto = {
+    /**
+     * ID của người dùng được thao tác
+     */
+    userId: string;
+    /**
+     * ID của tài khoản thực hiện thao tác
+     */
+    accountId: string;
+    /**
+     * Loại thao tác được thực hiện
+     */
+    operation: 'CREATE' | 'UPDATE' | 'DELETE';
+    /**
+     * Nội dung chi tiết của thao tác
+     */
+    content: string;
+    /**
+     * Dữ liệu trước khi thay đổi (chỉ có với UPDATE và DELETE)
+     */
+    previousData?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Dữ liệu sau khi thay đổi (chỉ có với CREATE và UPDATE)
+     */
+    newData?: {
+        [key: string]: unknown;
+    };
+};
+
+/**
+ * Loại thao tác được thực hiện
+ */
+export type operation = 'CREATE' | 'UPDATE' | 'DELETE';
+
 export type DisposeDto = {
     /**
      * Số quyết định thanh lý
@@ -745,10 +781,6 @@ export type LoginDto = {
 
 export type LoginResponseDto = {
     access_token: string;
-};
-
-export type Object = {
-    [key: string]: unknown;
 };
 
 export type ObjectId = {
@@ -1431,6 +1463,49 @@ export type User = {
     updatedAt: string;
 };
 
+export type UserHistoryResponseDto = {
+    /**
+     * Mongo document ID
+     */
+    _id: string;
+    /**
+     * ID của người dùng được thao tác
+     */
+    userId: string;
+    /**
+     * ID của tài khoản thực hiện thao tác
+     */
+    accountId: string;
+    /**
+     * Loại thao tác được thực hiện
+     */
+    operation: 'CREATE' | 'UPDATE' | 'DELETE';
+    /**
+     * Nội dung chi tiết của thao tác
+     */
+    content: string;
+    /**
+     * Dữ liệu trước khi thay đổi (chỉ có với UPDATE và DELETE)
+     */
+    previousData?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Dữ liệu sau khi thay đổi (chỉ có với CREATE và UPDATE)
+     */
+    newData?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Thời điểm tạo
+     */
+    createdAt: string;
+    /**
+     * Thời điểm cập nhật lần cuối
+     */
+    updatedAt: string;
+};
+
 export type UserResponseDto = {
     /**
      * Mongo document ID
@@ -1984,6 +2059,81 @@ export type UnitsControllerRemoveResponse = (Unit);
 
 export type UnitsControllerRemoveError = (unknown);
 
+export type UserHistoryControllerCreateData = {
+    body: CreateUserHistoryDto;
+};
+
+export type UserHistoryControllerCreateResponse = (UserHistoryResponseDto);
+
+export type UserHistoryControllerCreateError = (unknown);
+
+export type UserHistoryControllerSearchData = {
+    query?: {
+        /**
+         * ID của tài khoản thực hiện thao tác
+         */
+        accountId?: string;
+        /**
+         * Ngày kết thúc tìm kiếm (ISO string)
+         */
+        endDate?: string;
+        /**
+         * Số bản ghi mỗi trang
+         */
+        limit?: number;
+        /**
+         * Loại thao tác cần tìm
+         */
+        operation?: 'CREATE' | 'UPDATE' | 'DELETE';
+        /**
+         * Số trang (bắt đầu từ 1)
+         */
+        page?: number;
+        /**
+         * Ngày bắt đầu tìm kiếm (ISO string)
+         */
+        startDate?: string;
+        /**
+         * ID của người dùng cần tìm lịch sử
+         */
+        userId?: string;
+    };
+};
+
+export type UserHistoryControllerSearchResponse = (unknown);
+
+export type UserHistoryControllerSearchError = (unknown);
+
+export type UserHistoryControllerFindByUserIdData = {
+    path: {
+        userId: string;
+    };
+};
+
+export type UserHistoryControllerFindByUserIdResponse = (Array<UserHistoryResponseDto>);
+
+export type UserHistoryControllerFindByUserIdError = (unknown);
+
+export type UserHistoryControllerFindByAccountIdData = {
+    path: {
+        accountId: string;
+    };
+};
+
+export type UserHistoryControllerFindByAccountIdResponse = (Array<UserHistoryResponseDto>);
+
+export type UserHistoryControllerFindByAccountIdError = (unknown);
+
+export type UserHistoryControllerFindOneData = {
+    path: {
+        id: string;
+    };
+};
+
+export type UserHistoryControllerFindOneResponse = (UserHistoryResponseDto);
+
+export type UserHistoryControllerFindOneError = (unknown);
+
 export type UsersControllerCreateData = {
     body: CreateUserDto;
 };
@@ -2504,7 +2654,7 @@ export type EquipmentInstancesControllerSearchData = {
          * Tìm theo số kế hoạch nhập
          */
         entryPlanNumber?: string;
-        featureConfiguration?: Object;
+        featureConfiguration?: string;
         /**
          * ID của Nhóm loại trang bị
          */
@@ -2533,7 +2683,7 @@ export type EquipmentInstancesControllerSearchData = {
          * Tìm theo trạng thái (ví dụ: "Trong kho")
          */
         status?: string;
-        technicalSpecifications?: Object;
+        technicalSpecifications?: string;
         /**
          * Tìm theo loại trang bị (ví dụ: "SYNCHRONIZED_EQUIPMENT")
          */

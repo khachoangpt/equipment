@@ -13,6 +13,7 @@ import type { SidebarItem } from '@/types'
 import {
 	Activity,
 	BriefcaseBusiness,
+	History,
 	Home,
 	Settings,
 	Users,
@@ -100,6 +101,13 @@ const AppSidebar = () => {
 			label: 'Tài khoản',
 			href: pageList.account.href,
 			icon: <Users />,
+			items: [],
+		},
+		{
+			id: 'lich-su-hoat-dong',
+			label: 'Lịch sử hoạt động',
+			href: pageList.activityHistory.href,
+			icon: <History />,
 			items: [],
 		},
 		{

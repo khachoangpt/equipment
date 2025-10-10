@@ -11,12 +11,12 @@ const useSearchEquipmentDisposeController = () => {
 	const defaultValues: SearchEquipmentDisposeSchema = {
 		createdById: '',
 		decisionNumber: '',
-		disposalDateEnd: '',
-		disposalDateStart: '',
+		year: '',
 		equipmentQuery: '',
 		search: '',
 		signer: '',
 		unitId: '',
+		serialNumber: '',
 	}
 	const form = useForm({
 		defaultValues,
@@ -25,23 +25,23 @@ const useSearchEquipmentDisposeController = () => {
 	const [searchQuery, setSearchQuery] = useQueryStates({
 		createdById: parseAsString.withDefault(''),
 		decisionNumber: parseAsString.withDefault(''),
-		disposalDateEnd: parseAsString.withDefault(''),
-		disposalDateStart: parseAsString.withDefault(''),
+		year: parseAsString.withDefault(''),
 		equipmentQuery: parseAsString.withDefault(''),
 		search: parseAsString.withDefault(''),
 		signer: parseAsString.withDefault(''),
 		unitId: parseAsString.withDefault(''),
+		serialNumber: parseAsString.withDefault(''),
 	})
 
 	useEffect(() => {
 		form.setValue('createdById', searchQuery.createdById)
 		form.setValue('decisionNumber', searchQuery.decisionNumber)
-		form.setValue('disposalDateEnd', searchQuery.disposalDateEnd)
-		form.setValue('disposalDateStart', searchQuery.disposalDateStart)
+		form.setValue('year', searchQuery.year)
 		form.setValue('equipmentQuery', searchQuery.equipmentQuery)
 		form.setValue('search', searchQuery.search)
 		form.setValue('signer', searchQuery.signer)
 		form.setValue('unitId', searchQuery.unitId)
+		form.setValue('serialNumber', searchQuery.serialNumber)
 	}, [searchQuery])
 
 	const onSubmit: SubmitHandler<SearchEquipmentDisposeSchema> = (data) => {

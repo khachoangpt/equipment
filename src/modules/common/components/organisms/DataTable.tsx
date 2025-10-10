@@ -69,7 +69,7 @@ function DataTable<TData, TValue>({
 						</TableRow>
 					))}
 				</TableHeader>
-				<TableBody className="border-b">
+				<TableBody className="border-b bg-white">
 					{table.getRowModel().rows?.length ? (
 						table.getRowModel().rows.map((row) => (
 							<TableRow

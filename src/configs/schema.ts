@@ -316,12 +316,12 @@ type SearchEquipmentHandoverSchema = z.infer<
 const searchEquipmentDisposeSchema = z.object({
 	createdById: z.string().optional(),
 	decisionNumber: z.string().optional(),
-	disposalDateEnd: z.string().optional(),
-	disposalDateStart: z.string().optional(),
+	year: z.string().optional(),
 	equipmentQuery: z.string().optional(),
 	search: z.string().optional(),
 	signer: z.string().optional(),
 	unitId: z.string().optional(),
+	serialNumber: z.string().optional(),
 })
 type SearchEquipmentDisposeSchema = z.infer<typeof searchEquipmentDisposeSchema>
 
