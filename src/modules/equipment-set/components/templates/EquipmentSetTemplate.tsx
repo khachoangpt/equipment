@@ -2,7 +2,6 @@
 
 import { equipmentInstancesControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
@@ -78,12 +77,16 @@ const EquipmentSetTemplate = () => {
 	})
 
 	return (
-		<div className="h-full">
-			<Card>
-				<div className="flex items-center justify-between">
-					<div className="flex items-end gap-x-2">
-						<h3 className="font-bold text-2xl">Trang bị</h3>
-					</div>
+		<div className="pb-10">
+			<div className="text-center mb-10">
+				<h3 className="font-bold text-3xl">Trang bị đồng bộ</h3>
+			</div>
+			<SearchEquipmentSet onOpenChange={setOpen} open={open} />
+			<div className="flex justify-between items-center mt-5">
+				<div>
+					<h5 className="font-bold text-lg">Danh sách trang bị đồng bộ</h5>
+				</div>
+				<div className="flex justify-end gap-x-2 mb-2">
 					<Link href={pageList.equipmentSetCreate.href}>
 						<Button>
 							<Plus />
@@ -91,20 +94,17 @@ const EquipmentSetTemplate = () => {
 						</Button>
 					</Link>
 				</div>
-				<div className="mb-5">
-					<SearchEquipmentSet onOpenChange={setOpen} open={open} />
-				</div>
-				<DataTable
-					columns={columns}
-					data={(equipmentSets?.data ?? []) as any}
-					onChangePage={setPage}
-					pagination={{
-						page,
-						totalCount: equipmentSets?.total ?? 0,
-						pageSize: settings?.pagingSize ?? 10,
-					}}
-				/>
-			</Card>
+			</div>
+			<DataTable
+				columns={columns}
+				data={(equipmentSets?.data ?? []) as any}
+				onChangePage={setPage}
+				pagination={{
+					page,
+					totalCount: equipmentSets?.total ?? 0,
+					pageSize: settings?.pagingSize ?? 10,
+				}}
+			/>
 		</div>
 	)
 }

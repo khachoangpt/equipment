@@ -61,12 +61,7 @@ export const columns: ColumnDef<EquipmentInstance>[] = [
 			)
 		},
 	},
-	{
-		accessorKey: 'entryDate',
-		header: 'Ngày nhập',
-		cell: ({ row }) =>
-			new Date(row.original.entryDate).toLocaleDateString('vi-VN'),
-	},
+
 	{
 		id: 'actions',
 		enableResizing: false,
@@ -105,7 +100,23 @@ export const columns: ColumnDef<EquipmentInstance>[] = [
 			return (
 				<div className="flex items-center justify-end gap-x-3">
 					<Link
+						href={
+							pageList.equipmentSetDetailHistory({ id: row.original._id }).href
+						}
+						className="text-amber-800"
+					>
+						Lịch sử
+					</Link>
+					<Link
 						href={pageList.equipmentSetDetail({ id: row.original._id }).href}
+						className="text-green-600"
+					>
+						Chi tiết
+					</Link>
+					<Link
+						href={
+							pageList.equipmentSetDetailUpdate({ id: row.original._id }).href
+						}
 						className="text-blue-600"
 					>
 						Sửa

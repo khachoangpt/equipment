@@ -70,6 +70,18 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['equipment-set', ''],
 	}),
+	equipmentSetDetailUpdate: (config?: { id?: string }) => ({
+		title: 'Equipment Set Detail Update',
+		href: `/equipment-set/${config?.id}/update`,
+		isAuth: true,
+		pattern: ['equipment-set', 'update', ''],
+	}),
+	equipmentSetDetailHistory: (config?: { id?: string }) => ({
+		title: 'Equipment Set Detail History',
+		href: `/equipment-set/${config?.id}/history`,
+		isAuth: true,
+		pattern: ['equipment-set', 'history', ''],
+	}),
 	equipmentSetCreate: {
 		title: 'Equipment Set Create',
 		href: '/equipment-set/create',

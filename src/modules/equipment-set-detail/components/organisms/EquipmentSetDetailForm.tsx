@@ -44,9 +44,10 @@ import useEquipmentSetDetailController from '../../controllers/equipment-set-det
 
 type Props = {
 	id?: string
+	isUpdate?: boolean
 }
 
-const EquipmentSetDetailForm = ({ id }: Props) => {
+const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 	const router = useRouter()
 	const { form, data, isFetching } = useEquipmentSetDetailController({ id })
 	const [previewImages, setPreviewImages] = useState<
@@ -261,14 +262,20 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem key={value}>
 									<FormLabel>Loại trang bị</FormLabel>
 									<FormControl>
-										<Combobox
-											options={(syncEquipments || []).map((e) => ({
-												value: e._id,
-												label: e.name,
-											}))}
-											value={value}
-											onChange={onChange}
-										/>
+										{isUpdate ? (
+											<Combobox
+												options={(syncEquipments || []).map((e) => ({
+													value: e._id,
+													label: e.name,
+												}))}
+												value={value}
+												onChange={onChange}
+											/>
+										) : (
+											<span className="text-muted-foreground">
+												{syncEquipments?.find((e) => e._id === value)?.name}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -281,7 +288,13 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Mã hiệu serial</FormLabel>
 									<FormControl>
-										<Input placeholder="Mã hiệu serial" {...field} />
+										{isUpdate ? (
+											<Input placeholder="Mã hiệu serial" {...field} />
+										) : (
+											<span className="text-muted-foreground">
+												{field.value}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -294,11 +307,15 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Số kế hoạch nhập</FormLabel>
 									<FormControl>
-										<Input
-											placeholder="Số kế hoạch nhập"
-											value={value}
-											onChange={onChange}
-										/>
+										{isUpdate ? (
+											<Input
+												placeholder="Số kế hoạch nhập"
+												value={value}
+												onChange={onChange}
+											/>
+										) : (
+											<span className="text-muted-foreground">{value}</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -311,11 +328,15 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Nguồn cấp</FormLabel>
 									<FormControl>
-										<Input
-											placeholder="Nguồn cấp"
-											value={value}
-											onChange={onChange}
-										/>
+										{isUpdate ? (
+											<Input
+												placeholder="Nguồn cấp"
+												value={value}
+												onChange={onChange}
+											/>
+										) : (
+											<span className="text-muted-foreground">{value}</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -328,14 +349,23 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Giá tiền hiện tại</FormLabel>
 									<FormControl>
-										<Input
-											placeholder="Giá tiền hiện tại"
-											value={value}
-											onChange={(e) => {
-												if (Number.isNaN(Number(e.target.value))) return
-												onChange(Number(e.target.value))
-											}}
-										/>
+										{isUpdate ? (
+											<Input
+												placeholder="Giá tiền hiện tại"
+												value={value}
+												onChange={(e) => {
+													if (Number.isNaN(Number(e.target.value))) return
+													onChange(Number(e.target.value))
+												}}
+											/>
+										) : (
+											<span className="text-muted-foreground">
+												{new Intl.NumberFormat('vi-VN', {
+													style: 'currency',
+													currency: 'VND',
+												}).format(value || 0)}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -348,10 +378,16 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Ngày nhập</FormLabel>
 									<FormControl>
-										<DatePicker
-											onChange={(e) => onChange(e.toISOString())}
-											value={new Date(value ?? '')}
-										/>
+										{isUpdate ? (
+											<DatePicker
+												onChange={(e) => onChange(e.toISOString())}
+												value={new Date(value || '')}
+											/>
+										) : (
+											<span className="text-muted-foreground">
+												{new Date(value || '').toLocaleDateString('vi-VN')}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -364,10 +400,16 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Ngày sản xuất</FormLabel>
 									<FormControl>
-										<DatePicker
-											onChange={(e) => onChange(e.toISOString())}
-											value={value ? new Date(value ?? '') : undefined}
-										/>
+										{isUpdate ? (
+											<DatePicker
+												onChange={(e) => onChange(e.toISOString())}
+												value={value ? new Date(value || '') : undefined}
+											/>
+										) : (
+											<span className="text-muted-foreground">
+												{new Date(value || '').toLocaleDateString('vi-VN')}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -380,18 +422,24 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Đơn vị nhập</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												{units?.map((quantity: any) => (
-													<SelectItem key={quantity._id} value={quantity._id}>
-														{quantity.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
+										{isUpdate ? (
+											<Select value={value} onValueChange={onChange}>
+												<SelectTrigger className="w-full">
+													<SelectValue />
+												</SelectTrigger>
+												<SelectContent>
+													{units?.map((quantity: any) => (
+														<SelectItem key={quantity._id} value={quantity._id}>
+															{quantity.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										) : (
+											<span className="text-muted-foreground">
+												{units?.find((unit: any) => unit._id === value)?.name}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -404,18 +452,24 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Đơn vị đánh giá</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												{units?.map((quantity: any) => (
-													<SelectItem key={quantity._id} value={quantity._id}>
-														{quantity.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
+										{isUpdate ? (
+											<Select value={value} onValueChange={onChange}>
+												<SelectTrigger className="w-full">
+													<SelectValue />
+												</SelectTrigger>
+												<SelectContent>
+													{units?.map((quantity: any) => (
+														<SelectItem key={quantity._id} value={quantity._id}>
+															{quantity.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										) : (
+											<span className="text-muted-foreground">
+												{units?.find((unit: any) => unit._id === value)?.name}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -428,11 +482,15 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Kết quả đánh giá</FormLabel>
 									<FormControl>
-										<Textarea
-											placeholder="Kết quả đánh giá"
-											value={value}
-											onChange={onChange}
-										/>
+										{isUpdate ? (
+											<Textarea
+												placeholder="Kết quả đánh giá"
+												value={value}
+												onChange={onChange}
+											/>
+										) : (
+											<span className="text-muted-foreground">{value}</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -445,18 +503,24 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Đơn vị sử dụng</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												{units?.map((unit: any) => (
-													<SelectItem key={unit._id} value={unit._id}>
-														{unit.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
+										{isUpdate ? (
+											<Select value={value} onValueChange={onChange}>
+												<SelectTrigger className="w-full">
+													<SelectValue />
+												</SelectTrigger>
+												<SelectContent>
+													{units?.map((unit: any) => (
+														<SelectItem key={unit._id} value={unit._id}>
+															{unit.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										) : (
+											<span className="text-muted-foreground">
+												{units?.find((unit: any) => unit._id === value)?.name}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -469,18 +533,28 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem key={value}>
 									<FormLabel>Phân cấp chất lượng</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												{quantityList?.map((quantity: any) => (
-													<SelectItem key={quantity._id} value={quantity._id}>
-														{quantity.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
+										{isUpdate ? (
+											<Select value={value} onValueChange={onChange}>
+												<SelectTrigger className="w-full">
+													<SelectValue />
+												</SelectTrigger>
+												<SelectContent>
+													{quantityList?.map((quantity: any) => (
+														<SelectItem key={quantity._id} value={quantity._id}>
+															{quantity.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										) : (
+											<span className="text-muted-foreground">
+												{
+													quantityList?.find(
+														(quantity: any) => quantity._id === value,
+													)?.name
+												}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -493,11 +567,15 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Số lượng</FormLabel>
 									<FormControl>
-										<Input
-											placeholder="Số lượng"
-											value={value}
-											onChange={onChange}
-										/>
+										{isUpdate ? (
+											<Input
+												placeholder="Số lượng"
+												value={value}
+												onChange={onChange}
+											/>
+										) : (
+											<span className="text-muted-foreground">{value}</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -510,7 +588,13 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Tình trạng trang bị</FormLabel>
 									<FormControl>
-										<Input placeholder="Tình trạng trang bị" {...field} />
+										{isUpdate ? (
+											<Input placeholder="Tình trạng trang bị" {...field} />
+										) : (
+											<span className="text-muted-foreground">
+												{field.value}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -523,7 +607,13 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Cấu hình tính năng</FormLabel>
 									<FormControl>
-										<Textarea placeholder="Cấu hình tính năng" {...field} />
+										{isUpdate ? (
+											<Textarea placeholder="Cấu hình tính năng" {...field} />
+										) : (
+											<span className="text-muted-foreground">
+												{field.value}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -536,7 +626,13 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Thông số kỹ thuật</FormLabel>
 									<FormControl>
-										<Textarea placeholder="Thông số kỹ thuật" {...field} />
+										{isUpdate ? (
+											<Textarea placeholder="Thông số kỹ thuật" {...field} />
+										) : (
+											<span className="text-muted-foreground">
+												{field.value}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -550,13 +646,15 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 									<FormItem>
 										<FormLabel>Hình ảnh trang bị</FormLabel>
 										<FormControl>
-											<Input
-												placeholder="Hình ảnh trang bị"
-												type="file"
-												multiple
-												accept="image/*"
-												onChange={(e) => handleChooseImages(e)}
-											/>
+											{isUpdate ? (
+												<Input
+													placeholder="Hình ảnh trang bị"
+													type="file"
+													multiple
+													accept="image/*"
+													onChange={(e) => handleChooseImages(e)}
+												/>
+											) : null}
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -575,32 +673,36 @@ const EquipmentSetDetailForm = ({ id }: Props) => {
 												alt=""
 												className="w-40 h-auto object-contain"
 											/>
-											<div
-												onClick={() => handleDeleteImage(image)}
-												className="absolute size-6 flex items-center justify-center top-0 right-0 translate-x-1/2 -translate-y-1/2 cursor-pointer bg-primary rounded-full text-white"
-											>
-												<X className="size-5" />
-											</div>
+											{isUpdate ? (
+												<div
+													onClick={() => handleDeleteImage(image)}
+													className="absolute size-6 flex items-center justify-center top-0 right-0 translate-x-1/2 -translate-y-1/2 cursor-pointer bg-primary rounded-full text-white"
+												>
+													<X className="size-5" />
+												</div>
+											) : null}
 										</div>
 									))}
 								</div>
 							)}
 						</div>
 					</div>
-					<div className="mt-10 flex items-center justify-end gap-x-5">
-						<Button
-							type="button"
-							variant="secondary"
-							onClick={() => {
-								router.push(pageList.equipmentSet.href)
-							}}
-						>
-							Quay lại
-						</Button>
-						<Button onClick={form.handleSubmit(onSubmit)}>
-							{id ? 'Cập nhật' : 'Thêm'}
-						</Button>
-					</div>
+					{isUpdate ? (
+						<div className="mt-10 flex items-center justify-end gap-x-5">
+							<Button
+								type="button"
+								variant="secondary"
+								onClick={() => {
+									router.push(pageList.equipmentSet.href)
+								}}
+							>
+								Quay lại
+							</Button>
+							<Button onClick={form.handleSubmit(onSubmit)}>
+								{id ? 'Cập nhật' : 'Thêm'}
+							</Button>
+						</div>
+					) : null}
 				</Form>
 			</Card>
 		</div>

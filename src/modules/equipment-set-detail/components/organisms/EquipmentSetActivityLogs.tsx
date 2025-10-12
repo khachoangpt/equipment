@@ -3,7 +3,6 @@
 import type { ActivityLog } from '@/client'
 import { activityLogsControllerFindByInstanceOptions } from '@/client/@tanstack/react-query.gen'
 import { Card } from '@/components/ui/card'
-import PageTitle from '@/modules/common/components/molecules/PageTitle'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useQuery } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
@@ -31,10 +30,15 @@ const EquipmentSetActivityLogs = ({ id }: Props) => {
 		{
 			accessorKey: 'createdBy',
 			header: 'Người thực hiện',
+			cell: ({ row }) => {
+				return (
+					row.original.createdBy?.fullName ?? row.original.createdBy?.username
+				)
+			},
 		},
 		{
 			accessorKey: 'createdAt',
-			header: 'Ngày thêm',
+			header: 'Ngày',
 			cell: ({ row }) => {
 				return new Date(row.original.createdAt).toLocaleDateString('vi-VN')
 			},
@@ -46,8 +50,7 @@ const EquipmentSetActivityLogs = ({ id }: Props) => {
 	]
 	return (
 		<div className="mt-5">
-			<PageTitle title={'Lịch sử trang bị'} />
-			<Card className="mt-2">
+			<Card>
 				<DataTable columns={columns} data={data ?? []} />
 			</Card>
 		</div>

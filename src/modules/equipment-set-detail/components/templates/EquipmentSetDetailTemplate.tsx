@@ -1,19 +1,25 @@
 import PageTitle from '@/modules/common/components/molecules/PageTitle'
-import EquipmentSetActivityLogs from '../organisms/EquipmentSetActivityLogs'
 import EquipmentSetDetailForm from '../organisms/EquipmentSetDetailForm'
 
 type Props = {
 	id?: string
+	isUpdate?: boolean
 }
 
-const EquipmentSetDetailTemplate = ({ id }: Props) => {
-	const pageTitle = id ? 'Chỉnh sửa trang bị' : 'Khởi tạo trang bị'
+const EquipmentSetDetailTemplate = ({ id, isUpdate }: Props) => {
+	let pageTitle = 'Thông tin trang bị'
+	if (!id) {
+		pageTitle = 'Thêm trang bị'
+	}
+	if (isUpdate && id) {
+		pageTitle = 'Chỉnh sửa trang bị'
+	}
 
 	return (
 		<div>
 			<PageTitle title={pageTitle} />
-			<EquipmentSetDetailForm id={id} />
-			<EquipmentSetActivityLogs id={id} />
+			<EquipmentSetDetailForm id={id} isUpdate={isUpdate} />
+			{/* <EquipmentSetActivityLogs id={id} /> */}
 		</div>
 	)
 }

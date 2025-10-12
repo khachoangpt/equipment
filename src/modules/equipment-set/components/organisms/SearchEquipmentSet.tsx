@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/select'
 import {} from '@/mocks/equipment.mock'
 import { useQuery } from '@tanstack/react-query'
-import { parseAsString, useQueryStates } from 'nuqs'
+import {} from 'nuqs'
 import useSearchEquipmentSetController from '../../controllers/search-equipment-set.controller'
 
 type Props = {
@@ -31,20 +31,8 @@ type Props = {
 }
 
 const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
-	const { form, onSubmit, defaultValues } = useSearchEquipmentSetController()
+	const { form, onSubmit } = useSearchEquipmentSetController()
 	const { control } = form
-	const [_, setSearchQuery] = useQueryStates({
-		serialNumber: parseAsString.withDefault(''),
-		name: parseAsString.withDefault(''),
-		entryPlanNumber: parseAsString.withDefault(''),
-		qualityLevelId: parseAsString.withDefault(''),
-		status: parseAsString.withDefault(''),
-		usingUnitId: parseAsString.withDefault(''),
-		countryOfOrigin: parseAsString.withDefault(''),
-		groupId: parseAsString.withDefault(''),
-		featureConfiguration: parseAsString.withDefault(''),
-		technicalSpecifications: parseAsString.withDefault(''),
-	})
 	const { data: quantityList } = useQuery({
 		...qualityLevelsControllerFindAllOptions(),
 		select(data) {
@@ -66,13 +54,13 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 			<Collapsible open={open} onOpenChange={onOpenChange}>
 				<CollapsibleContent>
 					<Form {...form}>
-						<div className="grid grid-cols-3 gap-x-10 gap-y-3">
+						<div className="grid grid-cols-2 gap-x-10 gap-y-2">
 							<FormField
 								control={control}
 								name="serialNumber"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Mã hiệu serial</FormLabel>
+									<FormItem className="flex">
+										<FormLabel className="w-full">Mã hiệu serial</FormLabel>
 										<FormControl>
 											<Input placeholder="Mã hiệu serial" {...field} />
 										</FormControl>
@@ -83,10 +71,10 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								control={control}
 								name="name"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Tên trang bị</FormLabel>
+									<FormItem className="flex">
+										<FormLabel className="w-full">Tên trang bị</FormLabel>
 										<FormControl>
-											<Input placeholder="Tên trang bị" {...field} />
+											<Input placeholder="Tên trang bị" {...field} />
 										</FormControl>
 									</FormItem>
 								)}
@@ -95,8 +83,8 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								control={control}
 								name="entryPlanNumber"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Số kế hoạch nhập</FormLabel>
+									<FormItem className="flex">
+										<FormLabel className="w-full">Số kế hoạch nhập</FormLabel>
 										<FormControl>
 											<Input placeholder="Số kế hoạch nhập" {...field} />
 										</FormControl>
@@ -104,11 +92,11 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								)}
 							/>
 							<FormField
-								control={form.control}
+								control={control}
 								name="qualityLevelId"
 								render={({ field: { value, onChange } }) => (
-									<FormItem key={value}>
-										<FormLabel>Chất lượng</FormLabel>
+									<FormItem key={value} className="flex">
+										<FormLabel className="w-full">Chất lượng</FormLabel>
 										<FormControl>
 											<Select value={value} onValueChange={onChange}>
 												<SelectTrigger className="w-full">
@@ -130,8 +118,8 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								control={control}
 								name="status"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Trạng thái</FormLabel>
+									<FormItem className="flex">
+										<FormLabel className="w-full">Trạng thái</FormLabel>
 										<FormControl>
 											<Input placeholder="Trạng thái" {...field} />
 										</FormControl>
@@ -142,8 +130,8 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								control={control}
 								name="usingUnitId"
 								render={({ field: { value, onChange } }) => (
-									<FormItem>
-										<FormLabel>Đơn vị</FormLabel>
+									<FormItem className="flex">
+										<FormLabel className="w-full">Đơn vị</FormLabel>
 										<FormControl>
 											<Select value={value} onValueChange={onChange}>
 												<SelectTrigger className="w-full">
@@ -165,8 +153,8 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								control={control}
 								name="countryOfOrigin"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Nước sản xuất</FormLabel>
+									<FormItem className="flex">
+										<FormLabel className="w-full">Nước sản xuất</FormLabel>
 										<FormControl>
 											<Input placeholder="Nước sản xuất" {...field} />
 										</FormControl>
@@ -177,8 +165,8 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								control={form.control}
 								name="groupId"
 								render={({ field: { value, onChange } }) => (
-									<FormItem key={value}>
-										<FormLabel>Nhóm loại</FormLabel>
+									<FormItem key={value} className="flex">
+										<FormLabel className="w-full">Nhóm loại</FormLabel>
 										<FormControl>
 											<Select value={value} onValueChange={onChange}>
 												<SelectTrigger className="w-full">
@@ -203,8 +191,8 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								control={control}
 								name="featureConfiguration"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Cấu hình tính năng</FormLabel>
+									<FormItem className="flex">
+										<FormLabel className="w-full">Cấu hình tính năng</FormLabel>
 										<FormControl>
 											<Input placeholder="Cấu hình tính năng" {...field} />
 										</FormControl>
@@ -215,8 +203,8 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								control={control}
 								name="technicalSpecifications"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Thông số kỹ thuật</FormLabel>
+									<FormItem className="flex">
+										<FormLabel className="w-full">Thông số kỹ thuật</FormLabel>
 										<FormControl>
 											<Input placeholder="Thông số kỹ thuật" {...field} />
 										</FormControl>
@@ -224,16 +212,9 @@ const SearchEquipmentSet = ({ onOpenChange, open }: Props) => {
 								)}
 							/>
 						</div>
-						<div className="flex justify-end gap-x-3">
-							<Button
-								type="button"
-								variant={'secondary'}
-								onClick={() => setSearchQuery(defaultValues)}
-							>
-								Làm mới
-							</Button>
+						<div className="flex justify-center mt-3">
 							<Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-								Tìm kiếm
+								Lọc
 							</Button>
 						</div>
 					</Form>

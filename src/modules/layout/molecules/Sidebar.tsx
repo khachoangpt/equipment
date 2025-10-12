@@ -40,7 +40,7 @@ const AppSidebar = () => {
 			items: [
 				{
 					id: 'khoi-tao-trang-bi-trang-bi-dong-bo',
-					label: 'Trang bị',
+					label: 'Trang bị đồng bộ',
 					href: pageList.equipmentSet.href,
 				},
 			],
