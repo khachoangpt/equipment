@@ -44,10 +44,10 @@ import useEquipmentSetDetailController from '../../controllers/equipment-set-det
 
 type Props = {
 	id?: string
-	isUpdate?: boolean
+	mode: 'create' | 'update' | 'detail'
 }
 
-const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
+const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 	const router = useRouter()
 	const { form, data, isFetching } = useEquipmentSetDetailController({ id })
 	const [previewImages, setPreviewImages] = useState<
@@ -262,7 +262,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem key={value}>
 									<FormLabel>Loại trang bị</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Combobox
 												options={(syncEquipments || []).map((e) => ({
 													value: e._id,
@@ -288,7 +288,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Mã hiệu serial</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Input placeholder="Mã hiệu serial" {...field} />
 										) : (
 											<span className="text-muted-foreground">
@@ -307,7 +307,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Số kế hoạch nhập</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Input
 												placeholder="Số kế hoạch nhập"
 												value={value}
@@ -328,7 +328,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Nguồn cấp</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Input
 												placeholder="Nguồn cấp"
 												value={value}
@@ -349,7 +349,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Giá tiền hiện tại</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Input
 												placeholder="Giá tiền hiện tại"
 												value={value}
@@ -378,7 +378,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Ngày nhập</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<DatePicker
 												onChange={(e) => onChange(e.toISOString())}
 												value={new Date(value || '')}
@@ -400,7 +400,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Ngày sản xuất</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<DatePicker
 												onChange={(e) => onChange(e.toISOString())}
 												value={value ? new Date(value || '') : undefined}
@@ -422,7 +422,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Đơn vị nhập</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Select value={value} onValueChange={onChange}>
 												<SelectTrigger className="w-full">
 													<SelectValue />
@@ -452,7 +452,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Đơn vị đánh giá</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Select value={value} onValueChange={onChange}>
 												<SelectTrigger className="w-full">
 													<SelectValue />
@@ -482,7 +482,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Kết quả đánh giá</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Textarea
 												placeholder="Kết quả đánh giá"
 												value={value}
@@ -503,7 +503,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Đơn vị sử dụng</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Select value={value} onValueChange={onChange}>
 												<SelectTrigger className="w-full">
 													<SelectValue />
@@ -533,7 +533,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem key={value}>
 									<FormLabel>Phân cấp chất lượng</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Select value={value} onValueChange={onChange}>
 												<SelectTrigger className="w-full">
 													<SelectValue />
@@ -567,7 +567,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Số lượng</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Input
 												placeholder="Số lượng"
 												value={value}
@@ -588,7 +588,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Tình trạng trang bị</FormLabel>
 									<FormControl>
-										{isUpdate ? (
+										{mode !== 'detail' ? (
 											<Input placeholder="Tình trạng trang bị" {...field} />
 										) : (
 											<span className="text-muted-foreground">
@@ -607,8 +607,12 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Cấu hình tính năng</FormLabel>
 									<FormControl>
-										{isUpdate ? (
-											<Textarea placeholder="Cấu hình tính năng" {...field} />
+										{mode !== 'detail' ? (
+											<Textarea
+												placeholder="Cấu hình tính năng"
+												className="h-80"
+												{...field}
+											/>
 										) : (
 											<span className="text-muted-foreground">
 												{field.value}
@@ -619,6 +623,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								</FormItem>
 							)}
 						/>
+						<div />
 						<FormField
 							control={form.control}
 							name="technicalSpecifications"
@@ -626,8 +631,12 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								<FormItem>
 									<FormLabel>Thông số kỹ thuật</FormLabel>
 									<FormControl>
-										{isUpdate ? (
-											<Textarea placeholder="Thông số kỹ thuật" {...field} />
+										{mode !== 'detail' ? (
+											<Textarea
+												placeholder="Thông số kỹ thuật"
+												className="h-16"
+												{...field}
+											/>
 										) : (
 											<span className="text-muted-foreground">
 												{field.value}
@@ -638,6 +647,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 								</FormItem>
 							)}
 						/>
+						<div />
 						<div>
 							<FormField
 								control={form.control}
@@ -646,7 +656,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 									<FormItem>
 										<FormLabel>Hình ảnh trang bị</FormLabel>
 										<FormControl>
-											{isUpdate ? (
+											{mode !== 'detail' ? (
 												<Input
 													placeholder="Hình ảnh trang bị"
 													type="file"
@@ -673,7 +683,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 												alt=""
 												className="w-40 h-auto object-contain"
 											/>
-											{isUpdate ? (
+											{mode !== 'detail' ? (
 												<div
 													onClick={() => handleDeleteImage(image)}
 													className="absolute size-6 flex items-center justify-center top-0 right-0 translate-x-1/2 -translate-y-1/2 cursor-pointer bg-primary rounded-full text-white"
@@ -687,7 +697,7 @@ const EquipmentSetDetailForm = ({ id, isUpdate }: Props) => {
 							)}
 						</div>
 					</div>
-					{isUpdate ? (
+					{mode !== 'detail' ? (
 						<div className="mt-10 flex items-center justify-end gap-x-5">
 							<Button
 								type="button"

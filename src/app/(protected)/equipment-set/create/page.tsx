@@ -1,7 +1,7 @@
 import EquipmentSetDetailTemplate from '@/modules/equipment-set-detail/components/templates/EquipmentSetDetailTemplate'
 
 const EquipmentSetCreatePage = () => {
-	return <EquipmentSetDetailTemplate />
+	return <EquipmentSetDetailTemplate mode="create" />
 }
 
 export default EquipmentSetCreatePage

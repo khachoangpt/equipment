@@ -3,22 +3,22 @@ import EquipmentSetDetailForm from '../organisms/EquipmentSetDetailForm'
 
 type Props = {
 	id?: string
-	isUpdate?: boolean
+	mode: 'create' | 'update' | 'detail'
 }
 
-const EquipmentSetDetailTemplate = ({ id, isUpdate }: Props) => {
+const EquipmentSetDetailTemplate = ({ id, mode }: Props) => {
 	let pageTitle = 'Thông tin trang bị'
-	if (!id) {
+	if (mode === 'create') {
 		pageTitle = 'Thêm trang bị'
 	}
-	if (isUpdate && id) {
+	if (mode === 'update') {
 		pageTitle = 'Chỉnh sửa trang bị'
 	}
 
 	return (
 		<div>
 			<PageTitle title={pageTitle} />
-			<EquipmentSetDetailForm id={id} isUpdate={isUpdate} />
+			<EquipmentSetDetailForm id={id} mode={mode} />
 			{/* <EquipmentSetActivityLogs id={id} /> */}
 		</div>
 	)

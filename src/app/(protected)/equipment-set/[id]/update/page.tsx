@@ -4,7 +4,7 @@ import type { PageProps } from '@/types'
 const EquipmentSetUpdatePage = async (props: PageProps<{ id: string }>) => {
 	const params = await props.params
 
-	return <EquipmentSetDetailTemplate id={params.id} isUpdate />
+	return <EquipmentSetDetailTemplate id={params.id} mode="update" />
 }
 
 export default EquipmentSetUpdatePage
