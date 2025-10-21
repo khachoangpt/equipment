@@ -10,6 +10,7 @@ import {
 } from '@/client/@tanstack/react-query.gen'
 import Combobox from '@/components/custom/combobox/Combobox'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
+import { TextEditorWrapper } from '@/components/custom/text-editor'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -600,54 +601,6 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={form.control}
-							name="featureConfiguration"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Cấu hình tính năng</FormLabel>
-									<FormControl>
-										{mode !== 'detail' ? (
-											<Textarea
-												placeholder="Cấu hình tính năng"
-												className="h-80"
-												{...field}
-											/>
-										) : (
-											<span className="text-muted-foreground">
-												{field.value}
-											</span>
-										)}
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<div />
-						<FormField
-							control={form.control}
-							name="technicalSpecifications"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Thông số kỹ thuật</FormLabel>
-									<FormControl>
-										{mode !== 'detail' ? (
-											<Textarea
-												placeholder="Thông số kỹ thuật"
-												className="h-16"
-												{...field}
-											/>
-										) : (
-											<span className="text-muted-foreground">
-												{field.value}
-											</span>
-										)}
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<div />
 						<div>
 							<FormField
 								control={form.control}
@@ -697,6 +650,60 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 							)}
 						</div>
 					</div>
+					<FormField
+						control={form.control}
+						name="featureConfiguration"
+						render={({ field }) => (
+							<FormItem className="mt-5">
+								<FormLabel>Cấu hình tính năng</FormLabel>
+								<FormControl>
+									{mode !== 'detail' ? (
+										<TextEditorWrapper
+											content={field.value}
+											onChange={(value) => {
+												field.onChange(value)
+											}}
+											placeholder="Cấu hình tính năng"
+											editable={true}
+											className="min-h-[400px]"
+										/>
+									) : (
+										<span
+											className="text-muted-foreground"
+											dangerouslySetInnerHTML={{ __html: field.value ?? '' }}
+										/>
+									)}
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="technicalSpecifications"
+						render={({ field }) => (
+							<FormItem className="mt-5">
+								<FormLabel>Thông số kỹ thuật</FormLabel>
+								<FormControl>
+									{mode !== 'detail' ? (
+										<TextEditorWrapper
+											content={field.value}
+											onChange={(value) => field.onChange(value)}
+											placeholder="Thông số kỹ thuật"
+											editable={true}
+											className="min-h-[400px]"
+										/>
+									) : (
+										<span
+											className="text-muted-foreground"
+											dangerouslySetInnerHTML={{ __html: field.value ?? '' }}
+										/>
+									)}
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 					{mode !== 'detail' ? (
 						<div className="mt-10 flex items-center justify-end gap-x-5">
 							<Button
