@@ -195,4 +195,47 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+	
+	/* Global heading styles */
+	h1 {
+		font-size: 2rem;
+		font-weight: 700;
+		line-height: 1.2;
+		margin: 1.5rem 0 1rem 0;
+	}
+	
+	h2 {
+		font-size: 1.5rem;
+		font-weight: 600;
+		line-height: 1.3;
+		margin: 1.25rem 0 0.75rem 0;
+	}
+	
+	h3 {
+		font-size: 1.25rem;
+		font-weight: 600;
+		line-height: 1.4;
+		margin: 1rem 0 0.5rem 0;
+	}
+	
+	h4 {
+		font-size: 1.125rem;
+		font-weight: 600;
+		line-height: 1.4;
+		margin: 0.875rem 0 0.5rem 0;
+	}
+	
+	h5 {
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1.5;
+		margin: 0.75rem 0 0.5rem 0;
+	}
+	
+	h6 {
+		font-size: 0.875rem;
+		font-weight: 600;
+		line-height: 1.5;
+		margin: 0.75rem 0 0.5rem 0;
+	}
 }

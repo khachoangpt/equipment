@@ -34,6 +34,27 @@
 	margin: 1rem 0 0.5rem 0;
 }
 
+.ProseMirror h4 {
+	font-size: 1.125rem;
+	font-weight: 600;
+	line-height: 1.4;
+	margin: 0.875rem 0 0.5rem 0;
+}
+
+.ProseMirror h5 {
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1.5;
+	margin: 0.75rem 0 0.5rem 0;
+}
+
+.ProseMirror h6 {
+	font-size: 0.875rem;
+	font-weight: 600;
+	line-height: 1.5;
+	margin: 0.75rem 0 0.5rem 0;
+}
+
 .ProseMirror p {
 	margin: 0.75rem 0;
 	line-height: 1.6;
@@ -94,6 +115,17 @@
 
 .ProseMirror a:hover {
 	color: #1d4ed8;
+}
+
+/* Color and highlight styles */
+.ProseMirror mark {
+	background-color: var(--highlight-color, #fbbf24);
+	padding: 0.125rem 0.25rem;
+	border-radius: 0.25rem;
+}
+
+.ProseMirror span[style*="color"] {
+	color: var(--text-color);
 }
 
 .ProseMirror img {

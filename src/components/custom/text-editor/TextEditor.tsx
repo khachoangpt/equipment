@@ -1,6 +1,11 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import Blockquote from '@tiptap/extension-blockquote'
@@ -38,6 +43,9 @@ import {
 	Heading1 as H1Icon,
 	Heading2 as H2Icon,
 	Heading3 as H3Icon,
+	Heading4 as H4Icon,
+	Heading5 as H5Icon,
+	Heading6 as H6Icon,
 	Highlighter as HighlightIcon,
 	Minus as HorizontalRuleIcon,
 	Italic as ItalicIcon,
@@ -51,7 +59,13 @@ import {
 	Underline as UnderlineIcon,
 	Undo as UndoIcon,
 } from 'lucide-react'
-import { forwardRef, useCallback, useImperativeHandle, useState } from 'react'
+import {
+	forwardRef,
+	useCallback,
+	useEffect,
+	useImperativeHandle,
+	useState,
+} from 'react'
 import './TextEditor.css'
 import type { TextEditorProps, TextEditorRef } from './types'
 
@@ -72,6 +86,27 @@ const TextEditor = forwardRef<TextEditorRef, TextEditorProps>(
 		const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
 		const [linkUrl, setLinkUrl] = useState('')
 		const [isEditorReady, setIsEditorReady] = useState(false)
+		const [isColorPickerOpen, setIsColorPickerOpen] = useState(false)
+		const [isMounted, setIsMounted] = useState(false)
+
+		// Color palettes
+		const textColors = [
+			'#000000',
+			'#333333',
+			'#666666',
+			'#999999',
+			'#CCCCCC',
+			'#FF0000',
+			'#FF6600',
+			'#FFCC00',
+			'#00FF00',
+			'#00CCFF',
+			'#0066FF',
+			'#6600FF',
+			'#FF00CC',
+			'#8B4513',
+			'#2F4F4F',
+		]
 
 		const editor = useEditor({
 			extensions: [
@@ -127,6 +162,44 @@ const TextEditor = forwardRef<TextEditorRef, TextEditorProps>(
 			immediatelyRender: false,
 		})
 
+		const setTextColor = useCallback(
+			(color: string) => {
+				editor?.chain().focus().setColor(color).run()
+				setIsColorPickerOpen(false)
+			},
+			[editor],
+		)
+
+		const toggleHighlight = useCallback(() => {
+			if (editor?.isActive('highlight')) {
+				editor?.chain().focus().unsetHighlight().run()
+			} else {
+				editor?.chain().focus().setHighlight({ color: '#fbbf24' }).run()
+			}
+		}, [editor])
+
+		// Sync content when prop changes
+		useEffect(() => {
+			if (editor && content !== editor.getHTML()) {
+				editor.commands.setContent(content)
+			}
+		}, [content, editor])
+
+		// Ensure editor is properly initialized with content
+		useEffect(() => {
+			if (editor && isEditorReady && content) {
+				const currentContent = editor.getHTML()
+				if (currentContent !== content && currentContent !== '<p></p>') {
+					editor.commands.setContent(content)
+				}
+			}
+		}, [editor, isEditorReady, content])
+
+		// Handle client-side mounting
+		useEffect(() => {
+			setIsMounted(true)
+		}, [])
+
 		const setLink = useCallback(() => {
 			if (linkUrl === '') {
 				editor?.chain().focus().extendMarkRange('link').unsetLink().run()
@@ -166,6 +239,17 @@ const TextEditor = forwardRef<TextEditorRef, TextEditorProps>(
 			}),
 			[editor],
 		)
+
+		// Don't render on server side
+		if (!isMounted) {
+			return (
+				<div className="border border-gray-200 rounded-lg overflow-hidden">
+					<div className="min-h-[200px] flex items-center justify-center bg-gray-50">
+						<div className="text-gray-500">Loading editor...</div>
+					</div>
+				</div>
+			)
+		}
 
 		if (!editor) {
 			return null
@@ -283,6 +367,39 @@ const TextEditor = forwardRef<TextEditorRef, TextEditorProps>(
 								}
 							>
 								<H3Icon className="h-4 w-4" />
+							</Button>
+							<Button
+								variant={
+									editor.isActive('heading', { level: 4 }) ? 'default' : 'ghost'
+								}
+								size="sm"
+								onClick={() =>
+									editor.chain().focus().toggleHeading({ level: 4 }).run()
+								}
+							>
+								<H4Icon className="h-4 w-4" />
+							</Button>
+							<Button
+								variant={
+									editor.isActive('heading', { level: 5 }) ? 'default' : 'ghost'
+								}
+								size="sm"
+								onClick={() =>
+									editor.chain().focus().toggleHeading({ level: 5 }).run()
+								}
+							>
+								<H5Icon className="h-4 w-4" />
+							</Button>
+							<Button
+								variant={
+									editor.isActive('heading', { level: 6 }) ? 'default' : 'ghost'
+								}
+								size="sm"
+								onClick={() =>
+									editor.chain().focus().toggleHeading({ level: 6 }).run()
+								}
+							>
+								<H6Icon className="h-4 w-4" />
 							</Button>
 						</div>
 
@@ -405,23 +522,38 @@ const TextEditor = forwardRef<TextEditorRef, TextEditorProps>(
 
 						{/* Colors */}
 						<div className="flex gap-1">
-							<Button
-								variant="ghost"
-								size="sm"
-								onClick={() => editor.chain().focus().setColor('#958DF1').run()}
+							<Popover
+								open={isColorPickerOpen}
+								onOpenChange={setIsColorPickerOpen}
 							>
-								<ColorIcon className="h-4 w-4" />
-							</Button>
+								<PopoverTrigger asChild>
+									<Button variant="ghost" size="sm">
+										<ColorIcon className="h-4 w-4" />
+									</Button>
+								</PopoverTrigger>
+								<PopoverContent className="w-64 p-3">
+									<div className="space-y-2">
+										<h4 className="text-sm font-medium">Text Color</h4>
+										<div className="grid grid-cols-5 gap-2">
+											{textColors.map((color) => (
+												<button
+													key={color}
+													type="button"
+													className="w-8 h-8 rounded border border-gray-300 hover:scale-110 transition-transform"
+													style={{ backgroundColor: color }}
+													onClick={() => setTextColor(color)}
+													title={color}
+												/>
+											))}
+										</div>
+									</div>
+								</PopoverContent>
+							</Popover>
+
 							<Button
-								variant="ghost"
+								variant={editor.isActive('highlight') ? 'default' : 'ghost'}
 								size="sm"
-								onClick={() =>
-									editor
-										.chain()
-										.focus()
-										.setHighlight({ color: '#fbbf24' })
-										.run()
-								}
+								onClick={toggleHighlight}
 							>
 								<HighlightIcon className="h-4 w-4" />
 							</Button>
