@@ -6,6 +6,7 @@ import {
 	syncEquipmentControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import Combobox from '@/components/custom/combobox/Combobox'
+import { TextEditorWrapper } from '@/components/custom/text-editor'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import {
@@ -306,10 +307,14 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 							<FormItem className="mt-5">
 								<FormLabel>Tính năng kỹ thuật</FormLabel>
 								<FormControl>
-									<Textarea
+									<TextEditorWrapper
+										content={field.value}
+										onChange={(value) => {
+											field.onChange(value)
+										}}
 										placeholder="Tính năng kỹ thuật"
-										className="h-40 w-2/3"
-										{...field}
+										editable={true}
+										className="min-h-[400px]"
 									/>
 								</FormControl>
 								<FormMessage />

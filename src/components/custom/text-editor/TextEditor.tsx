@@ -18,14 +18,9 @@ import FontFamily from '@tiptap/extension-font-family'
 import Highlight from '@tiptap/extension-highlight'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Italic from '@tiptap/extension-italic'
-import Link from '@tiptap/extension-link'
 import ListItem from '@tiptap/extension-list-item'
 import OrderedList from '@tiptap/extension-ordered-list'
 import Strike from '@tiptap/extension-strike'
-import { Table } from '@tiptap/extension-table'
-import { TableCell } from '@tiptap/extension-table-cell'
-import { TableHeader } from '@tiptap/extension-table-header'
-import { TableRow } from '@tiptap/extension-table-row'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Underline } from '@tiptap/extension-underline'
@@ -49,13 +44,11 @@ import {
 	Highlighter as HighlightIcon,
 	Minus as HorizontalRuleIcon,
 	Italic as ItalicIcon,
-	Link as LinkIcon,
 	List as ListIcon,
 	ListOrdered as OrderedListIcon,
 	Quote as QuoteIcon,
 	Redo as RedoIcon,
 	Strikethrough as StrikeIcon,
-	Table as TableIcon,
 	Underline as UnderlineIcon,
 	Undo as UndoIcon,
 } from 'lucide-react'
@@ -83,8 +76,6 @@ const TextEditor = forwardRef<TextEditorRef, TextEditorProps>(
 		},
 		ref,
 	) => {
-		const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
-		const [linkUrl, setLinkUrl] = useState('')
 		const [isEditorReady, setIsEditorReady] = useState(false)
 		const [isColorPickerOpen, setIsColorPickerOpen] = useState(false)
 		const [isMounted, setIsMounted] = useState(false)
@@ -129,18 +120,6 @@ const TextEditor = forwardRef<TextEditorRef, TextEditorProps>(
 				TextAlign.configure({
 					types: ['heading', 'paragraph'],
 				}),
-				Link.configure({
-					openOnClick: false,
-					HTMLAttributes: {
-						class: 'text-blue-500 underline cursor-pointer',
-					},
-				}),
-				Table.configure({
-					resizable: true,
-				}),
-				TableRow,
-				TableHeader,
-				TableCell,
 			],
 			content,
 			editable,
@@ -199,30 +178,6 @@ const TextEditor = forwardRef<TextEditorRef, TextEditorProps>(
 		useEffect(() => {
 			setIsMounted(true)
 		}, [])
-
-		const setLink = useCallback(() => {
-			if (linkUrl === '') {
-				editor?.chain().focus().extendMarkRange('link').unsetLink().run()
-				return
-			}
-
-			editor
-				?.chain()
-				.focus()
-				.extendMarkRange('link')
-				.setLink({ href: linkUrl })
-				.run()
-			setIsLinkModalOpen(false)
-			setLinkUrl('')
-		}, [editor, linkUrl])
-
-		const addTable = useCallback(() => {
-			editor
-				?.chain()
-				.focus()
-				.insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-				.run()
-		}, [editor])
 
 		// Expose methods through ref
 		useImperativeHandle(
@@ -504,22 +459,6 @@ const TextEditor = forwardRef<TextEditorRef, TextEditorProps>(
 
 						<Separator orientation="vertical" className="h-8" />
 
-						{/* Media & Links */}
-						<div className="flex gap-1">
-							<Button
-								variant="ghost"
-								size="sm"
-								onClick={() => setIsLinkModalOpen(true)}
-							>
-								<LinkIcon className="h-4 w-4" />
-							</Button>
-							<Button variant="ghost" size="sm" onClick={addTable}>
-								<TableIcon className="h-4 w-4" />
-							</Button>
-						</div>
-
-						<Separator orientation="vertical" className="h-8" />
-
 						{/* Colors */}
 						<div className="flex gap-1">
 							<Popover
@@ -571,43 +510,6 @@ const TextEditor = forwardRef<TextEditorRef, TextEditorProps>(
 				>
 					<EditorContent editor={editor} placeholder={placeholder} />
 				</div>
-
-				{/* Link Modal */}
-				{isLinkModalOpen && (
-					<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-						<div className="bg-white p-6 rounded-lg shadow-lg w-96">
-							<h3 className="text-lg font-semibold mb-4">Add Link</h3>
-							<input
-								type="url"
-								placeholder="Enter URL"
-								value={linkUrl}
-								onChange={(e) => setLinkUrl(e.target.value)}
-								className="w-full p-2 border border-gray-300 rounded mb-4"
-								onKeyDown={(e) => {
-									if (e.key === 'Enter') {
-										setLink()
-									}
-									if (e.key === 'Escape') {
-										setIsLinkModalOpen(false)
-										setLinkUrl('')
-									}
-								}}
-							/>
-							<div className="flex gap-2 justify-end">
-								<Button
-									variant="outline"
-									onClick={() => {
-										setIsLinkModalOpen(false)
-										setLinkUrl('')
-									}}
-								>
-									Cancel
-								</Button>
-								<Button onClick={setLink}>Add Link</Button>
-							</div>
-						</div>
-					</div>
-				)}
 			</div>
 		)
 	},
