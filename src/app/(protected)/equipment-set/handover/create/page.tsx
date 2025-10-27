@@ -1,7 +1,6 @@
 import HandoverDetailTemplate from '@/modules/equipment-set-handover-detail/components/templates/HandOverCreateTemplate'
 
-const HandOverCreatePage = () => {
+const HandOverCreatePage = async () => {
 	return <HandoverDetailTemplate />
 }
-
 export default HandOverCreatePage

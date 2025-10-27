@@ -80,10 +80,6 @@ const categoryEquipmentSetDetailSchema = z.object({
 		.string({ required_error: 'Chưa chọn lĩnh vực' })
 		.trim()
 		.min(1, 'Chưa chọn lĩnh vực'),
-	countryOfOrigin: z
-		.string({ required_error: 'Chưa nhập nhập nước sản xuất' })
-		.trim()
-		.min(1, 'Chưa nhập nhập nước sản xuất'),
 	defaultAmount: z
 		.number({
 			required_error: 'Chưa nhập số tiền ban đầu',

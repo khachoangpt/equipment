@@ -1,8 +1,18 @@
 'use client'
-import { equipmentHandoverControllerGenerateHandoverReportFromLogMutation } from '@/client/@tanstack/react-query.gen'
+import {
+	equipmentHandoverControllerDeleteMutation,
+	equipmentHandoverControllerGenerateHandoverReportFromLogMutation,
+	equipmentHandoverControllerSearchQueryKey,
+} from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
+import { queryClient } from '@/configs/query-client'
+import { pageList } from '@/configs/routes'
+import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
 import { useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
+import Link from 'next/link'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 export const columns: ColumnDef<any>[] = [
 	{
@@ -53,17 +63,19 @@ export const columns: ColumnDef<any>[] = [
 		enableResizing: false,
 		size: 1,
 		cell: ({ row }) => {
-			// const [open, setOpen] = useState<boolean>(false)
+			const [openDelete, setOpenDelete] = useState<boolean>(false)
 
-			// const handleDelete = () => {
-			// 	setOpen(false)
-			// }
-			const { mutateAsync, isPending } = useMutation({
-				...equipmentHandoverControllerGenerateHandoverReportFromLogMutation(),
+			const { mutateAsync: generateReport, isPending: isGeneratingReport } =
+				useMutation({
+					...equipmentHandoverControllerGenerateHandoverReportFromLogMutation(),
+				})
+
+			const { mutate: deleteHandover } = useMutation({
+				...equipmentHandoverControllerDeleteMutation(),
 			})
 
 			const handleGenerateReport = async () => {
-				const res = await mutateAsync({
+				const res = await generateReport({
 					path: { id: row.original._id },
 					responseType: 'arraybuffer',
 				})
@@ -74,32 +86,72 @@ export const columns: ColumnDef<any>[] = [
 				)
 			}
 
+			const handleDelete = () => {
+				deleteHandover(
+					{ path: { id: row.original._id } },
+					{
+						onSuccess: () => {
+							setOpenDelete(false)
+							toast.success('Xóa thành công')
+							queryClient.invalidateQueries({
+								queryKey: equipmentHandoverControllerSearchQueryKey(),
+							})
+						},
+						onError: (error) => {
+							setOpenDelete(false)
+							toast.error(
+								<div
+									dangerouslySetInnerHTML={{
+										__html: (error.response?.data as any)?.message,
+									}}
+								/>,
+							)
+						},
+					},
+				)
+			}
+
 			return (
 				<div className="flex items-center justify-end gap-x-3">
 					<Button
 						variant={'ghost'}
-						disabled={isPending}
+						disabled={isGeneratingReport}
 						onClick={handleGenerateReport}
-						className="text-green-600 cursor-pointer"
+						className="text-amber-700 p-0 cursor-pointer font-normal"
 					>
 						Xuất Excel
 					</Button>
-					{/* <Link href={'#'} className="text-blue-600">
-						Chỉnh sửa
+					<Link
+						href={
+							pageList.equipmentSetHandoverDetail({ id: row.original._id }).href
+						}
+						className="text-green-600"
+					>
+						Chi tiết
+					</Link>
+					<Link
+						href={
+							pageList.equipmentSetHandoverDetailUpdate({
+								id: row.original._id,
+							}).href
+						}
+						className="text-blue-600"
+					>
+						Sửa
 					</Link>
 					<p
 						className="text-red-600 cursor-pointer"
-						onClick={() => setOpen(true)}
+						onClick={() => setOpenDelete(true)}
 					>
 						Xoá
 					</p>
 					<DialogConfirmDelete
 						title="Xoá hoạt động bàn giao"
 						description="Bạn có chắc chắn muốn xoá hoạt động bàn giao này"
-						open={open}
-						onOpenChange={setOpen}
+						open={openDelete}
+						onOpenChange={setOpenDelete}
 						onConfirm={handleDelete}
-					/> */}
+					/>
 				</div>
 			)
 		},

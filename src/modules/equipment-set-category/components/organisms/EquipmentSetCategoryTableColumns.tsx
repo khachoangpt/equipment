@@ -34,10 +34,6 @@ export const columns: ColumnDef<Equipment>[] = [
 		header: 'Lĩnh vực',
 	},
 	{
-		accessorKey: 'countryOfOrigin',
-		header: 'Nước sản xuất',
-	},
-	{
 		accessorKey: 'initialPrice',
 		header: 'Giá tiền ban đầu',
 		cell: ({ row }) => (

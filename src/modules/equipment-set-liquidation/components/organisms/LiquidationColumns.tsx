@@ -20,11 +20,11 @@ export const columns: ColumnDef<any>[] = [
 		accessorKey: 'decisionNumber',
 		header: 'Số quyết định',
 	},
-	{
-		accessorKey: 'unitId',
-		header: 'Đơn vị',
-		cell: ({ row }) => row.original?.unitId?.name,
-	},
+	// {
+	// 	accessorKey: 'unitId',
+	// 	header: 'Đơn vị',
+	// 	cell: ({ row }) => row.original?.unitId?.name,
+	// },
 	{
 		accessorKey: 'details.disposalDate',
 		header: 'Thời gian',

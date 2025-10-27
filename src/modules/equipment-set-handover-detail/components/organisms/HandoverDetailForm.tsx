@@ -30,14 +30,14 @@ import { useQuery } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import { ArrowBigLeftDash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import useHandoverDetailController from '../../controllers/handover-detail.controller'
+import { useHandoverDetailController } from '../../controllers/handover-detail.controller'
 
 type Props = {
 	id?: string
 }
 
 const HandoverDetailForm = ({ id }: Props) => {
-	const { form, onSubmit } = useHandoverDetailController({ id })
+	const { form, onSubmit, isUpdating } = useHandoverDetailController(id)
 	const { control } = form
 	const router = useRouter()
 
@@ -154,27 +154,11 @@ const HandoverDetailForm = ({ id }: Props) => {
 							name="handoverDate"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Thời gian</FormLabel>
-									<FormControl>
-										<DatePicker
-											onChange={(e) => field.onChange(e.toString())}
-											value={new Date(field.value)}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={control}
-							name="handoverDate"
-							render={({ field }) => (
-								<FormItem>
 									<FormLabel>Ngày giao</FormLabel>
 									<FormControl>
 										<DatePicker
 											onChange={(e) => field.onChange(e.toString())}
-											value={new Date(field.value)}
+											value={field.value ? new Date(field.value) : new Date()}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -316,7 +300,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 												<Combobox
 													onChange={field.onChange}
 													options={equipments || []}
-													value={field.value}
+													value={field.value || ''}
 												/>
 											</div>
 										</FormControl>
@@ -362,8 +346,8 @@ const HandoverDetailForm = ({ id }: Props) => {
 						>
 							Quay lại
 						</Button>
-						<Button onClick={form.handleSubmit(onSubmit)}>
-							{id ? 'Cập nhật' : 'Thêm'}
+						<Button onClick={form.handleSubmit(onSubmit)} disabled={isUpdating}>
+							{isUpdating ? 'Đang xử lý...' : id ? 'Cập nhật' : 'Thêm'}
 						</Button>
 					</div>
 				</Form>

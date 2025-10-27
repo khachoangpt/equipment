@@ -492,6 +492,95 @@ export type CreateUserHistoryDto = {
  */
 export type operation = 'CREATE' | 'UPDATE' | 'DELETE';
 
+export type DisposalByDecisionResponseDto = {
+    /**
+     * ID của bản ghi thanh lý
+     */
+    _id: string;
+    /**
+     * Số quyết định thanh lý
+     */
+    decisionNumber: string;
+    /**
+     * Ngày thanh lý
+     */
+    disposalDate: string;
+    /**
+     * Người ký
+     */
+    signer: string;
+    /**
+     * Người phê duyệt
+     */
+    approver?: string;
+    /**
+     * Người phê duyệt thanh lý
+     */
+    disposalApprovedBy?: string;
+    /**
+     * Người từ chối thanh lý
+     */
+    disposalRejectedBy?: string;
+    /**
+     * Đơn vị giao
+     */
+    fromUnitId: {
+        [key: string]: unknown;
+    };
+    /**
+     * Số hóa đơn
+     */
+    invoiceNumber?: string;
+    /**
+     * Ghi chú
+     */
+    notes?: string;
+    /**
+     * Bình luận
+     */
+    comment?: string;
+    /**
+     * Loại thanh lý
+     */
+    type?: string;
+    /**
+     * Người tạo
+     */
+    createdById: {
+        [key: string]: unknown;
+    };
+    /**
+     * Ngày tạo
+     */
+    createdAt: string;
+    /**
+     * Ngày cập nhật
+     */
+    updatedAt: string;
+    /**
+     * Danh sách trang bị thanh lý
+     */
+    items: Array<DisposeItemWithDetailsDto>;
+    /**
+     * Chi tiết trang bị
+     */
+    equipmentDetails: Array<{
+        [key: string]: unknown;
+    }>;
+    /**
+     * Tổng số mục thanh lý
+     */
+    totalItems: number;
+    /**
+     * Tổng số lượng thanh lý
+     */
+    totalQuantity: number;
+    /**
+     * Số lượng bản ghi thanh lý
+     */
+    recordCount: number;
+};
+
 export type DisposeDto = {
     /**
      * Số quyết định thanh lý
@@ -529,6 +618,31 @@ export type DisposeItem = {
      * Ghi chú riêng cho từng món
      */
     notes?: string;
+};
+
+export type DisposeItemWithDetailsDto = {
+    /**
+     * ID của trang bị
+     */
+    instanceId: string;
+    /**
+     * Số lượng thanh lý
+     */
+    quantity: number;
+    /**
+     * Đơn vị tính
+     */
+    unitOfMeasure: string;
+    /**
+     * Ghi chú
+     */
+    notes?: string;
+    /**
+     * Chi tiết trang bị
+     */
+    equipmentDetails?: {
+        [key: string]: unknown;
+    };
 };
 
 export type DocumentAttachment = {
@@ -2353,6 +2467,16 @@ export type EquipmentDisposeControllerFindByInstanceIdData = {
 export type EquipmentDisposeControllerFindByInstanceIdResponse = (EquipmentDispose);
 
 export type EquipmentDisposeControllerFindByInstanceIdError = (unknown);
+
+export type EquipmentDisposeControllerFindByDecisionNumberData = {
+    path: {
+        decisionNumber: string;
+    };
+};
+
+export type EquipmentDisposeControllerFindByDecisionNumberResponse = (DisposalByDecisionResponseDto);
+
+export type EquipmentDisposeControllerFindByDecisionNumberError = (unknown);
 
 export type EquipmentDisposeControllerGenerateLiquidationFormLayoutResponse = (unknown);
 

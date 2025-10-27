@@ -19,7 +19,6 @@ const useCategoryEquipmentSetDetailController = ({ id }: Props) => {
 		field: '',
 		defaultAmount: 0,
 		note: '',
-		countryOfOrigin: '',
 	}
 	const categoryEquipmentSetDetailForm =
 		useForm<CategoryEquipmentSetDetailSchema>({

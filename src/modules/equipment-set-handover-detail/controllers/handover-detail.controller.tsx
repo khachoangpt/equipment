@@ -1,109 +1,189 @@
-import type { ObjectId } from '@/client'
+'use client'
+
 import {
-	activityLogsControllerFindByInstanceOptions,
 	equipmentHandoverControllerHandoverMutation,
-	equipmentInstancesControllerSearchQueryKey,
+	equipmentHandoverControllerSearchOptions,
+	equipmentHandoverControllerSearchQueryKey,
+	equipmentHandoverControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
-import { pageList } from '@/configs/routes'
-import type { CreateEquipmentSetHandoverSchema } from '@/configs/schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
-import { type SubmitHandler, useForm } from 'react-hook-form'
+import React from 'react'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { z } from 'zod'
 
-type Props = {
-	id?: string
-}
+const handoverDetailSchema = z.object({
+	reportNumber: z.string().min(1, 'Số biên bản bàn giao là bắt buộc'),
+	receiver: z.string().optional(),
+	approver: z.string().optional(),
+	sender: z.string().optional(),
+	handoverApprovedBy: z.string().optional(),
+	handoverRejectedBy: z.string().optional(),
+	fromUnitId: z.string().min(1, 'Đơn vị giao là bắt buộc'),
+	toUnitId: z.string().min(1, 'Đơn vị nhận là bắt buộc'),
+	handoverDate: z.string().min(1, 'Ngày bàn giao là bắt buộc'),
+	comment: z.string().optional(),
+	type: z.enum(['handover', 'recall']).optional(),
+	items: z.array(z.any()).min(1, 'Danh sách trang bị không được để trống'),
+	// Fields for equipment selection
+	selectedEquipmentName: z.string().optional(),
+	selectedEquipmentQuantity: z.string().optional(),
+	selectedEquipmentNote: z.string().optional(),
+})
 
-const useHandoverDetailController = ({ id }: Props) => {
-	const defaultValues: CreateEquipmentSetHandoverSchema & {
-		selectedEquipmentName: string
-		selectedEquipmentQuantity: string
-		selectedEquipmentNote: string
-	} = {
-		handoverDate: new Date().toISOString(),
-		reportNumber: '',
-		approver: '',
-		comment: '',
-		fromUnitId: '',
-		toUnitId: '',
-		handoverApprovedBy: '',
-		handoverRejectedBy: '',
-		items: [],
-		receiver: '',
-		sender: '',
-		selectedEquipmentName: '',
-		selectedEquipmentNote: '',
-		selectedEquipmentQuantity: '',
-	}
-	const form = useForm<
-		CreateEquipmentSetHandoverSchema & {
-			selectedEquipmentName: string
-			selectedEquipmentQuantity: string
-			selectedEquipmentNote: string
-		}
-	>({
-		defaultValues,
-	})
-	const { data: handoverFound, isFetching } = useQuery({
-		...activityLogsControllerFindByInstanceOptions({
-			path: { instanceId: id ?? '' },
-		}),
-	})
-	const { mutate: create } = useMutation({
-		...equipmentHandoverControllerHandoverMutation(),
-	})
+export type HandoverDetailFormData = z.infer<typeof handoverDetailSchema>
+
+export const useHandoverDetailController = (id?: string) => {
 	const router = useRouter()
 
-	useEffect(() => {
-		if (!id) return
+	const { data: handoverDetail, isFetching } = useQuery({
+		...equipmentHandoverControllerSearchOptions({
+			query: {
+				limit: 1,
+				page: 1,
+				_id: id,
+			},
+		}),
+		enabled: !!id,
+		select: (data: any) => data?.data?.[0],
+	})
 
-		if (handoverFound) {
-			form.reset({})
+	const form = useForm<HandoverDetailFormData>({
+		resolver: zodResolver(handoverDetailSchema),
+		defaultValues: {
+			reportNumber: '',
+			receiver: '',
+			approver: '',
+			sender: '',
+			handoverApprovedBy: '',
+			handoverRejectedBy: '',
+			fromUnitId: '',
+			toUnitId: '',
+			handoverDate: '',
+			comment: '',
+			type: 'handover',
+			items: [],
+			selectedEquipmentName: '',
+			selectedEquipmentQuantity: '',
+			selectedEquipmentNote: '',
+		},
+	})
+
+	const { mutate: updateHandover, isPending: isUpdating } = useMutation({
+		...equipmentHandoverControllerUpdateMutation(),
+	})
+
+	const { mutate: createHandover, isPending: isCreating } = useMutation({
+		...equipmentHandoverControllerHandoverMutation(),
+	})
+
+	const onSubmit = (data: HandoverDetailFormData) => {
+		const submitData = {
+			...data,
+			items: data.items.map((item: any) => ({
+				instanceId: item.instanceId,
+				unitOfMeasure: item.unitOfMeasure || 'Bộ',
+				quantity: item.quantity,
+				notes: item.note || '',
+			})),
 		}
-	}, [id, isFetching])
 
-	const onSubmit: SubmitHandler<CreateEquipmentSetHandoverSchema> = (data) => {
-		create(
-			{
-				body: {
-					fromUnitId: data.fromUnitId as unknown as ObjectId,
-					handoverDate: new Date(data.handoverDate).toISOString(),
-					reportNumber: data.reportNumber,
-					toUnitId: data.toUnitId as unknown as ObjectId,
-					approver: data.approver,
-					comment: data.comment,
-					receiver: data.receiver,
-					sender: data.sender,
-					handoverApprovedBy: data.handoverApprovedBy,
-					handoverRejectedBy: data.handoverRejectedBy,
-					items: (data.items || []) as any,
+		if (id) {
+			// Update existing handover
+			updateHandover(
+				{
+					path: { id },
+					body: submitData as any,
 				},
-			},
-			{
-				onError: (error) => {
-					toast.error(
-						<div
-							dangerouslySetInnerHTML={{
-								__html: (error.response?.data as any)?.message,
-							}}
-						/>,
-					)
+				{
+					onSuccess: () => {
+						toast.success('Cập nhật thành công')
+						queryClient.invalidateQueries({
+							queryKey: equipmentHandoverControllerSearchQueryKey(),
+						})
+						router.push('/equipment-set/handover')
+					},
+					onError: (error: any) => {
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
+					},
 				},
-				onSuccess: () => {
-					toast.success('Tạo thành công')
-					queryClient.invalidateQueries({
-						queryKey: equipmentInstancesControllerSearchQueryKey(),
-					})
-					router.push(pageList.equipmentSetHandover.href)
+			)
+		} else {
+			// Create new handover
+			createHandover(
+				{
+					body: submitData as any,
 				},
-			},
-		)
+				{
+					onSuccess: () => {
+						toast.success('Tạo mới thành công')
+						queryClient.invalidateQueries({
+							queryKey: equipmentHandoverControllerSearchQueryKey(),
+						})
+						router.push('/equipment-set/handover')
+					},
+					onError: (error: any) => {
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
+					},
+				},
+			)
+		}
 	}
 
-	return { form, onSubmit }
-}
+	// Populate form when data is loaded
+	React.useEffect(() => {
+		if (handoverDetail) {
+			form.reset({
+				reportNumber: handoverDetail.reportNumber || '',
+				receiver: handoverDetail.receiver || '',
+				approver: handoverDetail.approver || '',
+				sender: handoverDetail.sender || '',
+				handoverApprovedBy: handoverDetail.handoverApprovedBy || '',
+				handoverRejectedBy: handoverDetail.handoverRejectedBy || '',
+				fromUnitId: handoverDetail.fromUnitId?._id || '',
+				toUnitId: handoverDetail.toUnitId?._id || '',
+				handoverDate: handoverDetail.handoverDate
+					? new Date(handoverDetail.handoverDate).toISOString().split('T')[0]
+					: '',
+				comment: handoverDetail.comment || '',
+				type: handoverDetail.type || 'handover',
+				items:
+					handoverDetail.items?.map((item: any) => {
+						return {
+							instanceId: item.instanceId?._id || item.instanceId,
+							componentName: item.instanceId?.name || 'N/A',
+							unitOfMeasure: item.unitOfMeasure || 'Bộ',
+							quantity: item.quantity || 0,
+							note: item.notes || '',
+						}
+					}) || [],
+				selectedEquipmentName: '',
+				selectedEquipmentQuantity: '',
+				selectedEquipmentNote: '',
+			})
+		}
+	}, [handoverDetail, form])
 
-export default useHandoverDetailController
+	return {
+		form,
+		onSubmit,
+		handoverDetail,
+		isFetching,
+		isUpdating: isUpdating || isCreating,
+	}
+}

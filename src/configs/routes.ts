@@ -107,10 +107,16 @@ export const pageList = {
 		pattern: ['equipment-set', 'handover', 'create'],
 	},
 	equipmentSetHandoverDetail: (config?: { id?: string }) => ({
-		title: 'Create Equipment Set Handover',
+		title: 'Equipment Set Handover Detail',
 		href: `/equipment-set/handover/${config?.id}`,
 		isAuth: true,
 		pattern: ['equipment-set', 'handover', ''],
+	}),
+	equipmentSetHandoverDetailUpdate: (config?: { id?: string }) => ({
+		title: 'Equipment Set Handover Detail Update',
+		href: `/equipment-set/handover/${config?.id}/update`,
+		isAuth: true,
+		pattern: ['equipment-set', 'handover', 'update', ''],
 	}),
 	equipmentSetMaintenance: {
 		title: 'Equipment Set maintenance',
