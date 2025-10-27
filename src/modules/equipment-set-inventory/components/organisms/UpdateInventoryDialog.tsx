@@ -1,6 +1,10 @@
 'use client'
 
-import { qualityLevelsControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
+import {
+	equipmentInstancesControllerSearchQueryKey,
+	equipmentInstancesControllerUpdateMutation,
+	qualityLevelsControllerFindAllOptions,
+} from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import {
 	Dialog,
@@ -27,9 +31,9 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { queryClient } from '@/configs/query-client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -49,15 +53,15 @@ type Props = {
 }
 
 const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
-	const [isLoading, setIsLoading] = useState(false)
-
-	// equipmentId will be used in actual API call
-
 	const { data: qualityLevels } = useQuery({
 		...qualityLevelsControllerFindAllOptions(),
 		select(data) {
-			return data?.data
+			return data?.data?.slice()?.sort((a, b) => a.name.localeCompare(b.name))
 		},
+	})
+
+	const { mutate: updateInventory, isPending: isLoading } = useMutation({
+		...equipmentInstancesControllerUpdateMutation(),
 	})
 
 	const form = useForm<UpdateInventoryForm>({
@@ -70,40 +74,39 @@ const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
 	})
 
 	const onSubmit = async (formData: UpdateInventoryForm) => {
-		setIsLoading(true)
-		try {
-			// TODO: Implement API call to update inventory
-			// This would be something like:
-			// await updateInventoryMutation({
-			//   equipmentId,
-			//   qualityLevelId: formData.qualityLevelId,
-			//   status: formData.status,
-			//   note: formData.note,
-			// })
-
-			// Simulate API call - using equipmentId and formData to avoid unused variable warnings
-			// In real implementation, this would be:
-			// await updateInventoryAPI({ equipmentId, ...formData })
-
-			// Simulate delay
-			await new Promise((resolve) => setTimeout(resolve, 1000))
-
-			// Validate that we have the required data
-			const hasRequiredData =
-				equipmentId && formData.qualityLevelId && formData.status
-			if (!hasRequiredData) {
-				throw new Error('Missing required data for inventory update')
-			}
-
-			toast.success('Cập nhật kiểm kê thành công')
-			onOpenChange(false)
-			form.reset()
-		} catch (err) {
-			console.error('Error updating inventory:', err)
-			toast.error('Có lỗi xảy ra khi cập nhật kiểm kê')
-		} finally {
-			setIsLoading(false)
-		}
+		updateInventory(
+			{
+				path: {
+					id: equipmentId,
+				},
+				body: {
+					qualityLevelId: formData.qualityLevelId,
+					status: formData.status,
+					notes: formData.note,
+				},
+			},
+			{
+				onSuccess: () => {
+					toast.success('Cập nhật kiểm kê thành công')
+					queryClient.invalidateQueries({
+						queryKey: equipmentInstancesControllerSearchQueryKey(),
+					})
+					onOpenChange(false)
+					form.reset()
+				},
+				onError: (error) => {
+					toast.error(
+						<div
+							dangerouslySetInnerHTML={{
+								__html:
+									(error.response?.data as any)?.message ||
+									'Có lỗi xảy ra khi cập nhật kiểm kê',
+							}}
+						/>,
+					)
+				},
+			},
+		)
 	}
 
 	const handleClose = () => {

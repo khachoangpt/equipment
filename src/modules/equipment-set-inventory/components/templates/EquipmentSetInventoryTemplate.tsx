@@ -75,7 +75,7 @@ const EquipmentSetInventoryTemplate = () => {
 	return (
 		<div className="pb-10">
 			<div className="text-center mb-10">
-				<h3 className="font-bold text-3xl">Hoạt động kiểm kê</h3>
+				<h3 className="font-bold text-3xl">Kiểm kê trang bị</h3>
 			</div>
 			<SearchEquipmentSetInventory onOpenChange={setOpen} open={open} />
 			<div className="flex justify-between items-center mt-5">

@@ -34,7 +34,7 @@ const SearchEquipmentSetInventory = ({ onOpenChange, open }: Props) => {
 	const { data: quantityList } = useQuery({
 		...qualityLevelsControllerFindAllOptions(),
 		select(data) {
-			return data?.data
+			return data?.data?.slice()?.sort((a, b) => a.name.localeCompare(b.name))
 		},
 	})
 	const { data: typeGroups } = useQuery({

@@ -75,7 +75,7 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 	const { data: quantityList } = useQuery({
 		...qualityLevelsControllerFindAllOptions(),
 		select(data) {
-			return data?.data
+			return data?.data?.slice()?.sort((a, b) => a.name.localeCompare(b.name))
 		},
 	})
 	const { uploadFile } = useUploadFile()
