@@ -94,6 +94,11 @@ const AppSidebar = () => {
 					id: 'thanh-ly',
 					href: pageList.equipmentSetLiquidation.href,
 				},
+				{
+					label: 'Kiểm kê',
+					id: 'kiem-ke',
+					href: pageList.equipmentSetInventory.href,
+				},
 			],
 		},
 		{

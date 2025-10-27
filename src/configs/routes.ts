@@ -148,6 +148,12 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['equipment-set', 'liquidation', ''],
 	}),
+	equipmentSetInventory: {
+		title: 'Equipment Set Inventory',
+		href: '/equipment-set/inventory',
+		isAuth: true,
+		pattern: ['equipment-set', 'inventory'],
+	},
 	assembledEquipment: {
 		title: 'Assembled Equipment',
 		href: '/assembled-equipment',

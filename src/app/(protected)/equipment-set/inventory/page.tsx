@@ -1,5 +1,7 @@
+import EquipmentSetInventoryTemplate from '@/modules/equipment-set-inventory/components/templates/EquipmentSetInventoryTemplate'
+
 const EquipmentSetInventoryPage = () => {
-	return <div>EquipmentSetInventoryPage</div>
+	return <EquipmentSetInventoryTemplate />
 }
 
 export default EquipmentSetInventoryPage
