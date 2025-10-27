@@ -1,4 +1,4 @@
-import { equipmentDisposeControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
+import { equipmentDisposeControllerFindByDecisionNumberOptions } from '@/client/@tanstack/react-query.gen'
 import type { CreateEquipmentDisposalSchema } from '@/configs/schema'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
@@ -37,7 +37,9 @@ const useLiquidationDetailController = ({ id }: Props) => {
 	})
 
 	const { data: liquidationData } = useQuery({
-		...equipmentDisposeControllerFindOneOptions({ path: { id: id || '' } }),
+		...equipmentDisposeControllerFindByDecisionNumberOptions({
+			path: { decisionNumber: id || '' },
+		}),
 		enabled: Boolean(id),
 	})
 
@@ -52,17 +54,17 @@ const useLiquidationDetailController = ({ id }: Props) => {
 		form.reset({
 			decisionNumber: liquidationData.decisionNumber,
 			disposalDate: liquidationData.disposalDate,
-			fromUnitId: liquidationData.fromUnitId?._id || '',
+			fromUnitId: (liquidationData.fromUnitId as any)?._id || '',
 			signer: liquidationData.signer,
 			notes: liquidationData.notes,
 			createdBy: liquidationData.approver,
 			items:
-				liquidationData.items?.map((item: any) => ({
+				liquidationData.items?.map((item) => ({
 					instanceId: item.instanceId,
-					componentName: item.componentName,
+					componentName: item?.equipmentDetails?.name || 'N/A',
 					unitOfMeasure: item.unitOfMeasure || 'Bộ',
 					quantity: item.quantity,
-					note: item.note || '',
+					notes: item.notes ?? '',
 				})) || [],
 			selectedEquipmentName: '',
 			selectedEquipmentNote: '',

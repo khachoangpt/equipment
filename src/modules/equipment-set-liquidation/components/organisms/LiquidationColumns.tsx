@@ -76,8 +76,9 @@ export const columns: ColumnDef<any>[] = [
 				<div className="flex items-center justify-end gap-x-3">
 					<Link
 						href={
-							pageList.equipmentSetLiquidationDetail({ id: row.original._id })
-								.href
+							pageList.equipmentSetLiquidationDetail({
+								id: row.original.decisionNumber,
+							}).href
 						}
 						className="text-green-600"
 					>
@@ -86,7 +87,7 @@ export const columns: ColumnDef<any>[] = [
 					<Link
 						href={
 							pageList.equipmentSetLiquidationDetailUpdate({
-								id: row.original._id,
+								id: row.original.decisionNumber,
 							}).href
 						}
 						className="text-blue-600"

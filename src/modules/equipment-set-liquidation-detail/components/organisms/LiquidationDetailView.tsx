@@ -1,7 +1,7 @@
 'use client'
 
 import {
-	equipmentDisposeControllerFindOneOptions,
+	equipmentDisposeControllerFindByDecisionNumberOptions,
 	unitsControllerFindAllOptions,
 	usersControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
@@ -20,7 +20,9 @@ type Props = {
 const LiquidationDetailView = ({ id }: Props) => {
 	const router = useRouter()
 	const { data: liquidationData, isFetching } = useQuery({
-		...equipmentDisposeControllerFindOneOptions({ path: { id } }),
+		...equipmentDisposeControllerFindByDecisionNumberOptions({
+			path: { decisionNumber: id },
+		}),
 	})
 
 	const { data: units } = useQuery({
@@ -162,7 +164,7 @@ const LiquidationDetailView = ({ id }: Props) => {
 							{getUnitName(
 								typeof liquidationData.fromUnitId === 'string'
 									? liquidationData.fromUnitId
-									: liquidationData.fromUnitId?._id || '',
+									: (liquidationData.fromUnitId as any)?._id || '',
 							)}
 						</p>
 					</div>
@@ -196,10 +198,10 @@ const LiquidationDetailView = ({ id }: Props) => {
 								data={
 									liquidationData.items?.map((item: any, index: number) => ({
 										index,
-										componentName: item.componentName || 'N/A',
+										componentName: item.equipmentDetails?.name || 'N/A',
 										unitOfMeasure: item.unitOfMeasure || 'Bộ',
 										quantity: item.quantity || 0,
-										note: item.note || '',
+										note: item.notes ?? '',
 									})) || []
 								}
 							/>

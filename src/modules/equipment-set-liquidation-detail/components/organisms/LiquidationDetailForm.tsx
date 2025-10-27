@@ -3,6 +3,7 @@
 import type { CreateEquipmentDisposeDto } from '@/client'
 import {
 	equipmentDisposeControllerDisposeMutation,
+	equipmentDisposeControllerFindByDecisionNumberOptions,
 	equipmentDisposeControllerSearchQueryKey,
 	equipmentDisposeControllerUpdateMutation,
 	equipmentInstancesControllerSearchOptions,
@@ -48,6 +49,12 @@ type Props = {
 
 const LiquidationDetailForm = ({ id }: Props) => {
 	const { form } = useLiquidationDetailController({ id })
+	const { data: liquidationData } = useQuery({
+		...equipmentDisposeControllerFindByDecisionNumberOptions({
+			path: { decisionNumber: id || '' },
+		}),
+		enabled: Boolean(id),
+	})
 	const { control } = form
 	const router = useRouter()
 	const { mutate: create } = useMutation({
@@ -87,7 +94,7 @@ const LiquidationDetailForm = ({ id }: Props) => {
 		componentName: string
 		unitOfMeasure: string
 		quantity: number
-		note: string
+		notes: string
 	}>[] = [
 		{
 			accessorKey: 'index',
@@ -109,7 +116,7 @@ const LiquidationDetailForm = ({ id }: Props) => {
 			header: 'Số lượng',
 		},
 		{
-			accessorKey: 'note',
+			accessorKey: 'notes',
 			header: 'Ghi chú',
 		},
 		{
@@ -152,7 +159,7 @@ const LiquidationDetailForm = ({ id }: Props) => {
 				componentName: component?.label,
 				unitOfMeasure: 'Bộ',
 				quantity: Number(form.watch('selectedEquipmentQuantity')),
-				note: form.watch('selectedEquipmentNote'),
+				notes: form.watch('selectedEquipmentNote'),
 			} as any,
 		])
 	}
@@ -172,7 +179,7 @@ const LiquidationDetailForm = ({ id }: Props) => {
 		if (id) {
 			update(
 				{
-					path: { id },
+					path: { id: liquidationData?._id || '' },
 					body: submitData,
 				},
 				{
