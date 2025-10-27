@@ -201,6 +201,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 								</FormItem>
 							)}
 						/>
+						<div />
 						<FormField
 							control={control}
 							name="fromUnitId"
