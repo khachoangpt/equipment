@@ -1,8 +1,10 @@
 'use client'
 
+import type { CreateEquipmentDisposeDto } from '@/client'
 import {
 	equipmentDisposeControllerDisposeMutation,
 	equipmentDisposeControllerSearchQueryKey,
+	equipmentDisposeControllerUpdateMutation,
 	equipmentInstancesControllerSearchOptions,
 	unitsControllerFindAllOptions,
 	usersControllerFindAllOptions,
@@ -50,6 +52,9 @@ const LiquidationDetailForm = ({ id }: Props) => {
 	const router = useRouter()
 	const { mutate: create } = useMutation({
 		...equipmentDisposeControllerDisposeMutation(),
+	})
+	const { mutate: update } = useMutation({
+		...equipmentDisposeControllerUpdateMutation(),
 	})
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions({ query: { limit: 1000000, page: 1 } }),
@@ -153,38 +158,67 @@ const LiquidationDetailForm = ({ id }: Props) => {
 	}
 
 	const onSubmit: SubmitHandler<CreateEquipmentDisposalSchema> = (data) => {
-		create(
-			{
-				body: {
-					decisionNumber: data.decisionNumber,
-					disposalDate: new Date(data.disposalDate).toISOString(),
-					fromUnitId: data.fromUnitId as any,
-					items: (data.items || []) as any,
-					signer: data.signer,
-					type: 'disposal',
-					approver: data.createdBy,
-					notes: data.notes,
+		const submitData: CreateEquipmentDisposeDto = {
+			decisionNumber: data.decisionNumber,
+			disposalDate: new Date(data.disposalDate).toISOString(),
+			fromUnitId: data.fromUnitId as any,
+			items: (data.items || []) as any,
+			signer: data.signer,
+			type: 'disposal',
+			approver: data.createdBy,
+			notes: data.notes,
+		}
+
+		if (id) {
+			update(
+				{
+					path: { id },
+					body: submitData,
 				},
-			},
-			{
-				onError: (error) => {
-					toast.error(
-						<div
-							dangerouslySetInnerHTML={{
-								__html: (error.response?.data as any)?.message,
-							}}
-						/>,
-					)
+				{
+					onError: (error) => {
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
+					},
+					onSuccess: () => {
+						toast.success('Cập nhật thành công')
+						queryClient.invalidateQueries({
+							queryKey: equipmentDisposeControllerSearchQueryKey(),
+						})
+						router.push(pageList.equipmentSetLiquidation.href)
+					},
 				},
-				onSuccess: () => {
-					toast.success('Tạo thành công')
-					queryClient.invalidateQueries({
-						queryKey: equipmentDisposeControllerSearchQueryKey(),
-					})
-					router.push(pageList.equipmentSetLiquidation.href)
+			)
+		} else {
+			create(
+				{
+					body: submitData,
 				},
-			},
-		)
+				{
+					onError: (error) => {
+						toast.error(
+							<div
+								dangerouslySetInnerHTML={{
+									__html: (error.response?.data as any)?.message,
+								}}
+							/>,
+						)
+					},
+					onSuccess: () => {
+						toast.success('Tạo thành công')
+						queryClient.invalidateQueries({
+							queryKey: equipmentDisposeControllerSearchQueryKey(),
+						})
+						router.push(pageList.equipmentSetLiquidation.href)
+					},
+				},
+			)
+		}
 	}
 
 	return (

@@ -1,7 +1,7 @@
-import LiquidationDetailTemplate from '@/modules/equipment-set-liquidation-detail/components/templates/LiquidationCreateTemplate'
+import LiquidationCreateTemplate from '@/modules/equipment-set-liquidation-detail/components/templates/LiquidationCreateTemplate'
 
 const CreateEquipmentSetLiquidationPage = () => {
-	return <LiquidationDetailTemplate />
+	return <LiquidationCreateTemplate />
 }
 
 export default CreateEquipmentSetLiquidationPage

@@ -149,10 +149,16 @@ export const pageList = {
 		pattern: ['equipment-set', 'liquidation', 'create'],
 	},
 	equipmentSetLiquidationDetail: (config?: { id?: string }) => ({
-		title: 'Create Equipment Set liquidation',
+		title: 'Equipment Set Liquidation Detail',
 		href: `/equipment-set/liquidation/${config?.id}`,
 		isAuth: true,
 		pattern: ['equipment-set', 'liquidation', ''],
+	}),
+	equipmentSetLiquidationDetailUpdate: (config?: { id?: string }) => ({
+		title: 'Equipment Set Liquidation Detail Update',
+		href: `/equipment-set/liquidation/${config?.id}/update`,
+		isAuth: true,
+		pattern: ['equipment-set', 'liquidation', 'update', ''],
 	}),
 	equipmentSetInventory: {
 		title: 'Equipment Set Inventory',

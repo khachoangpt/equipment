@@ -5,7 +5,7 @@ type Props = {
 	id?: string
 }
 
-const LiquidationDetailTemplate = ({ id }: Props) => {
+const LiquidationCreateTemplate = ({ id }: Props) => {
 	const pageTitle = id
 		? 'Chỉnh sửa hoạt động thanh lý'
 		: 'Thêm hoạt động thanh lý'
@@ -18,4 +18,4 @@ const LiquidationDetailTemplate = ({ id }: Props) => {
 	)
 }
 
-export default LiquidationDetailTemplate
+export default LiquidationCreateTemplate

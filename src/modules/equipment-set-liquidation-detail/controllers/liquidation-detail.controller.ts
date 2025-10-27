@@ -1,11 +1,14 @@
+import { equipmentDisposeControllerFindOneOptions } from '@/client/@tanstack/react-query.gen'
 import type { CreateEquipmentDisposalSchema } from '@/configs/schema'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 type Props = {
 	id?: string
 }
 
-const useLiquidationDetailController = (_: Props) => {
+const useLiquidationDetailController = ({ id }: Props) => {
 	const defaultValues: CreateEquipmentDisposalSchema & {
 		selectedEquipmentName: string
 		selectedEquipmentQuantity: string
@@ -33,28 +36,41 @@ const useLiquidationDetailController = (_: Props) => {
 		defaultValues,
 	})
 
-	// useEffect(() => {
-	// 	if (!id) return
+	const { data: liquidationData } = useQuery({
+		...equipmentDisposeControllerFindOneOptions({ path: { id: id || '' } }),
+		enabled: Boolean(id),
+	})
 
-	// 	const handoverFound = equipmentHandovers.find(
-	// 		(handover) => handover.id === id,
-	// 	)
-	// 	if (handoverFound) {
-	// 		form.reset({
-	// 			code: handoverFound.code,
-	// 			handoverPerson: handoverFound.handoverPerson,
-	// 			handoverUnit: handoverFound.handoverUnit,
-	// 			receiverPerson: handoverFound.receiverPerson,
-	// 			receiverUnit: handoverFound.receiverUnit,
-	// 			handoverDate: handoverFound.handoverDate,
-	// 			returnDate: handoverFound.returnDate,
-	// 			equipmentName: handoverFound.equipmentName,
-	// 			note: handoverFound.note,
-	// 		})
-	// 	}
-	// }, [id])
+	useEffect(() => {
+		if (!id) {
+			return
+		}
+		if (!liquidationData) {
+			return
+		}
 
-	return { form }
+		form.reset({
+			decisionNumber: liquidationData.decisionNumber,
+			disposalDate: liquidationData.disposalDate,
+			fromUnitId: liquidationData.fromUnitId?._id || '',
+			signer: liquidationData.signer,
+			notes: liquidationData.notes,
+			createdBy: liquidationData.approver,
+			items:
+				liquidationData.items?.map((item: any) => ({
+					instanceId: item.instanceId,
+					componentName: item.componentName,
+					unitOfMeasure: item.unitOfMeasure || 'Bộ',
+					quantity: item.quantity,
+					note: item.note || '',
+				})) || [],
+			selectedEquipmentName: '',
+			selectedEquipmentNote: '',
+			selectedEquipmentQuantity: '',
+		})
+	}, [id, liquidationData, form])
+
+	return { form, liquidationData }
 }
 
 export default useLiquidationDetailController

@@ -4,6 +4,7 @@ import {
 	equipmentDisposeControllerSearchQueryKey,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
+import { pageList } from '@/configs/routes'
 import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
 import { useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
@@ -73,10 +74,23 @@ export const columns: ColumnDef<any>[] = [
 
 			return (
 				<div className="flex items-center justify-end gap-x-3">
-					<Link href={'#'} className="text-green-600">
-						Xem
+					<Link
+						href={
+							pageList.equipmentSetLiquidationDetail({ id: row.original._id })
+								.href
+						}
+						className="text-green-600"
+					>
+						Chi tiết
 					</Link>
-					<Link href={'#'} className="text-blue-600">
+					<Link
+						href={
+							pageList.equipmentSetLiquidationDetailUpdate({
+								id: row.original._id,
+							}).href
+						}
+						className="text-blue-600"
+					>
 						Sửa
 					</Link>
 					<p
