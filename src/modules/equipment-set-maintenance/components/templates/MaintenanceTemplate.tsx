@@ -2,7 +2,6 @@
 
 import { equipmentRepairControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
@@ -38,12 +37,15 @@ const MaintenanceTemplate = () => {
 	})
 
 	return (
-		<div className="h-full">
-			<Card>
-				<div className="flex items-center justify-between">
-					<div className="flex items-end gap-x-2">
-						<h3 className="font-bold text-2xl">Bảo dưỡng / Sửa chữa</h3>
-					</div>
+		<div className="pb-10">
+			<div className="text-center mb-10">
+				<h3 className="font-bold text-3xl">Bảo dưỡng / Sửa chữa</h3>
+			</div>
+			<div className="flex items-center justify-between">
+				<div>
+					<h5 className="font-bold text-lg">Danh sách bảo dưỡng / sửa chữa</h5>
+				</div>
+				<div className="flex items-center gap-x-2">
 					<Link href={pageList.createEquipmentSetMaintenance.href}>
 						<Button>
 							<Plus />
@@ -51,17 +53,17 @@ const MaintenanceTemplate = () => {
 						</Button>
 					</Link>
 				</div>
-				<DataTable
-					columns={columns}
-					data={equipmentRepair?.data ?? []}
-					onChangePage={setPage}
-					pagination={{
-						page,
-						totalCount: equipmentRepair?.total ?? 0,
-						pageSize: settings?.pagingSize ?? 10,
-					}}
-				/>
-			</Card>
+			</div>
+			<DataTable
+				columns={columns}
+				data={equipmentRepair?.data ?? []}
+				onChangePage={setPage}
+				pagination={{
+					page,
+					totalCount: equipmentRepair?.total ?? 0,
+					pageSize: settings?.pagingSize ?? 10,
+				}}
+			/>
 		</div>
 	)
 }

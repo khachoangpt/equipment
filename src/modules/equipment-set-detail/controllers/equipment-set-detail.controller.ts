@@ -31,6 +31,7 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 		images: [],
 		imageFiles: [],
 		featureConfiguration: '',
+		countryOfOrigin: '',
 		technicalSpecifications: '',
 	}
 	const form = useForm<EquipmentSetDetailSchema>({
@@ -64,6 +65,7 @@ const useEquipmentSetDetailController = ({ id }: Props) => {
 				images: data.images ?? [],
 				featureConfiguration: data.featureConfiguration,
 				technicalSpecifications: data.technicalSpecifications,
+				countryOfOrigin: data.countryOfOrigin,
 			})
 		}
 	}, [id, isFetching])

@@ -66,7 +66,10 @@ const SearchEquipmentDispose = ({ onOpenChange, open }: Props) => {
 										<FormLabel className="w-full">Đơn vị giao</FormLabel>
 										<FormControl>
 											<Select value={value} onValueChange={onChange}>
-												<SelectTrigger className="w-full">
+												<SelectTrigger
+													className="w-full"
+													onClear={() => onChange('')}
+												>
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent>
@@ -89,7 +92,10 @@ const SearchEquipmentDispose = ({ onOpenChange, open }: Props) => {
 										<FormLabel className="w-full">Năm thanh lý</FormLabel>
 										<FormControl>
 											<Select value={value} onValueChange={onChange}>
-												<SelectTrigger className="w-full">
+												<SelectTrigger
+													className="w-full"
+													onClear={() => onChange('')}
+												>
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent>

@@ -81,7 +81,10 @@ const EditUnitForm = ({ id }: Props) => {
 										<FormLabel>Đơn vị chính</FormLabel>
 										<Select value={value} onValueChange={onChange} {...rest}>
 											<FormControl>
-												<SelectTrigger className="w-full">
+												<SelectTrigger
+													className="w-full"
+													onClear={() => onChange('')}
+												>
 													<SelectValue />
 												</SelectTrigger>
 											</FormControl>

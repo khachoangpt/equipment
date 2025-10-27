@@ -6,7 +6,7 @@ const AssembledEquipmentDetailPage = async (
 ) => {
 	const params = await props.params
 
-	return <AssembledEquipmentDetailTemplate id={params.id} mode="detail" />
+	return <AssembledEquipmentDetailTemplate id={params.id} mode="update" />
 }
 
 export default AssembledEquipmentDetailPage

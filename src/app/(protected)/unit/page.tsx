@@ -1,4 +1,4 @@
-import UnitTemplate from '@/modules/unit/components/templates/AccountTemplate'
+import UnitTemplate from '@/modules/unit/components/templates/UnitTemplate'
 
 const AccountPage = () => {
 	return (

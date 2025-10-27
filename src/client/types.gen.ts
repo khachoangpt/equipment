@@ -7,7 +7,7 @@ export type ActivityLog = {
     _id: string;
     instanceId?: EquipmentInstance;
     componentId?: Component;
-    activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị';
+    activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị';
     createdBy: User;
     /**
      * Chi tiết hoạt động, cấu trúc thay đổi theo activityType
@@ -20,7 +20,7 @@ export type ActivityLog = {
     updatedAt: string;
 };
 
-export type activityType = 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị';
+export type activityType = 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị';
 
 export type AddComponentStockDto = {
     /**
@@ -279,6 +279,10 @@ export type CreateEquipmentInstanceDto = {
      * Ghi chú
      */
     notes?: string;
+    /**
+     * Quốc gia sản xuất
+     */
+    countryOfOrigin?: string;
 };
 
 export type CreateHandoverEquipmentDto = {
@@ -680,6 +684,10 @@ export type EquipmentInstance = {
      * Ghi chú
      */
     notes?: string;
+    /**
+     * Quốc gia sản xuất
+     */
+    countryOfOrigin?: string;
 };
 
 export type HandoverEquipment = {
@@ -1405,6 +1413,61 @@ export type UpdateEquipmentInstanceDto = {
      * Ghi chú
      */
     notes?: string;
+    /**
+     * Quốc gia sản xuất
+     */
+    countryOfOrigin?: string;
+};
+
+export type UpdateHandoverEquipmentDto = {
+    /**
+     * Số biên bản bàn giao
+     */
+    reportNumber?: string;
+    /**
+     * Name của người nhận
+     */
+    receiver?: string;
+    /**
+     * Name của người phê duyệt
+     */
+    approver?: string;
+    /**
+     * Name của người thực hiện bàn giao
+     */
+    sender?: string;
+    /**
+     * Name của người phê duyệt bàn giao
+     */
+    handoverApprovedBy?: string;
+    /**
+     * Name của người từ chối bàn giao
+     */
+    handoverRejectedBy?: string;
+    /**
+     * ID của đơn vị giao
+     */
+    fromUnitId?: (ObjectId);
+    /**
+     * ID của đơn vị nhận
+     */
+    toUnitId?: (ObjectId);
+    /**
+     * Ngày bàn giao
+     */
+    handoverDate?: string;
+    /**
+     * Ghi chú thêm
+     */
+    comment?: string;
+    /**
+     * Loại hoạt động: handover (bàn giao) hoặc recall (thu hồi)
+     */
+    type?: 'handover' | 'recall';
+    /**
+     * Danh sách các trang bị bàn giao
+     */
+    items?: Array<(string)>;
 };
 
 export type UpdateProductProfileDto = {
@@ -2360,6 +2423,39 @@ export type EquipmentHandoverControllerHandoverResponse = (HandoverEquipment);
 
 export type EquipmentHandoverControllerHandoverError = (unknown);
 
+export type EquipmentHandoverControllerUpdateData = {
+    body: UpdateHandoverEquipmentDto;
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentHandoverControllerUpdateResponse = (HandoverEquipment);
+
+export type EquipmentHandoverControllerUpdateError = (unknown);
+
+export type EquipmentHandoverControllerDeleteData = {
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentHandoverControllerDeleteResponse = (unknown);
+
+export type EquipmentHandoverControllerDeleteError = (unknown);
+
+export type EquipmentHandoverControllerValidateQuantitiesData = {
+    body: CreateHandoverEquipmentDto;
+};
+
+export type EquipmentHandoverControllerValidateQuantitiesResponse = ({
+    isValid?: boolean;
+    errors?: Array<(string)>;
+    warnings?: Array<(string)>;
+});
+
+export type EquipmentHandoverControllerValidateQuantitiesError = unknown;
+
 export type EquipmentHandoverControllerSearchData = {
     query?: {
         /**
@@ -2496,7 +2592,7 @@ export type ActivityLogsControllerSearchData = {
         /**
          * Loại hoạt động cần tìm kiếm (Bắt buộc)
          */
-        activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị';
+        activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị';
         /**
          * ID của linh kiện (nếu có)
          */

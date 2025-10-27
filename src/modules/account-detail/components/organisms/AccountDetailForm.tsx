@@ -68,7 +68,11 @@ const EditAccountForm = ({ id }: Props) => {
 										<FormLabel>Vai trò</FormLabel>
 										<Select value={value} onValueChange={onChange} {...rest}>
 											<FormControl>
-												<SelectTrigger className="w-full">
+												<SelectTrigger
+													className="w-full"
+													clearable
+													onClear={() => onChange('')}
+												>
 													<SelectValue placeholder="Vai trò" />
 												</SelectTrigger>
 											</FormControl>

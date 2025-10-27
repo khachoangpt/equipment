@@ -20,7 +20,9 @@ const GeneralSettingsTemplate = () => {
 
 	return (
 		<div>
-			<PageTitle title={pageTitle} />
+			<div className="text-center mb-10">
+				<PageTitle title={pageTitle} />
+			</div>
 			<div>
 				<Card>
 					<Form {...form}>

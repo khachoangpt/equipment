@@ -148,6 +148,39 @@ const HandoverDetailForm = ({ id }: Props) => {
 								</FormItem>
 							)}
 						/>
+						<div />
+						<FormField
+							control={control}
+							name="handoverDate"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Thời gian</FormLabel>
+									<FormControl>
+										<DatePicker
+											onChange={(e) => field.onChange(e.toString())}
+											value={new Date(field.value)}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={control}
+							name="handoverDate"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Ngày giao</FormLabel>
+									<FormControl>
+										<DatePicker
+											onChange={(e) => field.onChange(e.toString())}
+											value={new Date(field.value)}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 						<FormField
 							control={control}
 							name="sender"
@@ -176,39 +209,16 @@ const HandoverDetailForm = ({ id }: Props) => {
 						/>
 						<FormField
 							control={control}
-							name="handoverApprovedBy"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Người phê duyệt bàn giao</FormLabel>
-									<FormControl>
-										<Input placeholder="Người phê duyệt bàn giao" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={control}
-							name="handoverRejectedBy"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Người từ chối bàn giao</FormLabel>
-									<FormControl>
-										<Input placeholder="Người từ chối bàn giao" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={control}
 							name="fromUnitId"
 							render={({ field: { value, onChange } }) => (
 								<FormItem>
 									<FormLabel>Đơn vị giao</FormLabel>
 									<FormControl>
 										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
+											<SelectTrigger
+												className="w-full"
+												onClear={() => onChange('')}
+											>
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
@@ -232,7 +242,10 @@ const HandoverDetailForm = ({ id }: Props) => {
 									<FormLabel>Đơn vị nhận</FormLabel>
 									<FormControl>
 										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
+											<SelectTrigger
+												className="w-full"
+												onClear={() => onChange('')}
+											>
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
@@ -248,23 +261,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 								</FormItem>
 							)}
 						/>
-						<FormField
-							control={control}
-							name="handoverDate"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Ngày giao</FormLabel>
-									<FormControl>
-										<DatePicker
-											onChange={(e) => field.onChange(e.toString())}
-											value={new Date(field.value)}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
+						{/* <FormField
 							control={control}
 							name="comment"
 							render={({ field }) => (
@@ -272,22 +269,6 @@ const HandoverDetailForm = ({ id }: Props) => {
 									<FormLabel>Nhận xét</FormLabel>
 									<FormControl>
 										<Textarea placeholder="Nhận xét" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						{/* <FormField
-							control={control}
-							name="items"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Trang bị bàn giao</FormLabel>
-									<FormControl>
-										<MultiSelect
-											options={equipments || []}
-											onValueChange={field.onChange}
-										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

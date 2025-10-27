@@ -51,7 +51,7 @@ const CollapsibleSidebar = ({ sidebarItem }: Props) => {
 						{sidebarItem.items.map((item) => {
 							return (
 								<SidebarMenuSubItem
-									className="hover:text-primary cursor-pointer active:text-primary"
+									className="hover:text-primary cursor-pointer active:text-primary list-none"
 									key={item.id}
 								>
 									<Link

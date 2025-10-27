@@ -125,6 +125,7 @@ const equipmentSetDetailSchema = z.object({
 	imageFiles: z.array(z.any()).optional(),
 	technicalSpecifications: z.string().optional(),
 	featureConfiguration: z.string().optional(),
+	countryOfOrigin: z.string().optional(),
 })
 type EquipmentSetDetailSchema = z.infer<typeof equipmentSetDetailSchema>
 

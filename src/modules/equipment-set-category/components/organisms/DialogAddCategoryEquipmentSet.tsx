@@ -87,7 +87,11 @@ const DialogAddCategoryEquipmentSet = ({
 									<FormLabel>Nhóm loại</FormLabel>
 									<FormControl>
 										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
+											<SelectTrigger
+												className="w-full"
+												clearable
+												onClear={() => onChange('')}
+											>
 												<SelectValue placeholder="Nhóm loại" />
 											</SelectTrigger>
 											<SelectContent>

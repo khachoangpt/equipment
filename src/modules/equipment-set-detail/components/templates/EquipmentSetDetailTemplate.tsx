@@ -7,19 +7,18 @@ type Props = {
 }
 
 const EquipmentSetDetailTemplate = ({ id, mode }: Props) => {
-	let pageTitle = 'Thông tin trang bị'
+	let pageTitle = 'Thông tin trang bị đồng bộ'
 	if (mode === 'create') {
-		pageTitle = 'Thêm trang bị'
+		pageTitle = 'Thêm trang bị đồng bộ'
 	}
 	if (mode === 'update') {
-		pageTitle = 'Chỉnh sửa trang bị'
+		pageTitle = 'Chỉnh sửa trang bị đồng bộ'
 	}
 
 	return (
 		<div>
 			<PageTitle title={pageTitle} />
 			<EquipmentSetDetailForm id={id} mode={mode} />
-			{/* <EquipmentSetActivityLogs id={id} /> */}
 		</div>
 	)
 }

@@ -213,7 +213,11 @@ const AssembledEquipmentBuildForm = ({ id }: Props) => {
 									<FormLabel>Đơn vị xây dựng</FormLabel>
 									<FormControl>
 										<Select key={value} value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
+											<SelectTrigger
+												className="w-full"
+												clearable
+												onClear={() => onChange('')}
+											>
 												<SelectValue placeholder="Đơn vị xây dựng" />
 											</SelectTrigger>
 											<SelectContent>

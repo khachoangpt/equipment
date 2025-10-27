@@ -18,7 +18,6 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import { useQuery } from '@tanstack/react-query'
-import { parseAsString, useQueryStates } from 'nuqs'
 import useSearchEquipmentHandoverController from '../../controllers/search-equipment-handover.controller'
 
 type Props = {
@@ -27,19 +26,9 @@ type Props = {
 }
 
 const SearchEquipmentHandover = ({ onOpenChange, open }: Props) => {
-	const { form, onSubmit, defaultValues } =
-		useSearchEquipmentHandoverController()
+	const { form, onSubmit } = useSearchEquipmentHandoverController()
 	const { control } = form
-	const [_, setSearchQuery] = useQueryStates({
-		reportNumber: parseAsString.withDefault(''),
-		fromUnitId: parseAsString.withDefault(''),
-		toUnitId: parseAsString.withDefault(''),
-		handoverDateStart: parseAsString.withDefault(''),
-		handoverDateEnd: parseAsString.withDefault(''),
-		receiver: parseAsString.withDefault(''),
-		sender: parseAsString.withDefault(''),
-		equipmentQuery: parseAsString.withDefault(''),
-	})
+
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions(),
 		select(data) {
@@ -52,28 +41,67 @@ const SearchEquipmentHandover = ({ onOpenChange, open }: Props) => {
 			<Collapsible open={open} onOpenChange={onOpenChange}>
 				<CollapsibleContent>
 					<Form {...form}>
-						<div className="grid grid-cols-3 gap-x-10 gap-y-3">
+						<div className="grid grid-cols-2 gap-x-10 gap-y-3">
 							<FormField
 								control={control}
 								name="reportNumber"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Số biên bản</FormLabel>
+									<FormItem className="flex items-center">
+										<FormLabel className="w-full">Số biên bản</FormLabel>
 										<FormControl>
 											<Input placeholder="Số biên bản" {...field} />
 										</FormControl>
 									</FormItem>
 								)}
 							/>
+							<div className="flex gap-x-3">
+								<div className="flex items-center w-full">
+									<FormLabel>Ngày bàn giao</FormLabel>
+								</div>
+								<div className="flex items-center w-full gap-x-3">
+									<FormField
+										control={form.control}
+										name="handoverDateStart"
+										render={({ field: { onChange, value } }) => (
+											<FormItem className="w-full flex items-center">
+												<FormControl>
+													<DatePicker
+														onChange={(e) => onChange(e.toISOString())}
+														value={value ? new Date(value ?? '') : undefined}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+									<div className="h-9 translate-y-2">~</div>
+									<FormField
+										control={form.control}
+										name="handoverDateEnd"
+										render={({ field: { onChange, value } }) => (
+											<FormItem className="flex items-center">
+												<FormControl>
+													<DatePicker
+														onChange={(e) => onChange(e.toISOString())}
+														value={value ? new Date(value ?? '') : undefined}
+													/>
+												</FormControl>
+											</FormItem>
+										)}
+									/>
+								</div>
+							</div>
 							<FormField
 								control={control}
 								name="fromUnitId"
 								render={({ field: { value, onChange } }) => (
-									<FormItem>
-										<FormLabel>Đơn vị giao</FormLabel>
+									<FormItem className="flex items-center">
+										<FormLabel className="w-full">Đơn vị giao</FormLabel>
 										<FormControl>
 											<Select value={value} onValueChange={onChange}>
-												<SelectTrigger className="w-full">
+												<SelectTrigger
+													className="w-full"
+													onClear={() => onChange('')}
+												>
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent>
@@ -92,11 +120,14 @@ const SearchEquipmentHandover = ({ onOpenChange, open }: Props) => {
 								control={control}
 								name="toUnitId"
 								render={({ field: { value, onChange } }) => (
-									<FormItem>
-										<FormLabel>Đơn vị nhận</FormLabel>
+									<FormItem className="flex items-center">
+										<FormLabel className="w-full">Đơn vị nhận</FormLabel>
 										<FormControl>
 											<Select value={value} onValueChange={onChange}>
-												<SelectTrigger className="w-full">
+												<SelectTrigger
+													className="w-full"
+													onClear={() => onChange('')}
+												>
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent>
@@ -111,45 +142,12 @@ const SearchEquipmentHandover = ({ onOpenChange, open }: Props) => {
 									</FormItem>
 								)}
 							/>
-							<div className="flex gap-x-3 items-end">
-								<FormField
-									control={form.control}
-									name="handoverDateStart"
-									render={({ field: { onChange, value } }) => (
-										<FormItem className="w-full">
-											<FormLabel>Ngày bàn giao</FormLabel>
-											<FormControl>
-												<DatePicker
-													onChange={(e) => onChange(e.toISOString())}
-													value={value ? new Date(value ?? '') : undefined}
-												/>
-											</FormControl>
-										</FormItem>
-									)}
-								/>
-								<div className="h-9 translate-y-2">~</div>
-								<FormField
-									control={form.control}
-									name="handoverDateEnd"
-									render={({ field: { onChange, value } }) => (
-										<FormItem className="w-full">
-											<FormLabel className="invisible">Ngày bàn giao</FormLabel>
-											<FormControl>
-												<DatePicker
-													onChange={(e) => onChange(e.toISOString())}
-													value={value ? new Date(value ?? '') : undefined}
-												/>
-											</FormControl>
-										</FormItem>
-									)}
-								/>
-							</div>
 							<FormField
 								control={control}
 								name="sender"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Người giao</FormLabel>
+									<FormItem className="flex items-center">
+										<FormLabel className="w-full">Người giao</FormLabel>
 										<FormControl>
 											<Input placeholder="Người giao" {...field} />
 										</FormControl>
@@ -160,8 +158,8 @@ const SearchEquipmentHandover = ({ onOpenChange, open }: Props) => {
 								control={control}
 								name="receiver"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Người nhận</FormLabel>
+									<FormItem className="flex items-center">
+										<FormLabel className="w-full">Người nhận</FormLabel>
 										<FormControl>
 											<Input placeholder="Người nhận" {...field} />
 										</FormControl>
@@ -172,8 +170,8 @@ const SearchEquipmentHandover = ({ onOpenChange, open }: Props) => {
 								control={control}
 								name="equipmentQuery"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Tên trang bị</FormLabel>
+									<FormItem className="flex items-center">
+										<FormLabel className="w-full">Tên trang bị</FormLabel>
 										<FormControl>
 											<Input placeholder="Tên trang bị" {...field} />
 										</FormControl>
@@ -181,16 +179,9 @@ const SearchEquipmentHandover = ({ onOpenChange, open }: Props) => {
 								)}
 							/>
 						</div>
-						<div className="flex justify-end gap-x-3">
-							<Button
-								type="button"
-								variant={'secondary'}
-								onClick={() => setSearchQuery(defaultValues)}
-							>
-								Làm mới
-							</Button>
+						<div className="flex justify-center mt-3">
 							<Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-								Tìm kiếm
+								Lọc
 							</Button>
 						</div>
 					</Form>

@@ -37,9 +37,10 @@ import useAssembledEquipmentDetailController from '../../controllers/assembled-e
 
 type Props = {
 	id?: string
+	mode: 'create' | 'update' | 'detail'
 }
 
-const AssembledEquipmentDetailForm = ({ id }: Props) => {
+const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 	const { form } = useAssembledEquipmentDetailController({ id })
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions(),
@@ -180,26 +181,35 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Tên trang bị</FormLabel>
 									<FormControl>
-										<Combobox
-											options={buildActivities || []}
-											value={value}
-											onChange={(value) => {
-												onChange(value)
-												const buildFound = buildActivities?.find(
-													(e: any) => e.value === value,
-												)
-												form.setValue('name', buildFound?.config?.name)
-												form.setValue(
-													'equipmentId',
-													buildFound?.config?.equipmentId,
-												)
-												form.setValue(
-													'unitOfMeasure',
-													buildFound?.config?.unitOfMeasure,
-												)
-												form.setValue('quantity', buildFound?.quantity)
-											}}
-										/>
+										{mode !== 'detail' ? (
+											<Combobox
+												options={buildActivities || []}
+												value={value}
+												onChange={(value) => {
+													onChange(value)
+													const buildFound = buildActivities?.find(
+														(e: any) => e.value === value,
+													)
+													form.setValue('name', buildFound?.config?.name)
+													form.setValue(
+														'equipmentId',
+														buildFound?.config?.equipmentId,
+													)
+													form.setValue(
+														'unitOfMeasure',
+														buildFound?.config?.unitOfMeasure,
+													)
+													form.setValue('quantity', buildFound?.quantity)
+												}}
+											/>
+										) : (
+											<span className="text-muted-foreground">
+												{
+													buildActivities?.find((e: any) => e.value === value)
+														?.config?.name
+												}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -213,12 +223,18 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Đơn vị tính</FormLabel>
 									<FormControl>
-										<Input
-											type="text"
-											placeholder="Đơn vị tính"
-											{...field}
-											className="w-1/2"
-										/>
+										{mode !== 'detail' ? (
+											<Input
+												type="text"
+												placeholder="Đơn vị tính"
+												{...field}
+												className="w-1/2"
+											/>
+										) : (
+											<span className="text-muted-foreground">
+												{field.value}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -231,12 +247,18 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Số lượng</FormLabel>
 									<FormControl>
-										<Input
-											type="number"
-											placeholder="Số lượng"
-											{...field}
-											className="w-1/2"
-										/>
+										{mode !== 'detail' ? (
+											<Input
+												type="number"
+												placeholder="Số lượng"
+												{...field}
+												className="w-1/2"
+											/>
+										) : (
+											<span className="text-muted-foreground">
+												{field.value}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -249,10 +271,18 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Thời gian</FormLabel>
 									<FormControl>
-										<DatePicker
-											onChange={(e) => field.onChange(e.toString())}
-											value={new Date(field.value || '')}
-										/>
+										{mode !== 'detail' ? (
+											<DatePicker
+												onChange={(e) => field.onChange(e.toString())}
+												value={new Date(field.value || '')}
+											/>
+										) : (
+											<span className="text-muted-foreground">
+												{new Date(field.value || '').toLocaleDateString(
+													'vi-VN',
+												)}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -266,64 +296,18 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Đơn vị cấp</FormLabel>
 									<FormControl>
-										<Select key={value} value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue placeholder="Đơn vị cấp" />
-											</SelectTrigger>
-											<SelectContent>
-												{units?.data?.map((unit) => (
-													<SelectItem key={unit._id} value={unit._id}>
-														{unit.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<div />
-						<FormField
-							control={form.control}
-							name="usingUnitId"
-							render={({ field: { value, onChange } }) => (
-								<FormItem>
-									<FormLabel>Đơn vị nhận</FormLabel>
-									<FormControl>
-										<Select key={value} value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
-												<SelectValue placeholder="Đơn vị nhận" />
-											</SelectTrigger>
-											<SelectContent>
-												{units?.data?.map((unit) => (
-													<SelectItem key={unit._id} value={unit._id}>
-														{unit.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<div />
-						<div>
-							<FormField
-								control={form.control}
-								name="evaluatingUnitId"
-								render={({ field: { value, onChange } }) => (
-									<FormItem>
-										<FormLabel>Đơn vị đánh giá</FormLabel>
-										<FormControl>
+										{mode !== 'detail' ? (
 											<Select
 												key={value}
 												value={value}
 												onValueChange={onChange}
 											>
-												<SelectTrigger className="w-full">
-													<SelectValue placeholder="Đơn vị đánh giá" />
+												<SelectTrigger
+													className="w-full"
+													clearable
+													onClear={() => onChange('')}
+												>
+													<SelectValue placeholder="Đơn vị cấp" />
 												</SelectTrigger>
 												<SelectContent>
 													{units?.data?.map((unit) => (
@@ -333,6 +317,91 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 													))}
 												</SelectContent>
 											</Select>
+										) : (
+											<span className="text-muted-foreground">
+												{units?.data?.find((unit) => unit._id === value)?.name}
+											</span>
+										)}
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="usingUnitId"
+							render={({ field: { value, onChange } }) => (
+								<FormItem>
+									<FormLabel>Đơn vị nhận</FormLabel>
+									<FormControl>
+										{mode !== 'detail' ? (
+											<Select
+												key={value}
+												value={value}
+												onValueChange={onChange}
+											>
+												<SelectTrigger
+													className="w-full"
+													clearable
+													onClear={() => onChange('')}
+												>
+													<SelectValue placeholder="Đơn vị nhận" />
+												</SelectTrigger>
+												<SelectContent>
+													{units?.data?.map((unit) => (
+														<SelectItem key={unit._id} value={unit._id}>
+															{unit.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										) : (
+											<span className="text-muted-foreground">
+												{units?.data?.find((unit) => unit._id === value)?.name}
+											</span>
+										)}
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<div>
+							<FormField
+								control={form.control}
+								name="evaluatingUnitId"
+								render={({ field: { value, onChange } }) => (
+									<FormItem>
+										<FormLabel>Đơn vị đánh giá</FormLabel>
+										<FormControl>
+											{mode !== 'detail' ? (
+												<Select
+													key={value}
+													value={value}
+													onValueChange={onChange}
+												>
+													<SelectTrigger
+														className="w-full"
+														clearable
+														onClear={() => onChange('')}
+													>
+														<SelectValue placeholder="Đơn vị đánh giá" />
+													</SelectTrigger>
+													<SelectContent>
+														{units?.data?.map((unit) => (
+															<SelectItem key={unit._id} value={unit._id}>
+																{unit.name}
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+											) : (
+												<span className="text-muted-foreground">
+													{
+														units?.data?.find((unit) => unit._id === value)
+															?.name
+													}
+												</span>
+											)}
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -346,7 +415,13 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Nội dung đánh giá</FormLabel>
 									<FormControl>
-										<Textarea placeholder="Nội dung đánh giá" {...field} />
+										{mode !== 'detail' ? (
+											<Textarea placeholder="Nội dung đánh giá" {...field} />
+										) : (
+											<span className="text-muted-foreground">
+												{field.value}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -359,11 +434,17 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Vị trí lưu trữ</FormLabel>
 									<FormControl>
-										<Input
-											type="text"
-											placeholder="Vị trí lưu trữ"
-											{...field}
-										/>
+										{mode !== 'detail' ? (
+											<Input
+												type="text"
+												placeholder="Vị trí lưu trữ"
+												{...field}
+											/>
+										) : (
+											<span className="text-muted-foreground">
+												{field.value}
+											</span>
+										)}
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -377,31 +458,37 @@ const AssembledEquipmentDetailForm = ({ id }: Props) => {
 							<FormItem className="mt-5">
 								<FormLabel>Ghi chú</FormLabel>
 								<FormControl>
-									<Textarea
-										placeholder="Ghi chú"
-										className="w-2/3"
-										{...field}
-									/>
+									{mode !== 'detail' ? (
+										<Textarea
+											placeholder="Ghi chú"
+											className="w-2/3"
+											{...field}
+										/>
+									) : (
+										<span className="text-muted-foreground">{field.value}</span>
+									)}
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 
-					<div className="mt-10 flex items-center justify-end gap-x-5">
-						<Button
-							type="button"
-							variant="secondary"
-							onClick={() => {
-								router.push(pageList.assembledEquipment.href)
-							}}
-						>
-							Quay lại
-						</Button>
-						<Button onClick={form.handleSubmit(onSubmit)}>
-							{id ? 'Cập nhật' : 'Thêm'}
-						</Button>
-					</div>
+					{mode !== 'detail' && (
+						<div className="mt-10 flex items-center justify-end gap-x-5">
+							<Button
+								type="button"
+								variant="secondary"
+								onClick={() => {
+									router.push(pageList.assembledEquipment.href)
+								}}
+							>
+								Quay lại
+							</Button>
+							<Button onClick={form.handleSubmit(onSubmit)}>
+								{id ? 'Cập nhật' : 'Thêm'}
+							</Button>
+						</div>
+					)}
 				</Form>
 			</Card>
 		</div>

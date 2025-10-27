@@ -214,7 +214,10 @@ const LiquidationDetailForm = ({ id }: Props) => {
 									<FormLabel>Đơn vị</FormLabel>
 									<FormControl>
 										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
+											<SelectTrigger
+												className="w-full"
+												onClear={() => onChange('')}
+											>
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>

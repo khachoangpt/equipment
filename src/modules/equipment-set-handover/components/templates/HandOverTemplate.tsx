@@ -2,7 +2,6 @@
 
 import { equipmentHandoverControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
@@ -70,38 +69,40 @@ const HandOverTemplate = () => {
 		placeholderData: (prev) => prev,
 	})
 	return (
-		<div className="h-full">
-			<Card>
-				<div className="flex items-center justify-between">
-					<div className="flex items-end gap-x-2">
-						<h3 className="font-bold text-2xl">Bàn giao trang bị</h3>
-					</div>
-					<div className="flex items-center gap-x-2">
-						<Button onClick={() => setOpenStatisticHandover(true)}>
-							Thống kê
+		<div className="pb-10">
+			<div className="text-center mb-10">
+				<h3 className="font-bold text-3xl">Bàn giao trang bị</h3>
+			</div>
+			<div className="mb-5">
+				<SearchEquipmentHandover onOpenChange={setOpen} open={open} />
+			</div>
+			<div className="flex justify-between items-center mt-5">
+				<div>
+					<h5 className="font-bold text-lg">Danh sách bàn giao trang bị</h5>
+				</div>
+				<div className="flex items-center gap-x-2">
+					<Button onClick={() => setOpenStatisticHandover(true)}>
+						Thống kê
+					</Button>
+					<Link href={pageList.createEquipmentSetHandover.href}>
+						<Button>
+							<Plus />
+							Thêm
 						</Button>
-						<Link href={pageList.createEquipmentSetHandover.href}>
-							<Button>
-								<Plus />
-								Thêm
-							</Button>
-						</Link>
-					</div>
+					</Link>
 				</div>
-				<div className="mb-5">
-					<SearchEquipmentHandover onOpenChange={setOpen} open={open} />
-				</div>
-				<DataTable
-					columns={columns}
-					data={equipmentHandovers?.data ?? []}
-					onChangePage={setPage}
-					pagination={{
-						page,
-						totalCount: equipmentHandovers?.total ?? 0,
-						pageSize: settings?.pagingSize ?? 10,
-					}}
-				/>
-			</Card>
+			</div>
+
+			<DataTable
+				columns={columns}
+				data={equipmentHandovers?.data ?? []}
+				onChangePage={setPage}
+				pagination={{
+					page,
+					totalCount: equipmentHandovers?.total ?? 0,
+					pageSize: settings?.pagingSize ?? 10,
+				}}
+			/>
 			<DialogStatisticHandover
 				open={openStatisticHandover}
 				onOpenChange={setOpenStatisticHandover}

@@ -473,7 +473,11 @@ const ComponentDetailForm = ({ id }: Props) => {
 									<FormLabel>Đơn vị cấp</FormLabel>
 									<FormControl>
 										<Select key={value} value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
+											<SelectTrigger
+												className="w-full"
+												clearable
+												onClear={() => onChange('')}
+											>
 												<SelectValue placeholder="Đơn vị cấp" />
 											</SelectTrigger>
 											<SelectContent>
@@ -498,7 +502,11 @@ const ComponentDetailForm = ({ id }: Props) => {
 									<FormLabel>Đơn vị nhận</FormLabel>
 									<FormControl>
 										<Select key={value} value={value} onValueChange={onChange}>
-											<SelectTrigger className="w-full">
+											<SelectTrigger
+												className="w-full"
+												clearable
+												onClear={() => onChange('')}
+											>
 												<SelectValue placeholder="Đơn vị nhận" />
 											</SelectTrigger>
 											<SelectContent>
@@ -528,7 +536,11 @@ const ComponentDetailForm = ({ id }: Props) => {
 												value={value}
 												onValueChange={onChange}
 											>
-												<SelectTrigger className="w-full">
+												<SelectTrigger
+													className="w-full"
+													clearable
+													onClear={() => onChange('')}
+												>
 													<SelectValue placeholder="Đơn vị đánh giá" />
 												</SelectTrigger>
 												<SelectContent>

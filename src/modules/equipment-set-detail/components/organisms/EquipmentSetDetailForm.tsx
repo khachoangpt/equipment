@@ -324,6 +324,27 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 						/>
 						<FormField
 							control={form.control}
+							name="countryOfOrigin"
+							render={({ field: { onChange, value } }) => (
+								<FormItem>
+									<FormLabel>Nước sản xuất</FormLabel>
+									<FormControl>
+										{mode !== 'detail' ? (
+											<Input
+												placeholder="Nước sản xuất"
+												value={value}
+												onChange={onChange}
+											/>
+										) : (
+											<span className="text-muted-foreground">{value}</span>
+										)}
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
 							name="supplySource"
 							render={({ field: { onChange, value } }) => (
 								<FormItem>
@@ -425,13 +446,51 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 									<FormControl>
 										{mode !== 'detail' ? (
 											<Select value={value} onValueChange={onChange}>
-												<SelectTrigger className="w-full">
+												<SelectTrigger
+													className="w-full"
+													clearable
+													onClear={() => onChange('')}
+												>
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent>
 													{units?.map((quantity: any) => (
 														<SelectItem key={quantity._id} value={quantity._id}>
 															{quantity.name}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										) : (
+											<span className="text-muted-foreground">
+												{units?.find((unit: any) => unit._id === value)?.name}
+											</span>
+										)}
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="usingUnitId"
+							render={({ field: { value, onChange } }) => (
+								<FormItem>
+									<FormLabel>Đơn vị sử dụng</FormLabel>
+									<FormControl>
+										{mode !== 'detail' ? (
+											<Select value={value} onValueChange={onChange}>
+												<SelectTrigger
+													className="w-full"
+													clearable
+													onClear={() => onChange('')}
+												>
+													<SelectValue />
+												</SelectTrigger>
+												<SelectContent>
+													{units?.map((unit: any) => (
+														<SelectItem key={unit._id} value={unit._id}>
+															{unit.name}
 														</SelectItem>
 													))}
 												</SelectContent>
@@ -455,7 +514,10 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 									<FormControl>
 										{mode !== 'detail' ? (
 											<Select value={value} onValueChange={onChange}>
-												<SelectTrigger className="w-full">
+												<SelectTrigger
+													onClear={() => onChange('')}
+													className="w-full"
+												>
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent>
@@ -499,36 +561,6 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 						/>
 						<FormField
 							control={form.control}
-							name="usingUnitId"
-							render={({ field: { value, onChange } }) => (
-								<FormItem>
-									<FormLabel>Đơn vị sử dụng</FormLabel>
-									<FormControl>
-										{mode !== 'detail' ? (
-											<Select value={value} onValueChange={onChange}>
-												<SelectTrigger className="w-full">
-													<SelectValue />
-												</SelectTrigger>
-												<SelectContent>
-													{units?.map((unit: any) => (
-														<SelectItem key={unit._id} value={unit._id}>
-															{unit.name}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-										) : (
-											<span className="text-muted-foreground">
-												{units?.find((unit: any) => unit._id === value)?.name}
-											</span>
-										)}
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
 							name="qualityLevelId"
 							render={({ field: { value, onChange } }) => (
 								<FormItem key={value}>
@@ -536,7 +568,10 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 									<FormControl>
 										{mode !== 'detail' ? (
 											<Select value={value} onValueChange={onChange}>
-												<SelectTrigger className="w-full">
+												<SelectTrigger
+													className="w-full"
+													onClear={() => onChange('')}
+												>
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent>
@@ -601,54 +636,55 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 								</FormItem>
 							)}
 						/>
-						<div>
-							<FormField
-								control={form.control}
-								name="images"
-								render={() => (
-									<FormItem>
-										<FormLabel>Hình ảnh trang bị</FormLabel>
-										<FormControl>
-											{mode !== 'detail' ? (
-												<Input
-													placeholder="Hình ảnh trang bị"
-													type="file"
-													multiple
-													accept="image/*"
-													onChange={(e) => handleChooseImages(e)}
-												/>
-											) : null}
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							{previewImages && previewImages?.length > 0 && (
-								<div className="mt-5 flex flex-wrap gap-4	">
-									{previewImages?.map((image) => (
-										<div key={image.url} className="relative">
-											<img
-												src={genImageUrl(
-													image._id
-														? `equipments/instances/images/${image._id}`
-														: image.url,
-												)}
-												alt=""
-												className="w-40 h-auto object-contain"
+						<div />
+					</div>
+					<div className="mt-3">
+						<FormField
+							control={form.control}
+							name="images"
+							render={() => (
+								<FormItem>
+									<FormLabel>Hình ảnh trang bị</FormLabel>
+									<FormControl>
+										{mode !== 'detail' ? (
+											<Input
+												placeholder="Hình ảnh trang bị"
+												type="file"
+												multiple
+												accept="image/*"
+												onChange={(e) => handleChooseImages(e)}
 											/>
-											{mode !== 'detail' ? (
-												<div
-													onClick={() => handleDeleteImage(image)}
-													className="absolute size-6 flex items-center justify-center top-0 right-0 translate-x-1/2 -translate-y-1/2 cursor-pointer bg-primary rounded-full text-white"
-												>
-													<X className="size-5" />
-												</div>
-											) : null}
-										</div>
-									))}
-								</div>
+										) : null}
+									</FormControl>
+									<FormMessage />
+								</FormItem>
 							)}
-						</div>
+						/>
+						{previewImages && previewImages?.length > 0 && (
+							<div className="mt-5 flex flex-wrap gap-4	">
+								{previewImages?.map((image) => (
+									<div key={image.url} className="relative">
+										<img
+											src={genImageUrl(
+												image._id
+													? `equipments/instances/images/${image._id}`
+													: image.url,
+											)}
+											alt=""
+											className="w-40 h-auto object-contain"
+										/>
+										{mode !== 'detail' ? (
+											<div
+												onClick={() => handleDeleteImage(image)}
+												className="absolute size-6 flex items-center justify-center top-0 right-0 translate-x-1/2 -translate-y-1/2 cursor-pointer bg-primary rounded-full text-white"
+											>
+												<X className="size-5" />
+											</div>
+										) : null}
+									</div>
+								))}
+							</div>
+						)}
 					</div>
 					<FormField
 						control={form.control}

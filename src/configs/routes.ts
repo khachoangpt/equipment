@@ -160,6 +160,12 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['assembled-equipment', ''],
 	}),
+	assembleEquipmentDetailUpdate: (config?: { id?: string }) => ({
+		title: 'Assembled Equipment Detail Update',
+		href: `/assembled-equipment/${config?.id}/update`,
+		isAuth: true,
+		pattern: ['assembled-equipment', 'update', ''],
+	}),
 	createAssembledEquipment: {
 		title: 'Create Assembled Equipment',
 		href: '/assembled-equipment/create',

@@ -2,8 +2,6 @@
 
 import { unitsControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
 import { pageList } from '@/configs/routes'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
@@ -17,7 +15,7 @@ const UnitTemplate = () => {
 	const router = useRouter()
 	const [page, setPage] = useState(1)
 	const { settings, isFetchingGeneralSettings } = useGetGeneralSettings()
-	const { data: units, isLoading } = useQuery({
+	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions({
 			query: { limit: settings?.pagingSize, page },
 		}),
@@ -36,43 +34,32 @@ const UnitTemplate = () => {
 		placeholderData: (prev) => prev,
 	})
 
-	if (isLoading) {
-		return (
-			<Card>
-				<div className="flex items-center justify-between mb-4">
-					<h3 className="font-bold text-2xl">Đơn vị</h3>
-					<Skeleton className="h-10 w-36" />
-				</div>
-				<div className="space-y-2">
-					<Skeleton className="h-12 w-full" />
-					<Skeleton className="h-12 w-full" />
-					<Skeleton className="h-12 w-full" />
-				</div>
-			</Card>
-		)
-	}
-
 	return (
-		<div className="h-full">
-			<Card>
-				<div className="flex items-center justify-between">
-					<h3 className="font-bold text-2xl">Đơn vị</h3>
+		<div className="pb-10">
+			<div className="text-center mb-10">
+				<h3 className="font-bold text-3xl">Đơn vị</h3>
+			</div>
+			<div className="flex justify-between items-center mt-5">
+				<div>
+					<h5 className="font-bold text-lg">Danh sách đơn vị</h5>
+				</div>
+				<div className="flex items-center gap-x-2">
 					<Button onClick={() => router.push(pageList.unitCreate.href)}>
 						<Plus />
 						Thêm
 					</Button>
 				</div>
-				<DataTable
-					columns={columns}
-					data={units?.data ?? []}
-					onChangePage={setPage}
-					pagination={{
-						page,
-						totalCount: units?.total ?? 0,
-						pageSize: settings?.pagingSize ?? 10,
-					}}
-				/>
-			</Card>
+			</div>
+			<DataTable
+				columns={columns}
+				data={units?.data ?? []}
+				onChangePage={setPage}
+				pagination={{
+					page,
+					totalCount: units?.total ?? 0,
+					pageSize: settings?.pagingSize ?? 10,
+				}}
+			/>
 		</div>
 	)
 }

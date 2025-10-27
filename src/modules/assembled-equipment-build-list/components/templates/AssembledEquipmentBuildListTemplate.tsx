@@ -2,7 +2,6 @@
 
 import { assembledEquipmentControllerFindAllBuildActivitiesOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
@@ -35,22 +34,17 @@ const AssembledEquipmentBuildListTemplate = () => {
 	})
 
 	return (
-		<div className="h-full">
-			<Card>
-				<div className="flex items-center justify-between">
-					<div className="flex items-end gap-x-2">
-						<h3 className="font-bold text-2xl">
-							Danh sách xây dựng trang bị lắp ghép
-						</h3>
-						{/* <Button
-							variant="link"
-							className="p-0 h-fit"
-							onClick={() => setOpen((open) => !open)}
-						>
-							Tìm kiếm
-							<ChevronDown />
-						</Button> */}
-					</div>
+		<div className="pb-10">
+			<div className="text-center mb-10">
+				<h3 className="font-bold text-3xl">Xây dựng trang bị lắp ghép</h3>
+			</div>
+			<div className="flex justify-between items-center mt-5">
+				<div>
+					<h5 className="font-bold text-lg">
+						Danh sách xây dựng trang bị lắp ghép
+					</h5>
+				</div>
+				<div className="flex justify-end gap-x-2 mb-2">
 					<Link href={pageList.assembledEquipmentBuildCreate.href}>
 						<Button>
 							<Plus />
@@ -58,17 +52,17 @@ const AssembledEquipmentBuildListTemplate = () => {
 						</Button>
 					</Link>
 				</div>
-				<DataTable
-					columns={columns}
-					data={builds?.data ?? []}
-					onChangePage={setPage}
-					pagination={{
-						page,
-						totalCount: builds?.total ?? 0,
-						pageSize: settings?.pagingSize ?? 10,
-					}}
-				/>
-			</Card>
+			</div>
+			<DataTable
+				columns={columns}
+				data={builds?.data ?? []}
+				onChangePage={setPage}
+				pagination={{
+					page,
+					totalCount: builds?.total ?? 0,
+					pageSize: settings?.pagingSize ?? 10,
+				}}
+			/>
 		</div>
 	)
 }

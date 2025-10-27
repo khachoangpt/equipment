@@ -103,6 +103,15 @@ export const columns: ColumnDef<any>[] = [
 						href={
 							pageList.assembleEquipmentDetail({ id: row.original._id }).href
 						}
+						className="text-green-600"
+					>
+						Chi tiết
+					</Link>
+					<Link
+						href={
+							pageList.assembleEquipmentDetailUpdate({ id: row.original._id })
+								.href
+						}
 						className="text-blue-600"
 					>
 						Sửa

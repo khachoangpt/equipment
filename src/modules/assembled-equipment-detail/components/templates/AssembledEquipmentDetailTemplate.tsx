@@ -3,17 +3,22 @@ import AssembledEquipmentDetailForm from '../organisms/AssembledEquimentDetailFo
 
 type Props = {
 	id?: string
+	mode: 'create' | 'update' | 'detail'
 }
 
-const AssembledEquipmentDetailTemplate = ({ id }: Props) => {
-	const pageTitle = id
-		? 'Chỉnh sửa trang bị lắp ghép'
-		: 'Thêm trang bị lắp ghép'
+const AssembledEquipmentDetailTemplate = ({ id, mode }: Props) => {
+	let pageTitle = 'Chỉnh sửa trang bị lắp ghép'
+	if (mode === 'create') {
+		pageTitle = 'Thêm trang bị lắp ghép'
+	}
+	if (mode === 'detail') {
+		pageTitle = 'Chi tiết trang bị lắp ghép'
+	}
 
 	return (
 		<div>
 			<PageTitle title={pageTitle} />
-			<AssembledEquipmentDetailForm id={id} />
+			<AssembledEquipmentDetailForm id={id} mode={mode} />
 		</div>
 	)
 }

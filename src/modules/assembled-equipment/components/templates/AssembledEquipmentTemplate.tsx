@@ -2,7 +2,6 @@
 
 import { equipmentInstancesControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { pageList } from '@/configs/routes'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
@@ -71,38 +70,39 @@ const AssembledEquipmentTemplate = () => {
 	})
 
 	return (
-		<div className="h-full">
-			<Card>
-				<div className="flex items-center justify-between">
-					<div className="flex items-end gap-x-2">
-						<h3 className="font-bold text-2xl">Trang bị lắp ghép</h3>
-					</div>
-					<div className="flex items-center gap-x-2">
-						<Button onClick={() => setOpenStatisticHandover(true)}>
-							Thống kê
+		<div className="pb-10">
+			<div className="text-center mb-10">
+				<h3 className="font-bold text-3xl">Trang bị lắp ghép</h3>
+			</div>
+			<div className="flex justify-between items-center mt-5">
+				<div>
+					<h5 className="font-bold text-lg">Danh sách trang bị lắp ghép</h5>
+				</div>
+				<div className="flex items-center gap-x-2">
+					<Button onClick={() => setOpenStatisticHandover(true)}>
+						Thống kê
+					</Button>
+					<Link href={pageList.createAssembledEquipment.href}>
+						<Button>
+							<Plus />
+							Thêm
 						</Button>
-						<Link href={pageList.createAssembledEquipment.href}>
-							<Button>
-								<Plus />
-								Thêm
-							</Button>
-						</Link>
-					</div>
+					</Link>
 				</div>
-				<div className="mb-5">
-					{/* <SearchEquipmentSet onOpenChange={setOpen} open={open} /> */}
-				</div>
-				<DataTable
-					onChangePage={setPage}
-					pagination={{
-						page,
-						pageSize: settings?.pagingSize ?? 10,
-						totalCount: assembledEquipments?.total ?? 0,
-					}}
-					columns={columns}
-					data={assembledEquipments?.data || []}
-				/>
-			</Card>
+			</div>
+			<div className="">
+				{/* <SearchEquipmentSet onOpenChange={setOpen} open={open} /> */}
+			</div>
+			<DataTable
+				onChangePage={setPage}
+				pagination={{
+					page,
+					pageSize: settings?.pagingSize ?? 10,
+					totalCount: assembledEquipments?.total ?? 0,
+				}}
+				columns={columns}
+				data={assembledEquipments?.data || []}
+			/>
 			<DialogStatisticEquipment
 				open={openStatisticHandover}
 				onOpenChange={setOpenStatisticHandover}
