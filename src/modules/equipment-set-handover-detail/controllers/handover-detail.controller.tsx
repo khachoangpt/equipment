@@ -5,6 +5,7 @@ import {
 	equipmentHandoverControllerSearchOptions,
 	equipmentHandoverControllerSearchQueryKey,
 	equipmentHandoverControllerUpdateMutation,
+	equipmentHandoverControllerValidateQuantitiesMutation,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -79,6 +80,38 @@ export const useHandoverDetailController = (id?: string) => {
 	const { mutate: createHandover, isPending: isCreating } = useMutation({
 		...equipmentHandoverControllerHandoverMutation(),
 	})
+
+	const { mutate: validateQuantities, isPending: isValidating } = useMutation({
+		...equipmentHandoverControllerValidateQuantitiesMutation(),
+	})
+
+	const validateEquipmentQuantities = (data: HandoverDetailFormData) => {
+		return new Promise((resolve, reject) => {
+			const submitData = {
+				...data,
+				items: data.items.map((item: any) => ({
+					instanceId: item.instanceId,
+					unitOfMeasure: item.unitOfMeasure || 'Bộ',
+					quantity: item.quantity,
+					notes: item.note || '',
+				})),
+			}
+
+			validateQuantities(
+				{
+					body: submitData as any,
+				},
+				{
+					onSuccess: (response) => {
+						resolve(response)
+					},
+					onError: (error) => {
+						reject(error)
+					},
+				},
+			)
+		})
+	}
 
 	const onSubmit = (data: HandoverDetailFormData) => {
 		const submitData = {
@@ -185,5 +218,7 @@ export const useHandoverDetailController = (id?: string) => {
 		handoverDetail,
 		isFetching,
 		isUpdating: isUpdating || isCreating,
+		validateEquipmentQuantities,
+		isValidating,
 	}
 }

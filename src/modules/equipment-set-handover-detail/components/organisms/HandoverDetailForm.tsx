@@ -30,6 +30,7 @@ import { useQuery } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import { ArrowBigLeftDash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { useHandoverDetailController } from '../../controllers/handover-detail.controller'
 
 type Props = {
@@ -37,7 +38,13 @@ type Props = {
 }
 
 const HandoverDetailForm = ({ id }: Props) => {
-	const { form, onSubmit, isUpdating } = useHandoverDetailController(id)
+	const {
+		form,
+		onSubmit,
+		isUpdating,
+		validateEquipmentQuantities,
+		isValidating,
+	} = useHandoverDetailController(id)
 	const { control } = form
 	const router = useRouter()
 
@@ -55,23 +62,79 @@ const HandoverDetailForm = ({ id }: Props) => {
 			})),
 	})
 
-	const handleSelectEquipment = () => {
+	const handleSelectEquipment = async () => {
 		const component = equipments?.find(
 			(item) => item.value === form.watch('selectedEquipmentName'),
 		)
+		const quantity = Number(form.watch('selectedEquipmentQuantity'))
+
+		if (!component) {
+			toast.error('Vui lòng chọn trang bị')
+			return
+		}
+
+		if (!quantity || quantity <= 0) {
+			toast.error('Vui lòng nhập số lượng hợp lệ')
+			return
+		}
+
+		// Create temporary items list for validation
 		const componentList = (form.getValues('items') ?? []).filter(
 			(item) => item.instanceId !== component?.value,
 		)
-		form.setValue('items', [
+		const tempItems = [
 			...componentList,
 			{
 				instanceId: component?.value,
 				componentName: component?.label,
 				unitOfMeasure: 'Bộ',
-				quantity: Number(form.watch('selectedEquipmentQuantity')),
+				quantity: quantity,
 				note: form.watch('selectedEquipmentNote'),
 			} as any,
-		])
+		]
+
+		// Prepare form data for validation
+		const formData = {
+			...form.getValues(),
+			items: tempItems,
+		}
+
+		try {
+			// Validate quantities
+			const validationResult = (await validateEquipmentQuantities(
+				formData,
+			)) as any
+
+			if (validationResult?.isValid === false) {
+				// Show validation errors
+				if (validationResult.errors && validationResult.errors.length > 0) {
+					for (const error of validationResult.errors) {
+						toast.error(error)
+					}
+					return
+				}
+			}
+
+			// Show warnings if any
+			if (validationResult?.warnings && validationResult.warnings.length > 0) {
+				for (const warning of validationResult.warnings) {
+					toast.warning(warning)
+				}
+			}
+
+			// If validation passes, add equipment to list
+			form.setValue('items', tempItems)
+
+			// Clear selection fields
+			form.setValue('selectedEquipmentName', '')
+			form.setValue('selectedEquipmentQuantity', '')
+			form.setValue('selectedEquipmentNote', '')
+
+			toast.success('Đã thêm trang bị vào danh sách bàn giao')
+		} catch (error) {
+			console.error('Validation error:', error)
+			toast.error('Có lỗi xảy ra khi kiểm tra số lượng trang bị')
+		}
 	}
 
 	const columns: ColumnDef<{
@@ -283,10 +346,14 @@ const HandoverDetailForm = ({ id }: Props) => {
 								!(
 									form.watch('selectedEquipmentName') &&
 									form.watch('selectedEquipmentQuantity')
-								)
+								) || isValidating
 							}
 						>
-							<ArrowBigLeftDash className="size-7" />
+							{isValidating ? (
+								'Đang kiểm tra...'
+							) : (
+								<ArrowBigLeftDash className="size-7" />
+							)}
 						</Button>
 						<Card className="h-full w-1/3 flex-none">
 							<FormField
