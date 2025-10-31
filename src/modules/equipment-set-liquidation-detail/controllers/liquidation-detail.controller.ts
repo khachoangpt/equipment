@@ -61,6 +61,7 @@ const useLiquidationDetailController = ({ id }: Props) => {
 			items:
 				liquidationData.items?.map((item) => ({
 					instanceId: item.instanceId,
+					serialNumber: item?.equipmentDetails?.serialNumber,
 					componentName: item?.equipmentDetails?.name || 'N/A',
 					unitOfMeasure: item.unitOfMeasure || 'Bộ',
 					quantity: item.quantity,

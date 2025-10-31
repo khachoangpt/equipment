@@ -1,20 +1,18 @@
 'use client'
-import { equipmentHandoverControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
-import { Button } from '@/components/ui/button'
+import {
+	equipmentHandoverControllerSearchOptions,
+	equipmentInstancesControllerSearchOptions,
+} from '@/client/@tanstack/react-query.gen'
 import { Card } from '@/components/ui/card'
-import { pageList } from '@/configs/routes'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useQuery } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
 
 type Props = {
 	id: string
 }
 
 const HandoverViewForm = ({ id }: Props) => {
-	const router = useRouter()
-
 	const { data: handoverDetail, isFetching } = useQuery({
 		...equipmentHandoverControllerSearchOptions({
 			query: {
@@ -28,7 +26,7 @@ const HandoverViewForm = ({ id }: Props) => {
 	})
 
 	const columns: ColumnDef<{
-		index: number
+		instanceId: string
 		componentName: string
 		unitOfMeasure: string
 		quantity: number
@@ -46,11 +44,27 @@ const HandoverViewForm = ({ id }: Props) => {
 			header: 'Tên trang bị',
 		},
 		{
+			accessorKey: 'serial',
+			header: 'Mã hiệu',
+			cell: ({ row }) => {
+				const { data: equipments } = useQuery({
+					...equipmentInstancesControllerSearchOptions({
+						query: { limit: 1000000, page: 1 },
+					}),
+				})
+				const serial = equipments?.data?.find(
+					(item) => item._id === row.original?.instanceId,
+				)?.serialNumber
+
+				return <div>{serial}</div>
+			},
+		},
+		{
 			accessorKey: 'quantity',
 			header: 'Số lượng',
 		},
 		{
-			accessorKey: 'note',
+			accessorKey: 'notes',
 			header: 'Ghi chú',
 		},
 	]
@@ -178,40 +192,18 @@ const HandoverViewForm = ({ id }: Props) => {
 							<DataTable
 								columns={columns}
 								data={
-									handoverDetail.items?.map((item: any, index: number) => ({
-										index,
+									handoverDetail.items?.map((item: any) => ({
+										instanceId: item?.instanceId?._id,
 										componentName: item.instanceId?.name || 'N/A',
 										unitOfMeasure: item.unitOfMeasure || 'Bộ',
 										quantity: item.quantity || 0,
-										note: item.note || '',
+										notes: item.notes || '',
 									})) || []
 								}
 							/>
 						</div>
 					</div>
 				)}
-
-				<div className="mt-10 flex items-center justify-end gap-x-5">
-					<Button
-						type="button"
-						variant="secondary"
-						onClick={() => {
-							router.push(pageList.equipmentSetHandover.href)
-						}}
-					>
-						Quay lại
-					</Button>
-					<Button
-						type="button"
-						onClick={() => {
-							router.push(
-								pageList.equipmentSetHandoverDetailUpdate({ id }).href,
-							)
-						}}
-					>
-						Chỉnh sửa
-					</Button>
-				</div>
 			</Card>
 		</div>
 	)

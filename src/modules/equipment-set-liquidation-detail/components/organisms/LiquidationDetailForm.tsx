@@ -70,11 +70,14 @@ const LiquidationDetailForm = ({ id }: Props) => {
 		...equipmentInstancesControllerSearchOptions({
 			query: { limit: 1000000, page: 1 },
 		}),
-		select: (data) =>
-			data?.data?.map((equipment) => ({
+		select: (data) => {
+			return data?.data?.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
 				value: equipment._id,
-			})),
+				name: equipment.equipmentId.name,
+				serialNumber: equipment?.serialNumber,
+			}))
+		},
 	})
 
 	const { data: accounts } = useQuery({
@@ -90,7 +93,8 @@ const LiquidationDetailForm = ({ id }: Props) => {
 	})
 
 	const columns: ColumnDef<{
-		index: number
+		instanceId: string
+		serialNumber: string
 		componentName: string
 		unitOfMeasure: string
 		quantity: number
@@ -107,10 +111,10 @@ const LiquidationDetailForm = ({ id }: Props) => {
 			accessorKey: 'componentName',
 			header: 'Tên',
 		},
-		// {
-		// 	accessorKey: 'unitOfMeasure',
-		// 	header: 'Đơn vị tính',
-		// },
+		{
+			accessorKey: 'serialNumber',
+			header: 'Mã hiệu',
+		},
 		{
 			accessorKey: 'quantity',
 			header: 'Số lượng',
@@ -156,7 +160,8 @@ const LiquidationDetailForm = ({ id }: Props) => {
 			...componentList,
 			{
 				instanceId: component?.value,
-				componentName: component?.label,
+				serialNumber: component?.serialNumber,
+				componentName: component?.name,
 				unitOfMeasure: 'Bộ',
 				quantity: Number(form.watch('selectedEquipmentQuantity')),
 				notes: form.watch('selectedEquipmentNote'),

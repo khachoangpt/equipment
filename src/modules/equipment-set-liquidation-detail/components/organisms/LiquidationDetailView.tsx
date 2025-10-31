@@ -5,20 +5,16 @@ import {
 	unitsControllerFindAllOptions,
 	usersControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { pageList } from '@/configs/routes'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useQuery } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
 
 type Props = {
 	id: string
 }
 
 const LiquidationDetailView = ({ id }: Props) => {
-	const router = useRouter()
 	const { data: liquidationData, isFetching } = useQuery({
 		...equipmentDisposeControllerFindByDecisionNumberOptions({
 			path: { decisionNumber: id },
@@ -42,7 +38,8 @@ const LiquidationDetailView = ({ id }: Props) => {
 	})
 
 	const columns: ColumnDef<{
-		index: number
+		instanceId: string
+		serialNumber: string
 		componentName: string
 		unitOfMeasure: string
 		quantity: number
@@ -58,6 +55,10 @@ const LiquidationDetailView = ({ id }: Props) => {
 		{
 			accessorKey: 'componentName',
 			header: 'Tên',
+		},
+		{
+			accessorKey: 'serialNumber',
+			header: 'Mã hiệu',
 		},
 		{
 			accessorKey: 'quantity',
@@ -196,8 +197,9 @@ const LiquidationDetailView = ({ id }: Props) => {
 							<DataTable
 								columns={columns}
 								data={
-									liquidationData.items?.map((item: any, index: number) => ({
-										index,
+									liquidationData.items?.map((item: any) => ({
+										instanceId: item?.equipmentDetails?._id,
+										serialNumber: item?.equipmentDetails?.serialNumber,
 										componentName: item.equipmentDetails?.name || 'N/A',
 										unitOfMeasure: item.unitOfMeasure || 'Bộ',
 										quantity: item.quantity || 0,
@@ -208,28 +210,6 @@ const LiquidationDetailView = ({ id }: Props) => {
 						</div>
 					</div>
 				)}
-
-				<div className="mt-10 flex items-center justify-end gap-x-5">
-					<Button
-						type="button"
-						variant="secondary"
-						onClick={() => {
-							router.push(pageList.equipmentSetLiquidation.href)
-						}}
-					>
-						Quay lại
-					</Button>
-					<Button
-						type="button"
-						onClick={() => {
-							router.push(
-								pageList.equipmentSetLiquidationDetailUpdate({ id }).href,
-							)
-						}}
-					>
-						Chỉnh sửa
-					</Button>
-				</div>
 			</Card>
 		</div>
 	)
