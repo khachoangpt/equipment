@@ -1,12 +1,9 @@
 import LiquidationUpdateTemplate from '@/modules/equipment-set-liquidation-detail/components/templates/LiquidationUpdateTemplate'
+import type { PageProps } from '@/types'
 
-type Props = {
-	params: {
-		id: string
-	}
-}
+const LiquidationUpdatePage = async (props: PageProps<{ id: string }>) => {
+	const params = await props.params
 
-const LiquidationUpdatePage = ({ params }: Props) => {
 	return <LiquidationUpdateTemplate id={params.id} />
 }
 

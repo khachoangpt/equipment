@@ -1,12 +1,11 @@
 import LiquidationDetailTemplate from '@/modules/equipment-set-liquidation-detail/components/templates/LiquidationDetailTemplate'
+import type { PageProps } from '@/types'
 
-type Props = {
-	params: {
-		id: string
-	}
-}
+const EquipmentSetLiquidationDetailPage = async (
+	props: PageProps<{ id: string }>,
+) => {
+	const params = await props.params
 
-const EquipmentSetLiquidationDetailPage = ({ params }: Props) => {
 	return <LiquidationDetailTemplate id={params.id} />
 }
 
