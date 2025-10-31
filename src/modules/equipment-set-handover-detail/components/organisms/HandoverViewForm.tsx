@@ -109,7 +109,7 @@ const HandoverViewForm = ({ id }: Props) => {
 						</p>
 					</div>
 					<div>
-						<label
+						{/* <label
 							className="text-sm font-medium text-gray-700"
 							htmlFor="handoverTime"
 						>
@@ -119,7 +119,7 @@ const HandoverViewForm = ({ id }: Props) => {
 							{handoverDetail.handoverDate
 								? new Date(handoverDetail.handoverDate).toLocaleString('vi-VN')
 								: 'N/A'}
-						</p>
+						</p> */}
 					</div>
 					<div>
 						<label
