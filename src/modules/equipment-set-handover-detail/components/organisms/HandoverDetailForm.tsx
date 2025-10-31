@@ -31,7 +31,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { ArrowBigLeftDash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { useHandoverDetailController } from '../../controllers/handover-detail.controller'
+import useHandoverDetailController from '../../controllers/handover-detail.controller'
 
 type Props = {
 	id?: string

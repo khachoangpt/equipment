@@ -37,7 +37,7 @@ const handoverDetailSchema = z.object({
 
 export type HandoverDetailFormData = z.infer<typeof handoverDetailSchema>
 
-export const useHandoverDetailController = (id?: string) => {
+const useHandoverDetailController = (id?: string) => {
 	const router = useRouter()
 
 	const { data: handoverDetail, isFetching } = useQuery({
@@ -222,3 +222,5 @@ export const useHandoverDetailController = (id?: string) => {
 		isValidating,
 	}
 }
+
+export default useHandoverDetailController
