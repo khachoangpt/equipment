@@ -59,6 +59,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 			data?.data?.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
 				value: equipment._id,
+				name: equipment.equipmentId.name,
 			})),
 	})
 
@@ -138,7 +139,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 	}
 
 	const columns: ColumnDef<{
-		index: number
+		instanceId: string
 		componentName: string
 		unitOfMeasure: string
 		quantity: number
@@ -154,11 +155,35 @@ const HandoverDetailForm = ({ id }: Props) => {
 		{
 			accessorKey: 'componentName',
 			header: 'Tên',
+			cell: ({ row }) => {
+				const { data: equipments } = useQuery({
+					...equipmentInstancesControllerSearchOptions({
+						query: { limit: 1000000, page: 1 },
+					}),
+				})
+				const name = equipments?.data?.find(
+					(item) => item._id === row.original?.instanceId,
+				)?.name
+
+				return <div>{name}</div>
+			},
 		},
-		// {
-		// 	accessorKey: 'unitOfMeasure',
-		// 	header: 'Đơn vị tính',
-		// },
+		{
+			accessorKey: 'serial',
+			header: 'Mã hiệu',
+			cell: ({ row }) => {
+				const { data: equipments } = useQuery({
+					...equipmentInstancesControllerSearchOptions({
+						query: { limit: 1000000, page: 1 },
+					}),
+				})
+				const serial = equipments?.data?.find(
+					(item) => item._id === row.original?.instanceId,
+				)?.serialNumber
+
+				return <div>{serial}</div>
+			},
+		},
 		{
 			accessorKey: 'quantity',
 			header: 'Số lượng',
@@ -228,6 +253,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 								</FormItem>
 							)}
 						/>
+						<div />
 						<FormField
 							control={control}
 							name="sender"
