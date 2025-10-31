@@ -73,11 +73,11 @@ const useHandoverDetailController = (id?: string) => {
 		},
 	})
 
-	const { mutate: updateHandover, isPending: isUpdating } = useMutation({
+	const { mutate: updateHandover, isPending: isPendingUpdate } = useMutation({
 		...equipmentHandoverControllerUpdateMutation(),
 	})
 
-	const { mutate: createHandover, isPending: isCreating } = useMutation({
+	const { mutate: createHandover, isPending: isPendingCreate } = useMutation({
 		...equipmentHandoverControllerHandoverMutation(),
 	})
 
@@ -217,7 +217,7 @@ const useHandoverDetailController = (id?: string) => {
 		onSubmit,
 		handoverDetail,
 		isFetching,
-		isUpdating: isUpdating || isCreating,
+		isUpdating: isPendingUpdate || isPendingCreate,
 		validateEquipmentQuantities,
 		isValidating,
 	}
