@@ -87,7 +87,7 @@ const useHandoverDetailController = (id?: string) => {
 
 	const validateEquipmentQuantities = (data: HandoverDetailFormData) => {
 		return new Promise((resolve, reject) => {
-			const submitData = {
+			const submitData: any = {
 				...data,
 				items: data.items.map((item: any) => ({
 					instanceId: item.instanceId,
@@ -95,6 +95,22 @@ const useHandoverDetailController = (id?: string) => {
 					quantity: item.quantity,
 					notes: item.note || '',
 				})),
+			}
+
+			// Remove empty string values for fromUnitId, toUnitId, and handoverDate
+			if (submitData.fromUnitId === '') {
+				submitData.fromUnitId = undefined
+			}
+			if (submitData.toUnitId === '') {
+				submitData.toUnitId = undefined
+			}
+			if (submitData.handoverDate === '') {
+				submitData.handoverDate = undefined
+			} else if (submitData.handoverDate) {
+				// Convert handoverDate to ISO 8601 format
+				submitData.handoverDate = new Date(
+					submitData.handoverDate,
+				).toISOString()
 			}
 
 			validateQuantities(
@@ -116,6 +132,9 @@ const useHandoverDetailController = (id?: string) => {
 	const onSubmit = (data: HandoverDetailFormData) => {
 		const submitData = {
 			...data,
+			handoverDate: data.handoverDate
+				? new Date(data.handoverDate).toISOString()
+				: data.handoverDate,
 			items: data.items.map((item: any) => ({
 				instanceId: item.instanceId,
 				unitOfMeasure: item.unitOfMeasure || 'Bộ',

@@ -180,7 +180,7 @@ const HandoverViewForm = ({ id }: Props) => {
 								data={
 									handoverDetail.items?.map((item: any, index: number) => ({
 										index,
-										componentName: item.instanceId?.equipmentId?.name || 'N/A',
+										componentName: item.instanceId?.name || 'N/A',
 										unitOfMeasure: item.unitOfMeasure || 'Bộ',
 										quantity: item.quantity || 0,
 										note: item.note || '',

@@ -313,15 +313,15 @@ export type CreateHandoverEquipmentDto = {
     /**
      * ID của đơn vị giao
      */
-    fromUnitId: (ObjectId);
+    fromUnitId?: (ObjectId);
     /**
      * ID của đơn vị nhận
      */
-    toUnitId: (ObjectId);
+    toUnitId?: (ObjectId);
     /**
      * Ngày bàn giao
      */
-    handoverDate: string;
+    handoverDate?: string;
     /**
      * Ghi chú thêm
      */
