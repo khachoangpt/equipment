@@ -280,26 +280,18 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 							control={control}
 							name="reason"
 							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Lý do bảo dưỡng/sửa chữa</FormLabel>
-									<FormControl>
-										<Input placeholder="Lý do bảo dưỡng/sửa chữa" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={control}
-							name="result"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Kết quả</FormLabel>
-									<FormControl>
-										<Input placeholder="Kết quả" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
+								<div>
+									<FormItem>
+										<FormLabel>Lý do bảo dưỡng/sửa chữa</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="Lý do bảo dưỡng/sửa chữa"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								</div>
 							)}
 						/>
 						<FormField
@@ -310,19 +302,6 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 									<FormLabel>Ghi chú</FormLabel>
 									<FormControl>
 										<Textarea placeholder="Ghi chú" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={control}
-							name="comment"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Nhận xét</FormLabel>
-									<FormControl>
-										<Textarea placeholder="Nhận xét" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -382,10 +361,10 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 								control={control}
 								name="selectedEquipmentQuantity"
 								render={({ field }) => (
-									<FormItem className="flex">
+									<FormItem className="flex w-full">
 										<FormLabel className="flex-none w-24">Số lượng</FormLabel>
 										<FormControl>
-											<div>
+											<div className="w-full">
 												<Input type="text" placeholder="Số lượng" {...field} />
 											</div>
 										</FormControl>
@@ -408,6 +387,36 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 							/>
 						</Card>
 					</div>
+					{id && (
+						<div className="grid gap-y-5 gap-x-20 grid-cols-2 mt-10">
+							<FormField
+								control={control}
+								name="result"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Kết quả</FormLabel>
+										<FormControl>
+											<Input placeholder="Kết quả" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={control}
+								name="comment"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Nhận xét</FormLabel>
+										<FormControl>
+											<Textarea placeholder="Nhận xét" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+					)}
 					<div className="mt-10 flex items-center justify-end gap-x-5">
 						<Button
 							type="button"

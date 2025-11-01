@@ -57,33 +57,32 @@ export const columns: ColumnDef<any>[] = [
 		header: 'Lý do',
 		cell: ({ row }) => row.original?.reason,
 	},
-	{
-		id: 'result',
-		accessorKey: 'details',
-		header: 'Kết quả',
-		cell: ({ row }) => row.original?.repairResult,
-	},
-	{
-		id: 'notes',
-		accessorKey: 'details',
-		header: 'Ghi chú',
-		cell: ({ row }) => (
-			<div className="whitespace-pre-wrap break-words max-w-[250px]">
-				{row.original?.notes as string}
-			</div>
-		),
-	},
-	{
-		id: 'comment',
-		accessorKey: 'details',
-		header: 'Nhận xét',
-		cell: ({ row }) => (
-			<div className="whitespace-pre-wrap break-words max-w-[250px]">
-				{row.original?.comment as string}
-			</div>
-		),
-	},
-
+	// {
+	// 	id: 'result',
+	// 	accessorKey: 'details',
+	// 	header: 'Kết quả',
+	// 	cell: ({ row }) => row.original?.repairResult,
+	// },
+	// {
+	// 	id: 'notes',
+	// 	accessorKey: 'details',
+	// 	header: 'Ghi chú',
+	// 	cell: ({ row }) => (
+	// 		<div className="whitespace-pre-wrap break-words max-w-[250px]">
+	// 			{row.original?.notes as string}
+	// 		</div>
+	// 	),
+	// },
+	// {
+	// 	id: 'comment',
+	// 	accessorKey: 'details',
+	// 	header: 'Nhận xét',
+	// 	cell: ({ row }) => (
+	// 		<div className="whitespace-pre-wrap break-words max-w-[250px]">
+	// 			{row.original?.comment as string}
+	// 		</div>
+	// 	),
+	// },
 	{
 		id: 'actions',
 		enableResizing: false,
@@ -140,7 +139,7 @@ export const columns: ColumnDef<any>[] = [
 					</p>
 					<DialogConfirmDelete
 						title="Xoá hoạt động bảo dưỡng/sửa chữa"
-						description="Bạn có chắc chắn muốn xoá hoạt động bảo dưỡng/sửa chữa này"
+						description="Bạn có chắc chắn muốn xoá hoạt động bảo dưỡng/sửa chữa này?"
 						open={openDelete}
 						onOpenChange={setOpenDelete}
 						onConfirm={handleDelete}
