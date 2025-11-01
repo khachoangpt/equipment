@@ -7,7 +7,7 @@ export type ActivityLog = {
     _id: string;
     instanceId?: EquipmentInstance;
     componentId?: Component;
-    activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị';
+    activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị' | 'Cập nhật sửa chữa' | 'Tạo sửa chữa' | 'Xóa sửa chữa' | 'Cập nhật bàn giao' | 'Tạo bàn giao' | 'Xóa bàn giao' | 'Cập nhật kiểm kê' | 'Tạo kiểm kê' | 'Xóa kiểm kê';
     createdBy: User;
     /**
      * Chi tiết hoạt động, cấu trúc thay đổi theo activityType
@@ -20,7 +20,7 @@ export type ActivityLog = {
     updatedAt: string;
 };
 
-export type activityType = 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị';
+export type activityType = 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị' | 'Cập nhật sửa chữa' | 'Tạo sửa chữa' | 'Xóa sửa chữa' | 'Cập nhật bàn giao' | 'Tạo bàn giao' | 'Xóa bàn giao' | 'Cập nhật kiểm kê' | 'Tạo kiểm kê' | 'Xóa kiểm kê';
 
 export type AddComponentStockDto = {
     /**
@@ -321,7 +321,7 @@ export type CreateHandoverEquipmentDto = {
     /**
      * Ngày bàn giao
      */
-    handoverDate?: string;
+    handoverDate: string;
     /**
      * Ghi chú thêm
      */
@@ -1597,6 +1597,77 @@ export type UpdateQualityLevelDto = {
     note?: string;
 };
 
+export type UpdateRepairEquipmentDto = {
+    /**
+     * Số biên bản sửa chữa
+     */
+    reportNumber?: string;
+    /**
+     * Tên người gửi đi sửa
+     */
+    sender?: string;
+    /**
+     * Tên người nhận lại sau sửa chữa
+     */
+    receiver?: string;
+    /**
+     * Tên người phê duyệt sửa chữa
+     */
+    approver?: string;
+    /**
+     * Tên người phê duyệt sửa chữa
+     */
+    repairApprovedBy?: string;
+    /**
+     * Tên người từ chối sửa chữa
+     */
+    repairRejectedBy?: string;
+    /**
+     * ID của đơn vị gửi đi sửa
+     */
+    fromUnitId?: (ObjectId);
+    /**
+     * ID của đơn vị sửa chữa
+     */
+    repairUnitId?: (ObjectId);
+    /**
+     * Ngày gửi đi sửa chữa
+     */
+    repairDate?: string;
+    /**
+     * Ngày nhận lại
+     */
+    receivedDate?: string;
+    /**
+     * Nơi sửa chữa
+     */
+    repairLocation?: string;
+    /**
+     * Lý do gửi đi sửa chữa
+     */
+    reason?: string;
+    /**
+     * Kết quả sửa chữa
+     */
+    repairResult?: string;
+    /**
+     * Ghi chú thêm
+     */
+    notes?: string;
+    /**
+     * Ghi chú thêm
+     */
+    comment?: string;
+    /**
+     * Loại hoạt động: repair (sửa chữa) hoặc maintenance (bảo trì)
+     */
+    type?: 'repair' | 'maintenance';
+    /**
+     * Danh sách các trang bị sửa chữa
+     */
+    items?: Array<(string)>;
+};
+
 export type UpdateSettingDto = {
     pagingSize?: number;
 };
@@ -2539,6 +2610,27 @@ export type EquipmentRepairControllerSearchResponse = (unknown);
 
 export type EquipmentRepairControllerSearchError = unknown;
 
+export type EquipmentRepairControllerUpdateData = {
+    body: UpdateRepairEquipmentDto;
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentRepairControllerUpdateResponse = (RepairEquipment);
+
+export type EquipmentRepairControllerUpdateError = (unknown);
+
+export type EquipmentRepairControllerRemoveData = {
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentRepairControllerRemoveResponse = (RepairEquipment);
+
+export type EquipmentRepairControllerRemoveError = (unknown);
+
 export type EquipmentHandoverControllerHandoverData = {
     body: CreateHandoverEquipmentDto;
 };
@@ -2716,7 +2808,7 @@ export type ActivityLogsControllerSearchData = {
         /**
          * Loại hoạt động cần tìm kiếm (Bắt buộc)
          */
-        activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị';
+        activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị' | 'Cập nhật sửa chữa' | 'Tạo sửa chữa' | 'Xóa sửa chữa' | 'Cập nhật bàn giao' | 'Tạo bàn giao' | 'Xóa bàn giao' | 'Cập nhật kiểm kê' | 'Tạo kiểm kê' | 'Xóa kiểm kê';
         /**
          * ID của linh kiện (nếu có)
          */
@@ -2879,6 +2971,10 @@ export type EquipmentInstancesControllerSearchData = {
          * ID của Nhóm loại trang bị
          */
         groupId?: string;
+        /**
+         * ID của Đơn vị nhập ban đầu
+         */
+        importingUnitId?: string;
         /**
          * Số lượng mục trên mỗi trang
          */

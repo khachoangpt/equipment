@@ -10,6 +10,7 @@ import {
 import { queryClient } from '@/configs/query-client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -63,7 +64,7 @@ const useHandoverDetailController = (id?: string) => {
 			handoverRejectedBy: '',
 			fromUnitId: '',
 			toUnitId: '',
-			handoverDate: '',
+			handoverDate: dayjs().format('YYYY-MM-DD'),
 			comment: '',
 			type: 'handover',
 			items: [],

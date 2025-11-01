@@ -53,8 +53,13 @@ const HandoverDetailForm = ({ id }: Props) => {
 	})
 	const { data: equipments } = useQuery({
 		...equipmentInstancesControllerSearchOptions({
-			query: { limit: 1000000, page: 1 },
+			query: {
+				limit: 1000000,
+				page: 1,
+				importingUnitId: form.watch('fromUnitId'),
+			},
 		}),
+		enabled: !!form.watch('fromUnitId'),
 		select: (data) =>
 			data?.data?.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
@@ -287,7 +292,16 @@ const HandoverDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Đơn vị giao</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
+										<Select
+											value={value}
+											onValueChange={(value) => {
+												onChange(value)
+												form.setValue('items', [])
+												form.setValue('selectedEquipmentName', '')
+												form.setValue('selectedEquipmentNote', '')
+												form.setValue('selectedEquipmentQuantity', '')
+											}}
+										>
 											<SelectTrigger
 												className="w-full"
 												onClear={() => onChange('')}
@@ -405,10 +419,12 @@ const HandoverDetailForm = ({ id }: Props) => {
 								control={control}
 								name="selectedEquipmentQuantity"
 								render={({ field }) => (
-									<FormItem className="flex">
+									<FormItem className="flex w-full">
 										<FormLabel className="flex-none w-24">Số lượng</FormLabel>
 										<FormControl>
-											<Input type="text" placeholder="Số lượng" {...field} />
+											<div className="w-full">
+												<Input type="text" placeholder="Số lượng" {...field} />
+											</div>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
