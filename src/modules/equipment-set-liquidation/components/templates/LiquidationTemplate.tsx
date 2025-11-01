@@ -1,14 +1,11 @@
 'use client'
 
-import {
-	equipmentDisposeControllerGenerateLiquidationFormLayoutMutation,
-	equipmentDisposeControllerSearchOptions,
-} from '@/client/@tanstack/react-query.gen'
+import { equipmentDisposeControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { pageList } from '@/configs/routes'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
@@ -74,32 +71,6 @@ const LiquidationTemplate = () => {
 		placeholderData: (prev) => prev,
 	})
 
-	const { mutateAsync, isPending } = useMutation({
-		...equipmentDisposeControllerGenerateLiquidationFormLayoutMutation(),
-	})
-
-	const handleDownload = (excelContent: string, fileName = 'document.xlsx') => {
-		const blob = new Blob([excelContent], {
-			type: 'application/vnd.openxmlformats-officedocument.spreadsheetml+xlsx',
-		})
-		const url = URL.createObjectURL(blob)
-
-		const link = document.createElement('a')
-		link.href = url
-		link.download = fileName
-		link.click()
-
-		URL.revokeObjectURL(url)
-	}
-
-	const handleGenerateReport = async () => {
-		const res = await mutateAsync({
-			responseType: 'arraybuffer',
-		})
-
-		handleDownload(res as string, 'Bien_ban_thanh_ly.xlsx')
-	}
-
 	return (
 		<div className="h-full">
 			<div className="text-center mb-10">
@@ -111,14 +82,6 @@ const LiquidationTemplate = () => {
 					<h5 className="font-bold text-lg">Danh sách hoạt động thanh lý</h5>
 				</div>
 				<div className="flex justify-end gap-x-2 mb-2">
-					<Button
-						variant={'outline'}
-						disabled={isPending}
-						onClick={handleGenerateReport}
-						className="text-green-600 cursor-pointer"
-					>
-						Xuất Excel
-					</Button>
 					<Link href={pageList.createEquipmentSetLiquidation.href}>
 						<Button>
 							<Plus />

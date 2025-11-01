@@ -3,6 +3,7 @@ import {
 	equipmentDisposeControllerRemoveMutation,
 	equipmentDisposeControllerSearchQueryKey,
 } from '@/client/@tanstack/react-query.gen'
+import { Button } from '@/components/ui/button'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
 import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
@@ -74,16 +75,12 @@ export const columns: ColumnDef<any>[] = [
 
 			return (
 				<div className="flex items-center justify-end gap-x-3">
-					<Link
-						href={
-							pageList.equipmentSetLiquidationDetail({
-								id: row.original.decisionNumber,
-							}).href
-						}
-						className="text-green-600"
+					<Button
+						variant={'ghost'}
+						className="text-amber-700 p-0 cursor-pointer font-normal"
 					>
-						Chi tiết
-					</Link>
+						Xuất Excel
+					</Button>
 					<Link
 						href={
 							pageList.equipmentSetLiquidationDetailUpdate({
