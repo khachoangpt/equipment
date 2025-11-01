@@ -509,33 +509,38 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 							control={form.control}
 							name="evaluatingUnitId"
 							render={({ field: { value, onChange } }) => (
-								<FormItem>
-									<FormLabel>Đơn vị đánh giá</FormLabel>
-									<FormControl>
-										{mode !== 'detail' ? (
-											<Select value={value} onValueChange={onChange}>
-												<SelectTrigger
-													onClear={() => onChange('')}
-													className="w-full"
-												>
-													<SelectValue />
-												</SelectTrigger>
-												<SelectContent>
-													{units?.map((quantity: any) => (
-														<SelectItem key={quantity._id} value={quantity._id}>
-															{quantity.name}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-										) : (
-											<span className="text-muted-foreground">
-												{units?.find((unit: any) => unit._id === value)?.name}
-											</span>
-										)}
-									</FormControl>
-									<FormMessage />
-								</FormItem>
+								<div>
+									<FormItem>
+										<FormLabel>Đơn vị đánh giá</FormLabel>
+										<FormControl>
+											{mode !== 'detail' ? (
+												<Select value={value} onValueChange={onChange}>
+													<SelectTrigger
+														onClear={() => onChange('')}
+														className="w-full"
+													>
+														<SelectValue />
+													</SelectTrigger>
+													<SelectContent>
+														{units?.map((quantity: any) => (
+															<SelectItem
+																key={quantity._id}
+																value={quantity._id}
+															>
+																{quantity.name}
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+											) : (
+												<span className="text-muted-foreground">
+													{units?.find((unit: any) => unit._id === value)?.name}
+												</span>
+											)}
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								</div>
 							)}
 						/>
 						<FormField
