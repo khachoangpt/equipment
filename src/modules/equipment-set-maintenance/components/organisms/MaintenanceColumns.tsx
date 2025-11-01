@@ -1,5 +1,16 @@
 'use client'
+import {
+	equipmentRepairControllerRemoveMutation,
+	equipmentRepairControllerSearchQueryKey,
+} from '@/client/@tanstack/react-query.gen'
+import { queryClient } from '@/configs/query-client'
+import { pageList } from '@/configs/routes'
+import DialogConfirmDelete from '@/modules/common/components/organisms/DialogConfirmDelete'
+import { useMutation } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
+import Link from 'next/link'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 export const columns: ColumnDef<any>[] = [
 	{
@@ -73,37 +84,69 @@ export const columns: ColumnDef<any>[] = [
 		),
 	},
 
-	// {
-	// 	id: 'actions',
-	// 	enableResizing: false,
-	// 	size: 1,
-	// 	cell: () => {
-	// 		const [open, setOpen] = useState<boolean>(false)
+	{
+		id: 'actions',
+		enableResizing: false,
+		size: 1,
+		cell: ({ row }) => {
+			const [openDelete, setOpenDelete] = useState<boolean>(false)
 
-	// 		const handleDelete = () => {
-	// 			setOpen(false)
-	// 		}
+			const { mutate: deleteRepair } = useMutation({
+				...equipmentRepairControllerRemoveMutation(),
+			})
 
-	// 		return (
-	// 			<div className="flex items-center justify-end gap-x-3">
-	// 				<Link href={'#'} className="text-blue-600">
-	// 					Chỉnh sửa
-	// 				</Link>
-	// 				<p
-	// 					className="text-red-600 cursor-pointer"
-	// 					onClick={() => setOpen(true)}
-	// 				>
-	// 					Xoá
-	// 				</p>
-	// 				<DialogConfirmDelete
-	// 					title="Xoá hoạt động bảo dưỡng/sửa chữa"
-	// 					description="Bạn có chắc chắn muốn xoá hoạt động bảo dưỡng/sửa chữa này"
-	// 					open={open}
-	// 					onOpenChange={setOpen}
-	// 					onConfirm={handleDelete}
-	// 				/>
-	// 			</div>
-	// 		)
-	// 	},
-	// },
+			const handleDelete = () => {
+				deleteRepair(
+					{ path: { id: row.original._id } },
+					{
+						onSuccess: () => {
+							setOpenDelete(false)
+							toast.success('Xóa thành công')
+							queryClient.invalidateQueries({
+								queryKey: equipmentRepairControllerSearchQueryKey(),
+							})
+						},
+						onError: (error) => {
+							setOpenDelete(false)
+							toast.error(
+								<div
+									dangerouslySetInnerHTML={{
+										__html: (error.response?.data as any)?.message,
+									}}
+								/>,
+							)
+						},
+					},
+				)
+			}
+
+			return (
+				<div className="flex items-center justify-end gap-x-3">
+					<Link
+						href={
+							pageList.equipmentSetMaintenanceDetailUpdate({
+								id: row.original._id,
+							}).href
+						}
+						className="text-blue-600"
+					>
+						Sửa
+					</Link>
+					<p
+						className="text-red-600 cursor-pointer"
+						onClick={() => setOpenDelete(true)}
+					>
+						Xoá
+					</p>
+					<DialogConfirmDelete
+						title="Xoá hoạt động bảo dưỡng/sửa chữa"
+						description="Bạn có chắc chắn muốn xoá hoạt động bảo dưỡng/sửa chữa này"
+						open={openDelete}
+						onOpenChange={setOpenDelete}
+						onConfirm={handleDelete}
+					/>
+				</div>
+			)
+		},
+	},
 ]

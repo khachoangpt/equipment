@@ -1,9 +1,7 @@
 'use client'
 
 import {
-	activityLogsControllerSearchQueryKey,
 	equipmentInstancesControllerSearchOptions,
-	equipmentRepairControllerRepairMutation,
 	unitsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import Combobox from '@/components/custom/combobox/Combobox'
@@ -27,15 +25,12 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
-import type { CreateEquipmentMaintenanceSchema } from '@/configs/schema'
 import DataTable from '@/modules/common/components/organisms/DataTable'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import { ArrowBigLeftDash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import type { SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import useMaintenanceDetailController from '../../controllers/maintenance-detail.controller'
 
@@ -44,12 +39,9 @@ type Props = {
 }
 
 const MaintenanceDetailForm = ({ id }: Props) => {
-	const { form } = useMaintenanceDetailController({ id })
+	const { form, onSubmit, isUpdating } = useMaintenanceDetailController({ id })
 	const { control } = form
 	const router = useRouter()
-	const { mutate: create } = useMutation({
-		...equipmentRepairControllerRepairMutation(),
-	})
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions({ query: { limit: 1000000, page: 1 } }),
 	})
@@ -65,7 +57,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 	})
 
 	const columns: ColumnDef<{
-		index: number
+		instanceId: string
 		componentName: string
 		unitOfMeasure: string
 		quantity: number
@@ -81,17 +73,41 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 		{
 			accessorKey: 'componentName',
 			header: 'Tên',
+			cell: ({ row }) => {
+				const { data: equipments } = useQuery({
+					...equipmentInstancesControllerSearchOptions({
+						query: { limit: 1000000, page: 1 },
+					}),
+				})
+				const name = equipments?.data?.find(
+					(item) => item._id === row.original?.instanceId,
+				)?.name
+
+				return <div>{name}</div>
+			},
 		},
-		// {
-		// 	accessorKey: 'unitOfMeasure',
-		// 	header: 'Đơn vị tính',
-		// },
+		{
+			accessorKey: 'serial',
+			header: 'Mã hiệu',
+			cell: ({ row }) => {
+				const { data: equipments } = useQuery({
+					...equipmentInstancesControllerSearchOptions({
+						query: { limit: 1000000, page: 1 },
+					}),
+				})
+				const serial = equipments?.data?.find(
+					(item) => item._id === row.original?.instanceId,
+				)?.serialNumber
+
+				return <div>{serial}</div>
+			},
+		},
 		{
 			accessorKey: 'quantity',
 			header: 'Số lượng',
 		},
 		{
-			accessorKey: 'note',
+			accessorKey: 'notes',
 			header: 'Ghi chú',
 		},
 		{
@@ -121,6 +137,10 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 	]
 
 	const handleSelectEquipment = () => {
+		if (Number.isNaN(Number(form.watch('selectedEquipmentQuantity')))) {
+			toast.error('Vui lòng nhập số lượng hợp lệ')
+			return
+		}
 		const component = equipments?.find(
 			(item) => item.value === form.watch('selectedEquipmentName'),
 		)
@@ -134,53 +154,9 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 				componentName: component?.label,
 				unitOfMeasure: 'Bộ',
 				quantity: Number(form.watch('selectedEquipmentQuantity')),
-				note: form.watch('selectedEquipmentNote'),
+				notes: form.watch('selectedEquipmentNote'),
 			} as any,
 		])
-	}
-
-	const onSubmit: SubmitHandler<CreateEquipmentMaintenanceSchema> = (data) => {
-		create(
-			{
-				body: {
-					fromUnitId: data.fromUnitId as any,
-					items: (data.items || []) as any,
-					reason: data.reason,
-					repairDate: new Date(data.sentDate).toISOString(),
-					receivedDate: data.receivedDate
-						? new Date(data.receivedDate).toISOString()
-						: undefined,
-					reportNumber: data.reportNumber,
-					receiver: data.receiver,
-					sender: data.sender,
-					comment: data.comment,
-					notes: data.notes,
-					repairLocation: data.repairLocation,
-					type: 'repair',
-					repairResult: data.result,
-				},
-			},
-			{
-				onError: (error) => {
-					toast.error(
-						<div
-							dangerouslySetInnerHTML={{
-								__html: (error.response?.data as any)?.message,
-							}}
-						/>,
-					)
-				},
-				onSuccess: () => {
-					toast.success('Tạo thành công')
-					queryClient.invalidateQueries({
-						queryKey: activityLogsControllerSearchQueryKey({
-							query: { activityType: 'Sửa chữa' },
-						}),
-					})
-					router.push(pageList.equipmentSetMaintenance.href)
-				},
-			},
-		)
 	}
 
 	return (
@@ -409,7 +385,9 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 									<FormItem className="flex">
 										<FormLabel className="flex-none w-24">Số lượng</FormLabel>
 										<FormControl>
-											<Input type="text" placeholder="Số lượng" {...field} />
+											<div>
+												<Input type="text" placeholder="Số lượng" {...field} />
+											</div>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -440,8 +418,8 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 						>
 							Quay lại
 						</Button>
-						<Button onClick={form.handleSubmit(onSubmit)}>
-							{id ? 'Cập nhật' : 'Thêm'}
+						<Button onClick={form.handleSubmit(onSubmit)} disabled={isUpdating}>
+							{isUpdating ? 'Đang xử lý...' : id ? 'Cập nhật' : 'Thêm'}
 						</Button>
 					</div>
 				</Form>

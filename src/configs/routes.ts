@@ -136,6 +136,12 @@ export const pageList = {
 		isAuth: true,
 		pattern: ['equipment-set', 'maintenance', ''],
 	}),
+	equipmentSetMaintenanceDetailUpdate: (config?: { id?: string }) => ({
+		title: 'Equipment Set maintenance Detail Update',
+		href: `/equipment-set/maintenance/${config?.id}/update`,
+		isAuth: true,
+		pattern: ['equipment-set', 'maintenance', 'update', ''],
+	}),
 	equipmentSetLiquidation: {
 		title: 'Equipment Set liquidation',
 		href: '/equipment-set/liquidation',
