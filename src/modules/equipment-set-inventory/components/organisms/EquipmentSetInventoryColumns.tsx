@@ -1,17 +1,16 @@
-import type { EquipmentInstance } from '@/client'
 import { pageList } from '@/configs/routes'
 import type { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useState } from 'react'
 import UpdateInventoryDialog from './UpdateInventoryDialog'
 
-export const columns: ColumnDef<EquipmentInstance>[] = [
+export const columns: ColumnDef<any>[] = [
 	{
 		accessorKey: 'index',
 		header: 'STT',
 	},
 	{
-		accessorKey: 'equipmentId',
+		accessorKey: 'instanceId',
 		header: 'Tên',
 		cell: ({ row }) => {
 			return (
@@ -23,13 +22,13 @@ export const columns: ColumnDef<EquipmentInstance>[] = [
 					}
 					className="text-right"
 				>
-					{row.original.equipmentId?.name}
+					{row.original.instanceId?.name}
 				</Link>
 			)
 		},
 	},
 	{
-		accessorKey: 'serialNumber',
+		accessorKey: 'instanceId.serialNumber',
 		header: 'Mã hiệu serial',
 	},
 	{
@@ -50,13 +49,11 @@ export const columns: ColumnDef<EquipmentInstance>[] = [
 		header: 'Phân cấp chất lượng',
 		cell: ({ row }) => {
 			return (
-				<span className="text-right">{row.original.qualityLevelId?.name}</span>
+				<span className="text-right">
+					{row.original.qualityLevelDetails?.name}
+				</span>
 			)
 		},
-	},
-	{
-		accessorKey: 'countryOfOrigin',
-		header: 'Nguồn cấp',
 	},
 	{
 		id: 'actions',

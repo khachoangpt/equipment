@@ -1,6 +1,6 @@
 'use client'
 
-import { equipmentInstancesControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
+import { equipmentInstanceDetailsControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useQuery } from '@tanstack/react-query'
@@ -26,7 +26,7 @@ const EquipmentSetInventoryTemplate = () => {
 		technicalSpecifications: parseAsString.withDefault(''),
 	})
 	const { data: equipmentSets } = useQuery({
-		...equipmentInstancesControllerSearchOptions({
+		...equipmentInstanceDetailsControllerSearchOptions({
 			query: {
 				type: 'SYNCHRONIZED_EQUIPMENT',
 				limit: settings?.pagingSize,
@@ -39,16 +39,16 @@ const EquipmentSetInventoryTemplate = () => {
 					? searchQuery.entryPlanNumber
 					: undefined,
 				qualityLevelId: searchQuery.qualityLevelId
-					? searchQuery.qualityLevelId
+					? (searchQuery.qualityLevelId as any)
 					: undefined,
 				status: searchQuery.status ? searchQuery.status : undefined,
 				usingUnitId: searchQuery.usingUnitId
-					? searchQuery.usingUnitId
+					? (searchQuery.usingUnitId as any)
 					: undefined,
 				countryOfOrigin: searchQuery.countryOfOrigin
 					? searchQuery.countryOfOrigin
 					: undefined,
-				groupId: searchQuery.groupId ? searchQuery.groupId : undefined,
+				groupId: searchQuery.groupId ? (searchQuery.groupId as any) : undefined,
 				featureConfiguration: searchQuery.featureConfiguration
 					? (searchQuery.featureConfiguration as any)
 					: undefined,
@@ -57,10 +57,10 @@ const EquipmentSetInventoryTemplate = () => {
 					: undefined,
 			},
 		}),
-		select: (data) => {
+		select: (data: any) => {
 			return {
 				...data,
-				data: data?.data?.map((item, index) => ({
+				data: data?.data?.map((item: any, index: number) => ({
 					...item,
 					index: settings?.pagingSize
 						? (page - 1) * settings?.pagingSize + index + 1
@@ -69,7 +69,7 @@ const EquipmentSetInventoryTemplate = () => {
 			}
 		},
 		enabled: !isFetchingGeneralSettings,
-		placeholderData: (prev) => prev,
+		placeholderData: (prev: any) => prev,
 	})
 
 	return (

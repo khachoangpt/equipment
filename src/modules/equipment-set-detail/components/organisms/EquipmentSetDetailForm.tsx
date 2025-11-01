@@ -36,7 +36,7 @@ import useUploadFile from '@/hooks/use-upload-file'
 import { genImageUrl } from '@/utils/gen-image-url'
 import { SelectValue } from '@radix-ui/react-select'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { X } from 'lucide-react'
+import { Loader2, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { type ChangeEvent, useEffect, useState } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
@@ -54,7 +54,7 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 	const [previewImages, setPreviewImages] = useState<
 		ImageAttachment[] | undefined
 	>(form.getValues('images'))
-	const { mutate: create } = useMutation({
+	const { mutate: create, isPending: isCreating } = useMutation({
 		...equipmentInstancesControllerCreateMutation(),
 	})
 	const { data: syncEquipments } = useQuery({
@@ -63,7 +63,7 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 			return data?.data
 		},
 	})
-	const { mutate: update } = useMutation({
+	const { mutate: update, isPending: isUpdating } = useMutation({
 		...equipmentInstancesControllerUpdateMutation(),
 	})
 	const { data: units } = useQuery({
@@ -758,6 +758,9 @@ const EquipmentSetDetailForm = ({ id, mode }: Props) => {
 							</Button>
 							<Button onClick={form.handleSubmit(onSubmit)}>
 								{id ? 'Cập nhật' : 'Thêm'}
+								{isCreating || isUpdating ? (
+									<Loader2 className="size-4 ml-2" />
+								) : null}
 							</Button>
 						</div>
 					) : null}

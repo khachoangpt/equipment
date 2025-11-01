@@ -216,6 +216,28 @@ export type CreateEquipmentGroupDto = {
     note?: string;
 };
 
+export type CreateEquipmentInstanceDetailDto = {
+    /**
+     * ID của trang bị gốc (EquipmentInstance)
+     */
+    instanceId: string;
+    detailSerialNumber?: string;
+    status?: string;
+    /**
+     * ID của Đơn vị sử dụng
+     */
+    usingUnitId?: string;
+    /**
+     * ID của Chất lượng trang bị
+     */
+    qualityLevelId?: string;
+    storageLocation?: string;
+    /**
+     * Ghi chú
+     */
+    notes?: string;
+};
+
 export type CreateEquipmentInstanceDto = {
     /**
      * ID của loại trang bị (trong danh mục)
@@ -802,6 +824,37 @@ export type EquipmentInstance = {
      * Quốc gia sản xuất
      */
     countryOfOrigin?: string;
+};
+
+export type EquipmentInstanceDetail = {
+    /**
+     * Mongo document ID
+     */
+    _id: string;
+    /**
+     * ID của trang bị gốc (EquipmentInstance)
+     */
+    instanceId: (EquipmentInstance);
+    detailSerialNumber?: string;
+    status?: string;
+    /**
+     * Đơn vị đang sử dụng hiện tại
+     */
+    usingUnitId?: (Unit);
+    /**
+     * Chất lượng trang bị
+     */
+    qualityLevelId?: (QualityLevel);
+    /**
+     * Vị trí lưu trữ trang bị
+     */
+    storageLocation?: string;
+    /**
+     * Ghi chú riêng cho từng chi tiết
+     */
+    notes?: string;
+    createdAt: string;
+    updatedAt: string;
 };
 
 export type HandoverEquipment = {
@@ -1462,6 +1515,28 @@ export type UpdateEquipmentGroupDto = {
     name?: string;
     code?: string;
     note?: string;
+};
+
+export type UpdateEquipmentInstanceDetailDto = {
+    /**
+     * ID của trang bị gốc (EquipmentInstance)
+     */
+    instanceId?: string;
+    detailSerialNumber?: string;
+    status?: string;
+    /**
+     * ID của Đơn vị sử dụng
+     */
+    usingUnitId?: string;
+    /**
+     * ID của Chất lượng trang bị
+     */
+    qualityLevelId?: string;
+    storageLocation?: string;
+    /**
+     * Ghi chú
+     */
+    notes?: string;
 };
 
 export type UpdateEquipmentInstanceDto = {
@@ -2553,6 +2628,104 @@ export type EquipmentDisposeControllerGenerateLiquidationFormLayoutResponse = (u
 
 export type EquipmentDisposeControllerGenerateLiquidationFormLayoutError = unknown;
 
+export type EquipmentInstanceDetailsControllerCreateData = {
+    body: CreateEquipmentInstanceDetailDto;
+};
+
+export type EquipmentInstanceDetailsControllerCreateResponse = (EquipmentInstanceDetail);
+
+export type EquipmentInstanceDetailsControllerCreateError = (unknown);
+
+export type EquipmentInstanceDetailsControllerSearchData = {
+    query?: {
+        /**
+         * Tìm theo nước sản xuất
+         */
+        countryOfOrigin?: string;
+        /**
+         * Tìm kiếm theo serial number chi tiết
+         */
+        detailSerialNumber?: string;
+        /**
+         * ID của Nhóm loại trang bị
+         */
+        groupId?: ObjectId;
+        /**
+         * ID của trang bị gốc (EquipmentInstance)
+         */
+        instanceId?: ObjectId;
+        /**
+         * Số lượng mỗi trang
+         */
+        limit?: number;
+        /**
+         * Tìm theo tên trang bị (hỗ trợ tìm kiếm gần đúng)
+         */
+        name?: string;
+        /**
+         * Số trang
+         */
+        page?: number;
+        /**
+         * ID của Chất lượng trang bị
+         */
+        qualityLevelId?: ObjectId;
+        /**
+         * Lọc theo trạng thái
+         */
+        status?: string;
+        /**
+         * ID của Đơn vị sử dụng
+         */
+        usingUnitId?: ObjectId;
+    };
+};
+
+export type EquipmentInstanceDetailsControllerSearchResponse = (unknown);
+
+export type EquipmentInstanceDetailsControllerSearchError = unknown;
+
+export type EquipmentInstanceDetailsControllerFindByInstanceIdData = {
+    path: {
+        instanceId: string;
+    };
+};
+
+export type EquipmentInstanceDetailsControllerFindByInstanceIdResponse = (Array<EquipmentInstanceDetail>);
+
+export type EquipmentInstanceDetailsControllerFindByInstanceIdError = unknown;
+
+export type EquipmentInstanceDetailsControllerFindOneData = {
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentInstanceDetailsControllerFindOneResponse = (EquipmentInstanceDetail);
+
+export type EquipmentInstanceDetailsControllerFindOneError = (unknown);
+
+export type EquipmentInstanceDetailsControllerUpdateData = {
+    body: UpdateEquipmentInstanceDetailDto;
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentInstanceDetailsControllerUpdateResponse = (EquipmentInstanceDetail);
+
+export type EquipmentInstanceDetailsControllerUpdateError = (unknown);
+
+export type EquipmentInstanceDetailsControllerRemoveData = {
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentInstanceDetailsControllerRemoveResponse = (EquipmentInstanceDetail);
+
+export type EquipmentInstanceDetailsControllerRemoveError = (unknown);
+
 export type EquipmentRepairControllerRepairData = {
     body: CreateRepairEquipmentDto;
 };
@@ -2609,6 +2782,16 @@ export type EquipmentRepairControllerSearchData = {
 export type EquipmentRepairControllerSearchResponse = (unknown);
 
 export type EquipmentRepairControllerSearchError = unknown;
+
+export type EquipmentRepairControllerFindOneData = {
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentRepairControllerFindOneResponse = (RepairEquipment);
+
+export type EquipmentRepairControllerFindOneError = (unknown);
 
 export type EquipmentRepairControllerUpdateData = {
     body: UpdateRepairEquipmentDto;

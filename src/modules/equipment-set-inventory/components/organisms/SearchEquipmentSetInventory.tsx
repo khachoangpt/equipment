@@ -122,7 +122,7 @@ const SearchEquipmentSetInventory = ({ onOpenChange, open }: Props) => {
 									</FormItem>
 								)}
 							/>
-							<FormField
+							{/* <FormField
 								control={control}
 								name="serialNumber"
 								render={({ field }) => (
@@ -133,7 +133,7 @@ const SearchEquipmentSetInventory = ({ onOpenChange, open }: Props) => {
 										</FormControl>
 									</FormItem>
 								)}
-							/>
+							/> */}
 							<FormField
 								control={control}
 								name="qualityLevelId"

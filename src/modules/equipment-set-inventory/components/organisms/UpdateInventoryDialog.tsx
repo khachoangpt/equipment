@@ -1,8 +1,8 @@
 'use client'
 
 import {
-	equipmentInstancesControllerSearchQueryKey,
-	equipmentInstancesControllerUpdateMutation,
+	equipmentInstanceDetailsControllerSearchQueryKey,
+	equipmentInstanceDetailsControllerUpdateMutation,
 	qualityLevelsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
@@ -47,7 +47,7 @@ const updateInventorySchema = z.object({
 type UpdateInventoryForm = z.infer<typeof updateInventorySchema>
 
 type Props = {
-	equipmentId: string
+	equipmentId?: string
 	open: boolean
 	onOpenChange: (open: boolean) => void
 }
@@ -61,7 +61,7 @@ const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
 	})
 
 	const { mutate: updateInventory, isPending: isLoading } = useMutation({
-		...equipmentInstancesControllerUpdateMutation(),
+		...equipmentInstanceDetailsControllerUpdateMutation(),
 	})
 
 	const form = useForm<UpdateInventoryForm>({
@@ -77,7 +77,7 @@ const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
 		updateInventory(
 			{
 				path: {
-					id: equipmentId,
+					id: equipmentId ?? '',
 				},
 				body: {
 					qualityLevelId: formData.qualityLevelId,
@@ -89,7 +89,7 @@ const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
 				onSuccess: () => {
 					toast.success('Cập nhật kiểm kê thành công')
 					queryClient.invalidateQueries({
-						queryKey: equipmentInstancesControllerSearchQueryKey(),
+						queryKey: equipmentInstanceDetailsControllerSearchQueryKey(),
 					})
 					onOpenChange(false)
 					form.reset()

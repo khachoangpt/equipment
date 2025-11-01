@@ -1,8 +1,8 @@
 'use client'
 
 import {
+	equipmentRepairControllerFindOneOptions,
 	equipmentRepairControllerRepairMutation,
-	equipmentRepairControllerSearchOptions,
 	equipmentRepairControllerSearchQueryKey,
 	equipmentRepairControllerUpdateMutation,
 } from '@/client/@tanstack/react-query.gen'
@@ -26,15 +26,12 @@ const useMaintenanceDetailController = ({ id }: Props) => {
 	const router = useRouter()
 
 	const { data: repairDetail, isFetching } = useQuery({
-		...equipmentRepairControllerSearchOptions({
-			query: {
-				limit: 1,
-				page: 1,
-				_id: id,
+		...equipmentRepairControllerFindOneOptions({
+			path: {
+				id: id ?? '',
 			},
 		}),
 		enabled: !!id,
-		select: (data: any) => data?.data?.[0],
 	})
 
 	const defaultValues: CreateEquipmentMaintenanceSchema & {
@@ -188,7 +185,9 @@ const useMaintenanceDetailController = ({ id }: Props) => {
 				selectedEquipmentQuantity: '',
 				selectedEquipmentNote: '',
 				fromUnitId:
-					repairDetail.fromUnitId?._id || repairDetail.fromUnitId || '',
+					repairDetail.fromUnitId?._id ||
+					(repairDetail.fromUnitId as any) ||
+					'',
 			})
 		}
 	}, [repairDetail, form])
