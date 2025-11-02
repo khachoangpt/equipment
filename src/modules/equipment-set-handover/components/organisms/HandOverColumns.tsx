@@ -82,7 +82,7 @@ export const columns: ColumnDef<any>[] = [
 
 				handleDownload(
 					res as string,
-					`Bien_ban_ban_giao_${row.original.reportNumber}.xlsx`,
+					`Bien_ban_ban_giao_${row.original.reportNumber}.pdf`,
 				)
 			}
 
@@ -119,7 +119,7 @@ export const columns: ColumnDef<any>[] = [
 						onClick={handleGenerateReport}
 						className="text-amber-700 p-0 cursor-pointer font-normal"
 					>
-						Xuất Excel
+						Xuất PDF
 					</Button>
 					<Link
 						href={
@@ -158,9 +158,9 @@ export const columns: ColumnDef<any>[] = [
 	},
 ]
 
-const handleDownload = (excelContent: string, fileName = 'document.xlsx') => {
-	const blob = new Blob([excelContent], {
-		type: 'application/vnd.openxmlformats-officedocument.spreadsheetml+xml',
+const handleDownload = (pdfContent: string, fileName = 'document.pdf') => {
+	const blob = new Blob([pdfContent], {
+		type: 'application/pdf',
 	})
 	const url = URL.createObjectURL(blob)
 
