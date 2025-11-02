@@ -47,8 +47,9 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 	})
 	const { data: equipments } = useQuery({
 		...equipmentInstancesControllerSearchOptions({
-			query: { limit: 1000000, page: 1 },
+			query: { limit: 1000000, page: 1, usingUnitId: form.watch('fromUnitId') },
 		}),
+		enabled: !!form.watch('fromUnitId'),
 		select: (data) =>
 			data?.data?.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
@@ -79,10 +80,8 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 						query: {
 							limit: 1000000,
 							page: 1,
-							usingUnitId: form.watch('fromUnitId'),
 						},
 					}),
-					enabled: !!form.watch('fromUnitId'),
 				})
 				const name = equipments?.data?.find(
 					(item) => item._id === row.original?.instanceId,
