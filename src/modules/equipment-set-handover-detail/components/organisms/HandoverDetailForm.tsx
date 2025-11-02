@@ -1,5 +1,6 @@
 'use client'
 import {
+	equipmentInstancesControllerFindOneOptions,
 	equipmentInstancesControllerSearchOptions,
 	unitsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
@@ -162,15 +163,13 @@ const HandoverDetailForm = ({ id }: Props) => {
 			header: 'Tên',
 			cell: ({ row }) => {
 				const { data: equipments } = useQuery({
-					...equipmentInstancesControllerSearchOptions({
-						query: { limit: 1000000, page: 1 },
+					...equipmentInstancesControllerFindOneOptions({
+						path: { id: row.original?.instanceId },
 					}),
+					enabled: !!row.original?.instanceId,
 				})
-				const name = equipments?.data?.find(
-					(item) => item._id === row.original?.instanceId,
-				)?.name
 
-				return <div>{name}</div>
+				return <div>{equipments?.equipmentId?.name}</div>
 			},
 		},
 		{
@@ -182,6 +181,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 						query: { limit: 1000000, page: 1 },
 					}),
 				})
+
 				const serial = equipments?.data?.find(
 					(item) => item._id === row.original?.instanceId,
 				)?.serialNumber
@@ -395,7 +395,7 @@ const HandoverDetailForm = ({ id }: Props) => {
 								<ArrowBigLeftDash className="size-7" />
 							)}
 						</Button>
-						<Card className="h-full w-1/3 flex-none">
+						<Card className="h-full flex-none">
 							<FormField
 								control={control}
 								name="selectedEquipmentName"

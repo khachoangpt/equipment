@@ -1,5 +1,6 @@
 'use client'
 import {
+	equipmentDisposeControllerGenerateLiquidationFormLayoutMutation,
 	equipmentDisposeControllerRemoveMutation,
 	equipmentDisposeControllerSearchQueryKey,
 } from '@/client/@tanstack/react-query.gen'
@@ -73,13 +74,49 @@ export const columns: ColumnDef<any>[] = [
 				)
 			}
 
+			const { mutateAsync: generateLiquidationForm } = useMutation({
+				...equipmentDisposeControllerGenerateLiquidationFormLayoutMutation(),
+			})
+
+			const handleGenerateReport = async () => {
+				const res = await generateLiquidationForm({
+					query: {
+						decisionNumber: row.original.decisionNumber,
+					},
+					responseType: 'arraybuffer',
+				})
+
+				handleDownload(
+					res as string,
+					`Phieu_thanh_ly_${row.original?.decisionNumber || ''}.pdf`,
+				)
+			}
+
+			const handleDownload = (
+				excelContent: string,
+				fileName = 'document.pdf',
+			) => {
+				const blob = new Blob([excelContent], {
+					type: 'application/pdf',
+				})
+				const url = URL.createObjectURL(blob)
+
+				const link = document.createElement('a')
+				link.href = url
+				link.download = fileName
+				link.click()
+
+				URL.revokeObjectURL(url)
+			}
+
 			return (
 				<div className="flex items-center justify-end gap-x-3">
 					<Button
 						variant={'ghost'}
 						className="text-amber-700 p-0 cursor-pointer font-normal"
+						onClick={handleGenerateReport}
 					>
-						Xuất Excel
+						Xuất PDF
 					</Button>
 					<Link
 						href={

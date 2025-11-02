@@ -65,7 +65,7 @@ const DialogStatisticHandover = ({ onOpenChange, open }: Props) => {
 				onSuccess: (res) => {
 					handleDownload(
 						res as string,
-						`Bao_cao_ban_giao_${dayjs(data.startDate).format('DD-MM-YYYY')}_${dayjs(data.endDate).format('DD-MM-YYYY')}.xlsx`,
+						`Bao_cao_ban_giao_${dayjs(data.startDate).format('DD-MM-YYYY')}_${dayjs(data.endDate).format('DD-MM-YYYY')}.pdf`,
 					)
 					onOpenChange(false)
 				},
@@ -73,9 +73,9 @@ const DialogStatisticHandover = ({ onOpenChange, open }: Props) => {
 		)
 	}
 
-	const handleDownload = (pdfContent: string, fileName = 'document.xlsx') => {
+	const handleDownload = (pdfContent: string, fileName = 'document.pdf') => {
 		const blob = new Blob([pdfContent], {
-			type: 'application/vnd.openxmlformats-officedocument.spreadsheetml+xml',
+			type: 'application/pdf',
 		})
 		const url = URL.createObjectURL(blob)
 

@@ -2624,9 +2624,18 @@ export type EquipmentDisposeControllerFindByDecisionNumberResponse = (DisposalBy
 
 export type EquipmentDisposeControllerFindByDecisionNumberError = (unknown);
 
+export type EquipmentDisposeControllerGenerateLiquidationFormLayoutData = {
+    query: {
+        /**
+         * Số quyết định thanh lý
+         */
+        decisionNumber: string;
+    };
+};
+
 export type EquipmentDisposeControllerGenerateLiquidationFormLayoutResponse = (unknown);
 
-export type EquipmentDisposeControllerGenerateLiquidationFormLayoutError = unknown;
+export type EquipmentDisposeControllerGenerateLiquidationFormLayoutError = (unknown);
 
 export type EquipmentInstanceDetailsControllerCreateData = {
     body: CreateEquipmentInstanceDetailDto;

@@ -497,7 +497,7 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 						>
 							<ArrowBigLeftDash className="size-7" />
 						</Button>
-						<Card className="h-full w-1/3 flex-none">
+						<Card className="h-full flex-none">
 							<FormField
 								control={control}
 								name="selectedComponentName"
