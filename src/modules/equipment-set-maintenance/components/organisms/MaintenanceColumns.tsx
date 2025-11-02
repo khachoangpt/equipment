@@ -11,6 +11,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import DialogCompleteRepair from './DialogCompleteRepair'
 
 export const columns: ColumnDef<any>[] = [
 	{
@@ -89,6 +90,7 @@ export const columns: ColumnDef<any>[] = [
 		size: 1,
 		cell: ({ row }) => {
 			const [openDelete, setOpenDelete] = useState<boolean>(false)
+			const [openComplete, setOpenComplete] = useState<boolean>(false)
 
 			const { mutate: deleteRepair } = useMutation({
 				...equipmentRepairControllerRemoveMutation(),
@@ -121,6 +123,12 @@ export const columns: ColumnDef<any>[] = [
 
 			return (
 				<div className="flex items-center justify-end gap-x-3">
+					<p
+						className="text-green-600 cursor-pointer"
+						onClick={() => setOpenComplete(true)}
+					>
+						Hoàn thành
+					</p>
 					<Link
 						href={
 							pageList.equipmentSetMaintenanceDetailUpdate({
@@ -137,6 +145,11 @@ export const columns: ColumnDef<any>[] = [
 					>
 						Xoá
 					</p>
+					<DialogCompleteRepair
+						open={openComplete}
+						onOpenChange={setOpenComplete}
+						repairId={row.original._id}
+					/>
 					<DialogConfirmDelete
 						title="Xoá hoạt động bảo dưỡng/sửa chữa"
 						description="Bạn có chắc chắn muốn xoá hoạt động bảo dưỡng/sửa chữa này?"

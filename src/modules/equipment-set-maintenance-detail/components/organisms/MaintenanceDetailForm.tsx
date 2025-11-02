@@ -76,8 +76,13 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 			cell: ({ row }) => {
 				const { data: equipments } = useQuery({
 					...equipmentInstancesControllerSearchOptions({
-						query: { limit: 1000000, page: 1 },
+						query: {
+							limit: 1000000,
+							page: 1,
+							usingUnitId: form.watch('fromUnitId'),
+						},
 					}),
+					enabled: !!form.watch('fromUnitId'),
 				})
 				const name = equipments?.data?.find(
 					(item) => item._id === row.original?.instanceId,
@@ -185,7 +190,16 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 								<FormItem>
 									<FormLabel>Đơn vị</FormLabel>
 									<FormControl>
-										<Select value={value} onValueChange={onChange}>
+										<Select
+											value={value}
+											onValueChange={(e) => {
+												onChange(e)
+												form.setValue('items', [])
+												form.setValue('selectedEquipmentName', '')
+												form.setValue('selectedEquipmentNote', '')
+												form.setValue('selectedEquipmentQuantity', '')
+											}}
+										>
 											<SelectTrigger
 												className="w-full"
 												onClear={() => onChange('')}

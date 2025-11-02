@@ -49,6 +49,21 @@ export type BuildCheckDto = {
     quantityToBuild: number;
 };
 
+export type CompleteRepairEquipmentDto = {
+    /**
+     * Ngày nhận lại sau sửa chữa (mặc định là ngày hiện tại)
+     */
+    receivedDate?: string;
+    /**
+     * Kết quả sửa chữa
+     */
+    repairResult?: string;
+    /**
+     * Ghi chú tổng quan và chi phí
+     */
+    notes?: string;
+};
+
 export type Component = {
     /**
      * Mongo document ID
@@ -2835,6 +2850,17 @@ export type EquipmentRepairControllerRemoveData = {
 export type EquipmentRepairControllerRemoveResponse = (RepairEquipment);
 
 export type EquipmentRepairControllerRemoveError = (unknown);
+
+export type EquipmentRepairControllerCompleteData = {
+    body: CompleteRepairEquipmentDto;
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentRepairControllerCompleteResponse = (RepairEquipment);
+
+export type EquipmentRepairControllerCompleteError = (unknown);
 
 export type EquipmentHandoverControllerHandoverData = {
     body: CreateHandoverEquipmentDto;
