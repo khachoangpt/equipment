@@ -1,8 +1,9 @@
 'use client'
 
 import {
+	equipmentHandoverControllerFindOneOptions,
+	equipmentHandoverControllerFindOneQueryKey,
 	equipmentHandoverControllerHandoverMutation,
-	equipmentHandoverControllerSearchOptions,
 	equipmentHandoverControllerSearchQueryKey,
 	equipmentHandoverControllerUpdateMutation,
 	equipmentHandoverControllerValidateQuantitiesMutation,
@@ -42,15 +43,12 @@ const useHandoverDetailController = (id?: string) => {
 	const router = useRouter()
 
 	const { data: handoverDetail, isFetching } = useQuery({
-		...equipmentHandoverControllerSearchOptions({
-			query: {
-				limit: 1,
-				page: 1,
-				_id: id,
+		...equipmentHandoverControllerFindOneOptions({
+			path: {
+				id: id || '',
 			},
 		}),
 		enabled: !!id,
-		select: (data: any) => data?.data?.[0],
 	})
 
 	const form = useForm<HandoverDetailFormData>({
@@ -157,6 +155,13 @@ const useHandoverDetailController = (id?: string) => {
 						queryClient.invalidateQueries({
 							queryKey: equipmentHandoverControllerSearchQueryKey(),
 						})
+						if (id) {
+							queryClient.invalidateQueries({
+								queryKey: equipmentHandoverControllerFindOneQueryKey({
+									path: { id },
+								}),
+							})
+						}
 						router.push('/equipment-set/handover')
 					},
 					onError: (error: any) => {

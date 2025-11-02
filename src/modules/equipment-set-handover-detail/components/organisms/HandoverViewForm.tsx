@@ -1,6 +1,6 @@
 'use client'
 import {
-	equipmentHandoverControllerSearchOptions,
+	equipmentHandoverControllerFindOneOptions,
 	equipmentInstancesControllerSearchOptions,
 } from '@/client/@tanstack/react-query.gen'
 import { Card } from '@/components/ui/card'
@@ -14,15 +14,12 @@ type Props = {
 
 const HandoverViewForm = ({ id }: Props) => {
 	const { data: handoverDetail, isFetching } = useQuery({
-		...equipmentHandoverControllerSearchOptions({
-			query: {
-				limit: 1,
-				page: 1,
-				_id: id,
+		...equipmentHandoverControllerFindOneOptions({
+			path: {
+				id: id,
 			},
 		}),
 		enabled: !!id,
-		select: (data: any) => data?.data?.[0],
 	})
 
 	const columns: ColumnDef<{
@@ -30,7 +27,7 @@ const HandoverViewForm = ({ id }: Props) => {
 		componentName: string
 		unitOfMeasure: string
 		quantity: number
-		note: string
+		notes: string
 	}>[] = [
 		{
 			accessorKey: 'index',

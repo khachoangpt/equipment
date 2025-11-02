@@ -1,7 +1,7 @@
 'use client'
 import {
 	equipmentDisposeControllerGenerateLiquidationFormLayoutMutation,
-	equipmentDisposeControllerRemoveMutation,
+	equipmentDisposeControllerRemoveByDecisionNumberMutation,
 	equipmentDisposeControllerSearchQueryKey,
 } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
@@ -47,13 +47,13 @@ export const columns: ColumnDef<any>[] = [
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
 			const { mutate: remove } = useMutation({
-				...equipmentDisposeControllerRemoveMutation(),
+				...equipmentDisposeControllerRemoveByDecisionNumberMutation(),
 			})
 
 			const handleDelete = () => {
 				setOpen(false)
 				remove(
-					{ path: { id: row.original._id } },
+					{ query: { decisionNumber: row.original.decisionNumber } },
 					{
 						onError: (error) => {
 							toast.error(

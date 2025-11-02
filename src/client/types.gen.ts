@@ -2614,6 +2614,19 @@ export type EquipmentDisposeControllerFindByInstanceIdResponse = (EquipmentDispo
 
 export type EquipmentDisposeControllerFindByInstanceIdError = (unknown);
 
+export type EquipmentDisposeControllerRemoveByDecisionNumberData = {
+    query: {
+        /**
+         * Số quyết định thanh lý
+         */
+        decisionNumber: string;
+    };
+};
+
+export type EquipmentDisposeControllerRemoveByDecisionNumberResponse = (void);
+
+export type EquipmentDisposeControllerRemoveByDecisionNumberError = (unknown);
+
 export type EquipmentDisposeControllerFindByDecisionNumberData = {
     path: {
         decisionNumber: string;
@@ -2851,6 +2864,16 @@ export type EquipmentHandoverControllerDeleteData = {
 export type EquipmentHandoverControllerDeleteResponse = (unknown);
 
 export type EquipmentHandoverControllerDeleteError = (unknown);
+
+export type EquipmentHandoverControllerFindOneData = {
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentHandoverControllerFindOneResponse = (HandoverEquipment);
+
+export type EquipmentHandoverControllerFindOneError = (unknown);
 
 export type EquipmentHandoverControllerValidateQuantitiesData = {
     body: CreateHandoverEquipmentDto;
