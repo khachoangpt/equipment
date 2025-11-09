@@ -322,6 +322,16 @@ const searchEquipmentDisposeSchema = z.object({
 })
 type SearchEquipmentDisposeSchema = z.infer<typeof searchEquipmentDisposeSchema>
 
+const searchEquipmentRepairSchema = z.object({
+	reportNumber: z.string().optional(),
+	equipmentQuery: z.string().optional(),
+	repairDateStart: z.string().optional(),
+	repairDateEnd: z.string().optional(),
+	fromUnitId: z.string().optional(),
+	repairUnitId: z.string().optional(),
+})
+type SearchEquipmentRepairSchema = z.infer<typeof searchEquipmentRepairSchema>
+
 const statisticHandoverSchema = z.object({
 	startDate: z
 		.string({ required_error: 'Chưa nhập ngày bắt đầu' })
@@ -347,6 +357,7 @@ export {
 	generalSettingsSchema,
 	searchEquipmentHandoverSchema,
 	searchEquipmentDisposeSchema,
+	searchEquipmentRepairSchema,
 	statisticHandoverSchema,
 }
 
@@ -365,5 +376,6 @@ export type {
 	GeneralSettingsSchema,
 	SearchEquipmentHandoverSchema,
 	SearchEquipmentDisposeSchema,
+	SearchEquipmentRepairSchema,
 	StatisticHandoverSchema,
 }

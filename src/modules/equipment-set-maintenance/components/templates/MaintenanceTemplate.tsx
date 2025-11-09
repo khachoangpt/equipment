@@ -8,17 +8,55 @@ import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { parseAsString, useQueryStates } from 'nuqs'
+import { useEffect, useState } from 'react'
 import { columns } from '../organisms/MaintenanceColumns'
+import SearchEquipmentRepair from '../organisms/SearchEquipmentRepair'
 
 const MaintenanceTemplate = () => {
+	const [open, setOpen] = useState<boolean>(true)
 	const [page, setPage] = useState(1)
 	const { settings, isFetchingGeneralSettings } = useGetGeneralSettings()
+	const [searchQuery] = useQueryStates({
+		reportNumber: parseAsString.withDefault(''),
+		equipmentQuery: parseAsString.withDefault(''),
+		repairDateStart: parseAsString.withDefault(''),
+		repairDateEnd: parseAsString.withDefault(''),
+		fromUnitId: parseAsString.withDefault(''),
+		repairUnitId: parseAsString.withDefault(''),
+	})
+
+	useEffect(() => {
+		setPage(1)
+	}, [
+		searchQuery.reportNumber,
+		searchQuery.equipmentQuery,
+		searchQuery.repairDateStart,
+		searchQuery.repairDateEnd,
+		searchQuery.fromUnitId,
+		searchQuery.repairUnitId,
+	])
 	const { data: equipmentRepair } = useQuery({
 		...equipmentRepairControllerSearchOptions({
 			query: {
 				limit: settings?.pagingSize,
 				page,
+				reportNumber: searchQuery.reportNumber
+					? searchQuery.reportNumber
+					: undefined,
+				equipmentQuery: searchQuery.equipmentQuery
+					? searchQuery.equipmentQuery
+					: undefined,
+				repairDateStart: searchQuery.repairDateStart
+					? searchQuery.repairDateStart
+					: undefined,
+				repairDateEnd: searchQuery.repairDateEnd
+					? searchQuery.repairDateEnd
+					: undefined,
+				fromUnitId: searchQuery.fromUnitId ? searchQuery.fromUnitId : undefined,
+				repairUnitId: searchQuery.repairUnitId
+					? searchQuery.repairUnitId
+					: undefined,
 			},
 		}),
 		select: (data: any) => {
@@ -41,7 +79,8 @@ const MaintenanceTemplate = () => {
 			<div className="text-center mb-10">
 				<h3 className="font-bold text-3xl">Bảo dưỡng / Sửa chữa</h3>
 			</div>
-			<div className="flex items-center justify-between">
+			<SearchEquipmentRepair onOpenChange={setOpen} open={open} />
+			<div className="flex items-center justify-between mt-5">
 				<div>
 					<h5 className="font-bold text-lg">Danh sách bảo dưỡng / sửa chữa</h5>
 				</div>
