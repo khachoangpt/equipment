@@ -872,6 +872,13 @@ export type EquipmentInstanceDetail = {
     updatedAt: string;
 };
 
+export type EquipmentTypeStatisticDto = {
+    id: string;
+    groupCode: string;
+    groupName: string;
+    totalCount: number;
+};
+
 export type HandoverEquipment = {
     /**
      * Mongo document ID
@@ -958,6 +965,22 @@ export type ImageAttachment = {
     url: string;
 };
 
+export type InventoryDataDto = {
+    statisticsByUnit: Array<UnitStatisticDto>;
+    statisticsByEquipmentType: Array<EquipmentTypeStatisticDto>;
+    statisticsByQuality: Array<QualityStatisticDto>;
+    statisticsByTimePeriod: Array<TimePeriodStatisticDto>;
+    statisticsByModel: Array<ModelStatisticDto>;
+    activeUnits: Array<{
+        [key: string]: unknown;
+    }>;
+    groupedData: {
+        [key: string]: unknown;
+    };
+    reportDate: string;
+    previousYear: number;
+};
+
 export type LoginDto = {
     /**
      * Tên đăng nhập
@@ -971,6 +994,12 @@ export type LoginDto = {
 
 export type LoginResponseDto = {
     access_token: string;
+};
+
+export type ModelStatisticDto = {
+    equipmentId: string;
+    equipmentName: string;
+    totalCount: number;
 };
 
 export type ObjectId = {
@@ -1019,6 +1048,13 @@ export type QualityLevel = {
     note?: string;
     createdAt: string;
     updatedAt: string;
+};
+
+export type QualityStatisticDto = {
+    id: string;
+    qualityCode: string;
+    qualityName: string;
+    totalCount: number;
 };
 
 export type RepairDto = {
@@ -1095,6 +1131,10 @@ export type RepairEquipment = {
      * Ngày nhận lại
      */
     receivedDate?: string;
+    /**
+     * Ngày hoàn thành sửa chữa
+     */
+    completedDate?: string;
     repairLocation?: string;
     reason: string;
     /**
@@ -1374,6 +1414,11 @@ export type Setting = {
     updatedAt: string;
 };
 
+export type TimePeriodStatisticDto = {
+    period: string;
+    totalCount: number;
+};
+
 export type Unit = {
     /**
      * Mongo document ID
@@ -1388,6 +1433,13 @@ export type Unit = {
     description?: string;
     createdAt: string;
     updatedAt: string;
+};
+
+export type UnitStatisticDto = {
+    id: string;
+    code: string;
+    name: string;
+    totalCount: number;
 };
 
 export type UpdateAssembledProductConfigDto = {
@@ -3308,3 +3360,204 @@ export type EquipmentInstancesControllerDisposeData = {
 export type EquipmentInstancesControllerDisposeResponse = (EquipmentInstance);
 
 export type EquipmentInstancesControllerDisposeError = (unknown);
+
+export type EquipmentInstancesControllerGetInventoryDataData = {
+    query?: {
+        /**
+         * Tìm theo nước sản xuất
+         */
+        countryOfOrigin?: string;
+        /**
+         * Ngày nhập kết thúc (YYYY-MM-DD)
+         */
+        entryDateEnd?: string;
+        /**
+         * Ngày nhập bắt đầu (YYYY-MM-DD)
+         */
+        entryDateStart?: string;
+        /**
+         * Tìm theo số kế hoạch nhập
+         */
+        entryPlanNumber?: string;
+        featureConfiguration?: string;
+        /**
+         * ID của Nhóm loại trang bị
+         */
+        groupId?: string;
+        /**
+         * ID của Đơn vị nhập ban đầu
+         */
+        importingUnitId?: string;
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Tìm theo tên trang bị (hỗ trợ tìm kiếm gần đúng)
+         */
+        name?: string;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+        /**
+         * ID của Phân cấp chất lượng
+         */
+        qualityLevelId?: string;
+        /**
+         * Tìm theo số serial (hỗ trợ tìm kiếm gần đúng)
+         */
+        serialNumber?: string;
+        /**
+         * Tìm theo trạng thái (ví dụ: "Trong kho")
+         */
+        status?: string;
+        technicalSpecifications?: string;
+        /**
+         * Tìm theo loại trang bị (ví dụ: "SYNCHRONIZED_EQUIPMENT")
+         */
+        type?: string;
+        /**
+         * ID của Đơn vị sử dụng
+         */
+        usingUnitId?: string;
+    };
+};
+
+export type EquipmentInstancesControllerGetInventoryDataResponse = (InventoryDataDto);
+
+export type EquipmentInstancesControllerGetInventoryDataError = unknown;
+
+export type EquipmentInstancesControllerGenerateInventoryReportData = {
+    query?: {
+        /**
+         * Tìm theo nước sản xuất
+         */
+        countryOfOrigin?: string;
+        /**
+         * Ngày nhập kết thúc (YYYY-MM-DD)
+         */
+        entryDateEnd?: string;
+        /**
+         * Ngày nhập bắt đầu (YYYY-MM-DD)
+         */
+        entryDateStart?: string;
+        /**
+         * Tìm theo số kế hoạch nhập
+         */
+        entryPlanNumber?: string;
+        featureConfiguration?: string;
+        /**
+         * ID của Nhóm loại trang bị
+         */
+        groupId?: string;
+        /**
+         * ID của Đơn vị nhập ban đầu
+         */
+        importingUnitId?: string;
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Tìm theo tên trang bị (hỗ trợ tìm kiếm gần đúng)
+         */
+        name?: string;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+        /**
+         * ID của Phân cấp chất lượng
+         */
+        qualityLevelId?: string;
+        /**
+         * Tìm theo số serial (hỗ trợ tìm kiếm gần đúng)
+         */
+        serialNumber?: string;
+        /**
+         * Tìm theo trạng thái (ví dụ: "Trong kho")
+         */
+        status?: string;
+        technicalSpecifications?: string;
+        /**
+         * Tìm theo loại trang bị (ví dụ: "SYNCHRONIZED_EQUIPMENT")
+         */
+        type?: string;
+        /**
+         * ID của Đơn vị sử dụng
+         */
+        usingUnitId?: string;
+    };
+};
+
+export type EquipmentInstancesControllerGenerateInventoryReportResponse = ((Blob | File));
+
+export type EquipmentInstancesControllerGenerateInventoryReportError = unknown;
+
+export type EquipmentInstancesControllerGetGeneralInventoryReportData = {
+    query?: {
+        /**
+         * Tìm theo nước sản xuất
+         */
+        countryOfOrigin?: string;
+        /**
+         * Ngày nhập kết thúc (YYYY-MM-DD)
+         */
+        entryDateEnd?: string;
+        /**
+         * Ngày nhập bắt đầu (YYYY-MM-DD)
+         */
+        entryDateStart?: string;
+        /**
+         * Tìm theo số kế hoạch nhập
+         */
+        entryPlanNumber?: string;
+        featureConfiguration?: string;
+        /**
+         * ID của Nhóm loại trang bị
+         */
+        groupId?: string;
+        /**
+         * ID của Đơn vị nhập ban đầu
+         */
+        importingUnitId?: string;
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Tìm theo tên trang bị (hỗ trợ tìm kiếm gần đúng)
+         */
+        name?: string;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+        /**
+         * ID của Phân cấp chất lượng
+         */
+        qualityLevelId?: string;
+        /**
+         * Tìm theo số serial (hỗ trợ tìm kiếm gần đúng)
+         */
+        serialNumber?: string;
+        /**
+         * Tìm theo trạng thái (ví dụ: "Trong kho")
+         */
+        status?: string;
+        technicalSpecifications?: string;
+        /**
+         * Tìm theo loại trang bị (ví dụ: "SYNCHRONIZED_EQUIPMENT")
+         */
+        type?: string;
+        /**
+         * ID của Đơn vị sử dụng
+         */
+        usingUnitId?: string;
+    };
+};
+
+export type EquipmentInstancesControllerGetGeneralInventoryReportResponse = ((Blob | File));
+
+export type EquipmentInstancesControllerGetGeneralInventoryReportError = unknown;
