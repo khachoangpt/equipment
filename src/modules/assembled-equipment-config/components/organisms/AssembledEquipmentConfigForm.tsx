@@ -473,7 +473,7 @@ const AssembledEquipmentConfigForm = ({ id }: Props) => {
 							control={form.control}
 							name="componentList"
 							render={({ field: { value } }) => (
-								<FormItem className="mt-5">
+								<FormItem className="mt-5 w-full">
 									<FormLabel>Danh mục vật tư/linh kiện lắp ghép</FormLabel>
 									<FormControl>
 										<DataTable

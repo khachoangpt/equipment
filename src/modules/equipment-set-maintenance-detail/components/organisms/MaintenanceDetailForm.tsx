@@ -326,7 +326,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 							control={form.control}
 							name="items"
 							render={({ field: { value } }) => (
-								<FormItem className="mt-5">
+								<FormItem className="mt-5 w-full">
 									<FormLabel>Trang bị</FormLabel>
 									<FormControl>
 										<DataTable

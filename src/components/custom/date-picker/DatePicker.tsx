@@ -14,11 +14,17 @@ type Props = {
 	value?: Date
 	onChange: (value: Date) => void
 	className?: string
+	modal?: boolean
 }
 
-export const DatePicker = ({ onChange, value, className }: Props) => {
+export const DatePicker = ({
+	onChange,
+	value,
+	className,
+	modal = false,
+}: Props) => {
 	return (
-		<Popover>
+		<Popover modal={modal}>
 			<PopoverTrigger asChild>
 				<Button
 					variant={'outline'}

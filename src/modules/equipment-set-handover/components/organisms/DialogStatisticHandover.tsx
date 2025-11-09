@@ -104,6 +104,7 @@ const DialogStatisticHandover = ({ onOpenChange, open }: Props) => {
 									<FormLabel>Ngày bắt đầu</FormLabel>
 									<FormControl>
 										<DatePicker
+											modal={true}
 											onChange={(e) => onChange(e.toString())}
 											value={dayjs(value).toDate()}
 										/>
@@ -120,6 +121,7 @@ const DialogStatisticHandover = ({ onOpenChange, open }: Props) => {
 									<FormLabel>Ngày kết thúc</FormLabel>
 									<FormControl>
 										<DatePicker
+											modal={true}
 											onChange={(e) => onChange(e.toString())}
 											value={dayjs(value).toDate()}
 										/>
