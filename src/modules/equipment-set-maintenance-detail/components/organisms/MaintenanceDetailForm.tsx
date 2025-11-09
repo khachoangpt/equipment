@@ -326,7 +326,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 							control={form.control}
 							name="items"
 							render={({ field: { value } }) => (
-								<FormItem className="mt-5 w-full">
+								<FormItem className="mt-5">
 									<FormLabel>Trang bị</FormLabel>
 									<FormControl>
 										<DataTable
@@ -350,7 +350,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 						>
 							<ArrowBigLeftDash className="size-7" />
 						</Button>
-						<Card className="h-full flex-none">
+						<Card className="h-full flex-grow min-w-96">
 							<FormField
 								control={control}
 								name="selectedEquipmentName"
