@@ -1,8 +1,6 @@
 import { qualityLevelsControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
-import { pageList } from '@/configs/routes'
 import { useQuery } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
-import Link from 'next/link'
 import { useState } from 'react'
 import UpdateInventoryDialog from './UpdateInventoryDialog'
 
@@ -15,18 +13,7 @@ export const columns: ColumnDef<any>[] = [
 		accessorKey: 'instanceId',
 		header: 'Tên',
 		cell: ({ row }) => {
-			return (
-				<Link
-					href={
-						pageList.equipmentSetDetail({
-							id: row.original?._id ?? '',
-						}).href
-					}
-					className="text-right"
-				>
-					{row.original?.instance?.name}
-				</Link>
-			)
+			return <div>{row.original?.instance?.name}</div>
 		},
 	},
 	{

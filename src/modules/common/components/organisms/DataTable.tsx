@@ -143,7 +143,6 @@ function DataTable<TData, TValue>({
 									})}
 								>
 									{row.getVisibleCells().map((cell, cellIndex) => {
-										const isExpandCell = cell.column.id === 'expand'
 										return (
 											<TableCell
 												key={cell.id}
@@ -151,15 +150,7 @@ function DataTable<TData, TValue>({
 													'border-l': cellIndex === 0,
 													'border-r':
 														cellIndex === row.getVisibleCells().length - 1,
-													'pl-8': depth > 0 && !isExpandCell,
 												})}
-												style={
-													depth > 0 && !isExpandCell
-														? {
-																paddingLeft: `${16 + depth * 24}px`,
-															}
-														: undefined
-												}
 											>
 												{flexRender(
 													cell.column.columnDef.cell,
