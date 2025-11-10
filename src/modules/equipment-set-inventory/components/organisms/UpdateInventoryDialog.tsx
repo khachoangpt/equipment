@@ -1,8 +1,8 @@
 'use client'
 
 import {
-	equipmentInstanceDetailsControllerSearchQueryKey,
-	equipmentInstanceDetailsControllerUpdateMutation,
+	equipmentInstancesControllerGetInstancesWithGroupedDetailsQueryKey,
+	equipmentInstancesControllerUpdateInventoryMutation,
 	qualityLevelsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
@@ -30,7 +30,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
 import { queryClient } from '@/configs/query-client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -42,17 +41,26 @@ const updateInventorySchema = z.object({
 	qualityLevelId: z.string().min(1, 'Vui lòng chọn phân cấp chất lượng'),
 	status: z.string().min(1, 'Vui lòng nhập tình trạng trang bị'),
 	note: z.string().optional(),
+	quantity: z.number().min(1, 'Vui lòng nhập số lượng'),
 })
 
 type UpdateInventoryForm = z.infer<typeof updateInventorySchema>
 
 type Props = {
 	equipmentId?: string
+	currentStatus?: string
+	currentQualityLevelId?: string
 	open: boolean
 	onOpenChange: (open: boolean) => void
 }
 
-const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
+const UpdateInventoryDialog = ({
+	equipmentId,
+	currentStatus = '',
+	currentQualityLevelId,
+	open,
+	onOpenChange,
+}: Props) => {
 	const { data: qualityLevels } = useQuery({
 		...qualityLevelsControllerFindAllOptions(),
 		select(data) {
@@ -61,7 +69,7 @@ const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
 	})
 
 	const { mutate: updateInventory, isPending: isLoading } = useMutation({
-		...equipmentInstanceDetailsControllerUpdateMutation(),
+		...equipmentInstancesControllerUpdateInventoryMutation(),
 	})
 
 	const form = useForm<UpdateInventoryForm>({
@@ -70,6 +78,7 @@ const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
 			qualityLevelId: '',
 			status: '',
 			note: '',
+			quantity: 1,
 		},
 	})
 
@@ -80,16 +89,23 @@ const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
 					id: equipmentId ?? '',
 				},
 				body: {
-					qualityLevelId: formData.qualityLevelId,
-					status: formData.status,
-					notes: formData.note,
+					items: [
+						{
+							quantityToUpdate: formData.quantity,
+							currentStatus: currentStatus,
+							currentQualityLevelId: currentQualityLevelId,
+							newStatus: formData.status,
+							newQualityLevelId: formData.qualityLevelId,
+						},
+					],
 				},
 			},
 			{
 				onSuccess: () => {
 					toast.success('Cập nhật kiểm kê thành công')
 					queryClient.invalidateQueries({
-						queryKey: equipmentInstanceDetailsControllerSearchQueryKey(),
+						queryKey:
+							equipmentInstancesControllerGetInstancesWithGroupedDetailsQueryKey(),
 					})
 					onOpenChange(false)
 					form.reset()
@@ -136,7 +152,7 @@ const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
 										defaultValue={field.value}
 									>
 										<FormControl>
-											<SelectTrigger>
+											<SelectTrigger className="w-full">
 												<SelectValue placeholder="Chọn phân cấp chất lượng" />
 											</SelectTrigger>
 										</FormControl>
@@ -167,6 +183,25 @@ const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
 						/>
 						<FormField
 							control={form.control}
+							name="quantity"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Số lượng</FormLabel>
+									<FormControl>
+										<Input
+											type="number"
+											min={1}
+											placeholder="Nhập số lượng"
+											{...field}
+											onChange={(e) => field.onChange(Number(e.target.value))}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						{/* <FormField
+							control={form.control}
 							name="note"
 							render={({ field }) => (
 								<FormItem>
@@ -181,7 +216,7 @@ const UpdateInventoryDialog = ({ equipmentId, open, onOpenChange }: Props) => {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 						<DialogFooter>
 							<Button
 								type="button"

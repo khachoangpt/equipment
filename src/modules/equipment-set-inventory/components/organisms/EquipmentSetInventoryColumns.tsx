@@ -77,11 +77,26 @@ export const columns: ColumnDef<any>[] = [
 		},
 	},
 	{
+		accessorKey: 'quantity',
+		header: 'Số lượng',
+	},
+	{
 		id: 'actions',
 		enableResizing: false,
 		size: 1,
 		cell: ({ row }) => {
 			const [open, setOpen] = useState<boolean>(false)
+			const { data: qualityLevels } = useQuery({
+				...qualityLevelsControllerFindAllOptions({
+					query: {
+						limit: 1000,
+						page: 1,
+					},
+				}),
+			})
+			const qualityLevel = qualityLevels?.data?.find(
+				(item) => item.code === row.original.qualityLevelId,
+			)
 
 			return (
 				<div className="flex items-center justify-end gap-x-3">
@@ -94,6 +109,8 @@ export const columns: ColumnDef<any>[] = [
 					</button>
 					<UpdateInventoryDialog
 						equipmentId={row.original._id}
+						currentStatus={row.original.status}
+						currentQualityLevelId={qualityLevel?._id}
 						open={open}
 						onOpenChange={setOpen}
 					/>
