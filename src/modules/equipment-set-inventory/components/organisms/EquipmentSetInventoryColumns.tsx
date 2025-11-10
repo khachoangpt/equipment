@@ -1,4 +1,6 @@
+import { qualityLevelsControllerFindAllOptions } from '@/client/@tanstack/react-query.gen'
 import { pageList } from '@/configs/routes'
+import { useQuery } from '@tanstack/react-query'
 import type { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -22,13 +24,13 @@ export const columns: ColumnDef<any>[] = [
 					}
 					className="text-right"
 				>
-					{row.original.instanceId?.name}
+					{row.original?.instance?.name}
 				</Link>
 			)
 		},
 	},
 	{
-		accessorKey: 'instanceId.serialNumber',
+		accessorKey: 'instance.serialNumber',
 		header: 'Mã hiệu serial',
 	},
 	{
@@ -36,7 +38,9 @@ export const columns: ColumnDef<any>[] = [
 		header: 'Đơn vị sử dụng',
 		cell: ({ row }) => {
 			return (
-				<span className="text-right">{row.original.usingUnitId?.name}</span>
+				<span className="text-right">
+					{row.original?.instance?.usingUnitId?.name}
+				</span>
 			)
 		},
 	},
@@ -48,9 +52,26 @@ export const columns: ColumnDef<any>[] = [
 		accessorKey: 'qualityLevelId',
 		header: 'Phân cấp chất lượng',
 		cell: ({ row }) => {
+			const { data: qualityLevels } = useQuery({
+				...qualityLevelsControllerFindAllOptions({
+					query: {
+						limit: 1000,
+						page: 1,
+					},
+				}),
+				select: (data) => {
+					return data?.data
+						?.slice()
+						?.sort((a, b) => a.name.localeCompare(b.name))
+				},
+			})
 			return (
 				<span className="text-right">
-					{row.original.qualityLevelDetails?.name}
+					{
+						qualityLevels?.find(
+							(item) => item.code === row.original?.qualityLevelId,
+						)?.name
+					}
 				</span>
 			)
 		},

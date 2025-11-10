@@ -1,12 +1,12 @@
 'use client'
 
-import { equipmentInstanceDetailsControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
+import { equipmentInstancesControllerGetInstancesWithGroupedDetailsOptions } from '@/client/@tanstack/react-query.gen'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useQuery } from '@tanstack/react-query'
 import { parseAsString, useQueryStates } from 'nuqs'
-import { useState } from 'react'
-import { columns } from '../organisms/EquipmentSetInventoryColumns'
+import { useMemo, useState } from 'react'
+import { columns as baseColumns } from '../organisms/EquipmentSetInventoryColumns'
 import SearchEquipmentSetInventory from '../organisms/SearchEquipmentSetInventory'
 
 const EquipmentSetInventoryTemplate = () => {
@@ -26,7 +26,7 @@ const EquipmentSetInventoryTemplate = () => {
 		technicalSpecifications: parseAsString.withDefault(''),
 	})
 	const { data: equipmentSets } = useQuery({
-		...equipmentInstanceDetailsControllerSearchOptions({
+		...equipmentInstancesControllerGetInstancesWithGroupedDetailsOptions({
 			query: {
 				type: 'SYNCHRONIZED_EQUIPMENT',
 				limit: settings?.pagingSize,
@@ -60,17 +60,61 @@ const EquipmentSetInventoryTemplate = () => {
 		select: (data: any) => {
 			return {
 				...data,
-				data: data?.data?.map((item: any, index: number) => ({
-					...item,
-					index: settings?.pagingSize
-						? (page - 1) * settings?.pagingSize + index + 1
-						: index + 1,
-				})),
+				data: data?.data?.map((item: any, index: number) => {
+					const children: any[] = []
+					if (item.detailsByStatusAndQuality) {
+						for (const [status, qualityLevels] of Object.entries(
+							item.detailsByStatusAndQuality,
+						)) {
+							for (const [qualityLevelId, quantity] of Object.entries(
+								qualityLevels as any,
+							)) {
+								children.push({
+									...item,
+									_id: `${item?.instance?._id}`,
+									status,
+									qualityLevelId,
+									quantity,
+									index: undefined,
+								})
+							}
+						}
+					}
+
+					return {
+						...item,
+						index: settings?.pagingSize
+							? (page - 1) * settings?.pagingSize + index + 1
+							: index + 1,
+						children: children.length > 0 ? children : undefined,
+					}
+				}),
 			}
 		},
 		enabled: !isFetchingGeneralSettings,
 		placeholderData: (prev: any) => prev,
 	})
+
+	const columns = useMemo(() => {
+		return baseColumns.map((col) => {
+			if (col.id === 'actions') {
+				return {
+					...col,
+					cell: (ctx: any) => {
+						const row = ctx.row
+						if (row.depth === 0) {
+							return null
+						}
+						if (typeof col.cell === 'function') {
+							return col.cell(ctx)
+						}
+						return null
+					},
+				}
+			}
+			return col
+		})
+	}, [baseColumns])
 
 	return (
 		<div className="pb-10">
@@ -84,6 +128,7 @@ const EquipmentSetInventoryTemplate = () => {
 				</div>
 			</div>
 			<DataTable
+				enableExpanding
 				columns={columns}
 				data={(equipmentSets?.data ?? []) as any}
 				onChangePage={setPage}

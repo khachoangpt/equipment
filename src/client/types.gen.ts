@@ -965,6 +965,23 @@ export type ImageAttachment = {
     url: string;
 };
 
+export type InstancesWithGroupedDetailsResponseDto = {
+    data: Array<InstanceWithGroupedDetailsDto>;
+    total: number;
+};
+
+export type InstanceWithGroupedDetailsDto = {
+    instance: EquipmentInstance;
+    /**
+     * Details grouped by status, then by quality level code with counts. Use "null" string for items without quality level.
+     */
+    detailsByStatusAndQuality: {
+        [key: string]: {
+            [key: string]: (number);
+        };
+    };
+};
+
 export type InventoryDataDto = {
     statisticsByUnit: Array<UnitStatisticDto>;
     statisticsByEquipmentType: Array<EquipmentTypeStatisticDto>;
@@ -979,6 +996,29 @@ export type InventoryDataDto = {
     };
     reportDate: string;
     previousYear: number;
+};
+
+export type InventoryItemDto = {
+    /**
+     * Số lượng chi tiết trang bị cần cập nhật
+     */
+    quantityToUpdate: number;
+    /**
+     * Trạng thái hiện tại của các chi tiết cần cập nhật
+     */
+    currentStatus: string;
+    /**
+     * ID của mức chất lượng hiện tại của các chi tiết cần cập nhật
+     */
+    currentQualityLevelId?: string;
+    /**
+     * Trạng thái mới để cập nhật
+     */
+    newStatus: string;
+    /**
+     * ID của mức chất lượng mới để cập nhật
+     */
+    newQualityLevelId?: string;
 };
 
 export type LoginDto = {
@@ -1724,6 +1764,13 @@ export type UpdateHandoverEquipmentDto = {
      * Danh sách các trang bị bàn giao
      */
     items?: Array<(string)>;
+};
+
+export type UpdateInventoryDto = {
+    /**
+     * Danh sách các cập nhật: số lượng chi tiết cần cập nhật từ trạng thái/chất lượng hiện tại sang trạng thái/chất lượng mới
+     */
+    items: Array<InventoryItemDto>;
 };
 
 export type UpdateProductProfileDto = {
@@ -3307,6 +3354,21 @@ export type EquipmentInstancesControllerSearchData = {
 export type EquipmentInstancesControllerSearchResponse = (SearchInstanceResponseDto);
 
 export type EquipmentInstancesControllerSearchError = unknown;
+
+export type EquipmentInstancesControllerGetInstancesWithGroupedDetailsResponse = (InstancesWithGroupedDetailsResponseDto);
+
+export type EquipmentInstancesControllerGetInstancesWithGroupedDetailsError = unknown;
+
+export type EquipmentInstancesControllerUpdateInventoryData = {
+    body: UpdateInventoryDto;
+    path: {
+        id: string;
+    };
+};
+
+export type EquipmentInstancesControllerUpdateInventoryResponse = (EquipmentInstance);
+
+export type EquipmentInstancesControllerUpdateInventoryError = (unknown);
 
 export type EquipmentInstancesControllerFindOneData = {
     path: {
