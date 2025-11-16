@@ -85,7 +85,8 @@ function DataTable<TData, TValue>({
 		data,
 		columns: allColumns,
 		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
+		getPaginationRowModel:
+			enableExpanding || getSubRows ? undefined : getPaginationRowModel(),
 		getExpandedRowModel:
 			enableExpanding || getSubRows ? getExpandedRowModel() : undefined,
 		getSubRows: getSubRows || ((row: any) => row.children),
