@@ -1,6 +1,9 @@
-import { equipmentDisposeControllerFindByDecisionNumberOptions } from '@/client/@tanstack/react-query.gen'
+import {
+	equipmentDisposeControllerFindByDecisionNumberOptions,
+	equipmentDisposeControllerValidateQuantitiesMutation,
+} from '@/client/@tanstack/react-query.gen'
 import type { CreateEquipmentDisposalSchema } from '@/configs/schema'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -43,6 +46,48 @@ const useLiquidationDetailController = ({ id }: Props) => {
 		enabled: Boolean(id),
 	})
 
+	const { mutate: validateQuantities, isPending: isValidating } = useMutation({
+		...equipmentDisposeControllerValidateQuantitiesMutation(),
+	})
+
+	const validateEquipmentQuantities = (data: CreateEquipmentDisposalSchema) => {
+		return new Promise((resolve, reject) => {
+			const submitData: any = {
+				decisionNumber: data.decisionNumber,
+				disposalDate: new Date(data.disposalDate).toISOString(),
+				fromUnitId: data.fromUnitId || undefined,
+				items: (data.items || []).map((item: any) => ({
+					instanceId: item.instanceId,
+					unitOfMeasure: item.unitOfMeasure || 'Bộ',
+					quantity: item.quantity,
+					notes: item.notes || '',
+				})),
+				signer: data.signer,
+				type: 'disposal',
+				approver: data.createdBy,
+				notes: data.notes,
+			}
+
+			if (submitData.fromUnitId === '') {
+				submitData.fromUnitId = undefined
+			}
+
+			validateQuantities(
+				{
+					body: submitData as any,
+				},
+				{
+					onSuccess: (response) => {
+						resolve(response)
+					},
+					onError: (error) => {
+						reject(error)
+					},
+				},
+			)
+		})
+	}
+
 	useEffect(() => {
 		if (!id) {
 			return
@@ -73,7 +118,12 @@ const useLiquidationDetailController = ({ id }: Props) => {
 		})
 	}, [id, liquidationData, form])
 
-	return { form, liquidationData }
+	return {
+		form,
+		liquidationData,
+		validateEquipmentQuantities,
+		isValidating,
+	}
 }
 
 export default useLiquidationDetailController

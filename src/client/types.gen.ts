@@ -968,6 +968,9 @@ export type ImageAttachment = {
 export type InstancesWithGroupedDetailsResponseDto = {
     data: Array<InstanceWithGroupedDetailsDto>;
     total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
 };
 
 export type InstanceWithGroupedDetailsDto = {
@@ -2616,6 +2619,18 @@ export type UsersControllerRemoveResponse = (UserResponseDto);
 
 export type UsersControllerRemoveError = (unknown);
 
+export type EquipmentDisposeControllerValidateQuantitiesData = {
+    body: CreateEquipmentDisposeDto;
+};
+
+export type EquipmentDisposeControllerValidateQuantitiesResponse = ({
+    isValid?: boolean;
+    errors?: Array<(string)>;
+    warnings?: Array<(string)>;
+});
+
+export type EquipmentDisposeControllerValidateQuantitiesError = unknown;
+
 export type EquipmentDisposeControllerDisposeData = {
     body: CreateEquipmentDisposeDto;
 };
@@ -3356,6 +3371,69 @@ export type EquipmentInstancesControllerSearchData = {
 export type EquipmentInstancesControllerSearchResponse = (SearchInstanceResponseDto);
 
 export type EquipmentInstancesControllerSearchError = unknown;
+
+export type EquipmentInstancesControllerGetInstancesWithGroupedDetailsData = {
+    query?: {
+        /**
+         * Tìm theo nước sản xuất
+         */
+        countryOfOrigin?: string;
+        /**
+         * Ngày nhập kết thúc (YYYY-MM-DD)
+         */
+        entryDateEnd?: string;
+        /**
+         * Ngày nhập bắt đầu (YYYY-MM-DD)
+         */
+        entryDateStart?: string;
+        /**
+         * Tìm theo số kế hoạch nhập
+         */
+        entryPlanNumber?: string;
+        featureConfiguration?: string;
+        /**
+         * ID của Nhóm loại trang bị
+         */
+        groupId?: string;
+        /**
+         * ID của Đơn vị nhập ban đầu
+         */
+        importingUnitId?: string;
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Tìm theo tên trang bị (hỗ trợ tìm kiếm gần đúng)
+         */
+        name?: string;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+        /**
+         * ID của Phân cấp chất lượng
+         */
+        qualityLevelId?: string;
+        /**
+         * Tìm theo số serial (hỗ trợ tìm kiếm gần đúng)
+         */
+        serialNumber?: string;
+        /**
+         * Tìm theo trạng thái (ví dụ: "Trong kho")
+         */
+        status?: string;
+        technicalSpecifications?: string;
+        /**
+         * Tìm theo loại trang bị (ví dụ: "SYNCHRONIZED_EQUIPMENT")
+         */
+        type?: string;
+        /**
+         * ID của Đơn vị sử dụng
+         */
+        usingUnitId?: string;
+    };
+};
 
 export type EquipmentInstancesControllerGetInstancesWithGroupedDetailsResponse = (InstancesWithGroupedDetailsResponseDto);
 

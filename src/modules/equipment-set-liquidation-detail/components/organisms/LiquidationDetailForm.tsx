@@ -48,7 +48,8 @@ type Props = {
 }
 
 const LiquidationDetailForm = ({ id }: Props) => {
-	const { form } = useLiquidationDetailController({ id })
+	const { form, validateEquipmentQuantities, isValidating } =
+		useLiquidationDetailController({ id })
 	const { data: liquidationData } = useQuery({
 		...equipmentDisposeControllerFindByDecisionNumberOptions({
 			path: { decisionNumber: id || '' },
@@ -149,27 +150,101 @@ const LiquidationDetailForm = ({ id }: Props) => {
 		},
 	]
 
-	const handleSelectEquipment = () => {
+	const handleSelectEquipment = async () => {
 		const component = equipments?.find(
 			(item) => item.value === form.watch('selectedEquipmentName'),
 		)
+		const quantity = Number(form.watch('selectedEquipmentQuantity'))
+
+		if (!component) {
+			toast.error('Vui lòng chọn trang bị')
+			return
+		}
+
+		if (!quantity || quantity <= 0) {
+			toast.error('Vui lòng nhập số lượng hợp lệ')
+			return
+		}
+
 		const componentList = (form.getValues('items') ?? []).filter(
 			(item) => item.instanceId !== component?.value,
 		)
-		form.setValue('items', [
+		const tempItems = [
 			...componentList,
 			{
 				instanceId: component?.value,
 				serialNumber: component?.serialNumber,
 				componentName: component?.name,
 				unitOfMeasure: 'Bộ',
-				quantity: Number(form.watch('selectedEquipmentQuantity')),
+				quantity: quantity,
 				notes: form.watch('selectedEquipmentNote'),
 			} as any,
-		])
+		]
+
+		const formData = {
+			...form.getValues(),
+			items: tempItems,
+		}
+
+		try {
+			const validationResult = (await validateEquipmentQuantities(
+				formData,
+			)) as any
+
+			if (validationResult?.isValid === false) {
+				if (validationResult.errors && validationResult.errors.length > 0) {
+					for (const error of validationResult.errors) {
+						toast.error(error)
+					}
+					return
+				}
+			}
+
+			if (validationResult?.warnings && validationResult.warnings.length > 0) {
+				for (const warning of validationResult.warnings) {
+					toast.warning(warning)
+				}
+			}
+
+			form.setValue('items', tempItems)
+
+			form.setValue('selectedEquipmentName', '')
+			form.setValue('selectedEquipmentQuantity', '')
+			form.setValue('selectedEquipmentNote', '')
+
+			toast.success('Đã thêm trang bị vào danh sách thanh lý')
+		} catch (error) {
+			console.error('Validation error:', error)
+			toast.error('Có lỗi xảy ra khi kiểm tra số lượng trang bị')
+		}
 	}
 
-	const onSubmit: SubmitHandler<CreateEquipmentDisposalSchema> = (data) => {
+	const onSubmit: SubmitHandler<CreateEquipmentDisposalSchema> = async (
+		data,
+	) => {
+		try {
+			const validationResult = (await validateEquipmentQuantities(data)) as any
+
+			if (validationResult?.isValid === false) {
+				if (validationResult.errors && validationResult.errors.length > 0) {
+					for (const error of validationResult.errors) {
+						toast.error(error)
+					}
+					return
+				}
+			}
+
+			if (validationResult?.warnings && validationResult.warnings.length > 0) {
+				for (const warning of validationResult.warnings) {
+					toast.warning(warning)
+				}
+			}
+		} catch (error) {
+			console.error('Validation error:', error)
+			toast.error('Có lỗi xảy ra khi kiểm tra số lượng trang bị')
+			return
+		}
+
 		const submitData: CreateEquipmentDisposeDto = {
 			decisionNumber: data.decisionNumber,
 			disposalDate: new Date(data.disposalDate).toISOString(),
@@ -362,10 +437,14 @@ const LiquidationDetailForm = ({ id }: Props) => {
 								!(
 									form.watch('selectedEquipmentName') &&
 									form.watch('selectedEquipmentQuantity')
-								)
+								) || isValidating
 							}
 						>
-							<ArrowBigLeftDash className="size-7" />
+							{isValidating ? (
+								'Đang kiểm tra...'
+							) : (
+								<ArrowBigLeftDash className="size-7" />
+							)}
 						</Button>
 						<Card className="h-full flex-grow min-w-96">
 							<FormField
