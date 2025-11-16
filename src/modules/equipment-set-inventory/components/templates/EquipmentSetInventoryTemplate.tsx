@@ -74,7 +74,7 @@ const EquipmentSetInventoryTemplate = () => {
 								)) {
 									children.push({
 										...item,
-										_id: `${item?.instance?._id}-${status}-${usingUnitName}-${qualityLevelId}`,
+										_id: `${item?.instance?._id}`,
 										status,
 										usingUnitName:
 											usingUnitName === 'null' ? null : usingUnitName,
