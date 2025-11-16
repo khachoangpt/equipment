@@ -973,11 +973,13 @@ export type InstancesWithGroupedDetailsResponseDto = {
 export type InstanceWithGroupedDetailsDto = {
     instance: EquipmentInstance;
     /**
-     * Details grouped by status, then by quality level code with counts. Use "null" string for items without quality level.
+     * Details grouped by status, then by usingUnitName, then by quality level code with counts. Use "null" string for items without quality level or usingUnitName.
      */
     detailsByStatusAndQuality: {
         [key: string]: {
-            [key: string]: (number);
+            [key: string]: {
+                [key: string]: (number);
+            };
         };
     };
 };

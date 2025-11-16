@@ -63,20 +63,26 @@ const EquipmentSetInventoryTemplate = () => {
 				data: data?.data?.map((item: any, index: number) => {
 					const children: any[] = []
 					if (item.detailsByStatusAndQuality) {
-						for (const [status, qualityLevels] of Object.entries(
+						for (const [status, usingUnits] of Object.entries(
 							item.detailsByStatusAndQuality,
 						)) {
-							for (const [qualityLevelId, quantity] of Object.entries(
-								qualityLevels as any,
+							for (const [usingUnitName, qualityLevels] of Object.entries(
+								usingUnits as any,
 							)) {
-								children.push({
-									...item,
-									_id: `${item?.instance?._id}`,
-									status,
-									qualityLevelId,
-									quantity,
-									index: undefined,
-								})
+								for (const [qualityLevelId, quantity] of Object.entries(
+									qualityLevels as any,
+								)) {
+									children.push({
+										...item,
+										_id: `${item?.instance?._id}-${status}-${usingUnitName}-${qualityLevelId}`,
+										status,
+										usingUnitName:
+											usingUnitName === 'null' ? null : usingUnitName,
+										qualityLevelId,
+										quantity,
+										index: undefined,
+									})
+								}
 							}
 						}
 					}
@@ -97,16 +103,118 @@ const EquipmentSetInventoryTemplate = () => {
 
 	const columns = useMemo(() => {
 		return baseColumns.map((col) => {
+			const accessorKey = 'accessorKey' in col ? col.accessorKey : undefined
+
 			if (col.id === 'actions') {
 				return {
 					...col,
 					cell: (ctx: any) => {
 						const row = ctx.row
-						if (row.depth === 0) {
+						if (row.depth !== 1) {
 							return null
 						}
 						if (typeof col.cell === 'function') {
 							return col.cell(ctx)
+						}
+						return null
+					},
+				}
+			}
+			if (accessorKey === 'usingUnitId') {
+				return {
+					...col,
+					cell: (ctx: any) => {
+						const row = ctx.row
+						const depth = row.depth
+						const original = row.original
+
+						if (depth === 1) {
+							return (
+								<span className="text-right">
+									{original.usingUnitName ||
+										original?.instance?.usingUnitId?.name ||
+										'Không có đơn vị'}
+								</span>
+							)
+						}
+
+						if (typeof col.cell === 'function') {
+							return col.cell(ctx)
+						}
+						return null
+					},
+				}
+			}
+			if (accessorKey === 'status') {
+				return {
+					...col,
+					cell: (ctx: any) => {
+						const row = ctx.row
+						const depth = row.depth
+						const original = row.original
+
+						if (depth === 1 && original.status !== undefined) {
+							return <span>{original.status}</span>
+						}
+
+						if (typeof col.cell === 'function') {
+							return col.cell(ctx)
+						}
+						return null
+					},
+				}
+			}
+			if (accessorKey === 'qualityLevelId') {
+				return {
+					...col,
+					cell: (ctx: any) => {
+						const row = ctx.row
+						const depth = row.depth
+
+						if (depth !== 1) {
+							return null
+						}
+
+						if (typeof col.cell === 'function') {
+							return col.cell(ctx)
+						}
+						return null
+					},
+				}
+			}
+			if (accessorKey === 'quantity') {
+				return {
+					...col,
+					cell: (ctx: any) => {
+						const row = ctx.row
+						const depth = row.depth
+						const original = row.original
+
+						if (depth !== 1) {
+							return null
+						}
+
+						return <span>{original.quantity}</span>
+					},
+				}
+			}
+			if (
+				accessorKey === 'index' ||
+				accessorKey === 'instanceId' ||
+				accessorKey === 'instance.serialNumber'
+			) {
+				return {
+					...col,
+					cell: (ctx: any) => {
+						const row = ctx.row
+						const depth = row.depth
+						if (depth === 0 || depth === 1) {
+							if (typeof col.cell === 'function') {
+								return col.cell(ctx)
+							}
+							if (accessorKey) {
+								return row.original[accessorKey]
+							}
 						}
 						return null
 					},
