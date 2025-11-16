@@ -56,6 +56,7 @@ const LiquidationDetailForm = ({ id }: Props) => {
 		}),
 		enabled: Boolean(id),
 	})
+
 	const { control } = form
 	const router = useRouter()
 	const { mutate: create } = useMutation({
@@ -222,34 +223,14 @@ const LiquidationDetailForm = ({ id }: Props) => {
 	const onSubmit: SubmitHandler<CreateEquipmentDisposalSchema> = async (
 		data,
 	) => {
-		try {
-			const validationResult = (await validateEquipmentQuantities(data)) as any
-
-			if (validationResult?.isValid === false) {
-				if (validationResult.errors && validationResult.errors.length > 0) {
-					for (const error of validationResult.errors) {
-						toast.error(error)
-					}
-					return
-				}
-			}
-
-			if (validationResult?.warnings && validationResult.warnings.length > 0) {
-				for (const warning of validationResult.warnings) {
-					toast.warning(warning)
-				}
-			}
-		} catch (error) {
-			console.error('Validation error:', error)
-			toast.error('Có lỗi xảy ra khi kiểm tra số lượng trang bị')
-			return
-		}
-
 		const submitData: CreateEquipmentDisposeDto = {
 			decisionNumber: data.decisionNumber,
 			disposalDate: new Date(data.disposalDate).toISOString(),
 			fromUnitId: data.fromUnitId as any,
-			items: (data.items || []) as any,
+			items: (data.items || [])?.map((item) => ({
+				...item,
+				unitOfMeasure: 'Bộ',
+			})) as any,
 			signer: data.signer,
 			type: 'disposal',
 			approver: data.createdBy,
@@ -458,7 +439,7 @@ const LiquidationDetailForm = ({ id }: Props) => {
 												<Combobox
 													onChange={field.onChange}
 													options={equipments || []}
-													value={field.value}
+													value={field.value || ''}
 												/>
 											</div>
 										</FormControl>

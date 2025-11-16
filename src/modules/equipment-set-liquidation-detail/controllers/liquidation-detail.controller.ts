@@ -2,40 +2,43 @@ import {
 	equipmentDisposeControllerFindByDecisionNumberOptions,
 	equipmentDisposeControllerValidateQuantitiesMutation,
 } from '@/client/@tanstack/react-query.gen'
-import type { CreateEquipmentDisposalSchema } from '@/configs/schema'
+import {
+	type CreateEquipmentDisposalSchema,
+	createEquipmentDisposalSchema,
+} from '@/configs/schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 type Props = {
 	id?: string
 }
 
+const liquidationFormSchema = createEquipmentDisposalSchema.extend({
+	selectedEquipmentName: z.string().optional(),
+	selectedEquipmentQuantity: z.string().optional(),
+	selectedEquipmentNote: z.string().optional(),
+})
+
+type LiquidationFormSchema = z.infer<typeof liquidationFormSchema>
+
 const useLiquidationDetailController = ({ id }: Props) => {
-	const defaultValues: CreateEquipmentDisposalSchema & {
-		selectedEquipmentName: string
-		selectedEquipmentQuantity: string
-		selectedEquipmentNote: string
-	} = {
+	const defaultValues: LiquidationFormSchema = {
 		createdBy: '',
 		decisionNumber: '',
 		disposalDate: new Date().toISOString(),
 		signer: '',
 		notes: '',
-		invoiceNumber: '',
 		items: [],
 		selectedEquipmentName: '',
 		selectedEquipmentNote: '',
 		selectedEquipmentQuantity: '',
 		fromUnitId: '',
 	}
-	const form = useForm<
-		CreateEquipmentDisposalSchema & {
-			selectedEquipmentName: string
-			selectedEquipmentQuantity: string
-			selectedEquipmentNote: string
-		}
-	>({
+	const form = useForm<LiquidationFormSchema>({
+		resolver: zodResolver(liquidationFormSchema),
 		defaultValues,
 	})
 

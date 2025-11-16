@@ -214,10 +214,6 @@ const createEquipmentDisposalSchema = z.object({
 		.string({ required_error: 'Chưa nhập số quyết định thanh lý' })
 		.trim()
 		.min(1, 'Chưa nhập số quyết định thanh lý'),
-	invoiceNumber: z
-		.string({ required_error: 'Chưa nhập số hóa đơn thanh lý' })
-		.trim()
-		.min(1, 'Chưa nhập số hóa đơn thanh lý'),
 	disposalDate: z.string({ required_error: 'Chưa nhập ngày thanh lý' }),
 	createdBy: z
 		.string({ required_error: 'Chưa nhập người lập' })
@@ -227,18 +223,23 @@ const createEquipmentDisposalSchema = z.object({
 		.string({ required_error: 'Chưa nhập người ký quyết định' })
 		.trim()
 		.min(1, 'Chưa nhập người ký quyết định'),
-	fromUnitId: z.string().optional(),
-	items: z.array(
-		z.object({
-			instanceId: z.string().trim().min(1, 'Chưa nhập ID của trang bị'),
-			quantity: z.number({
-				required_error: 'Chưa nhập số lượng',
-				coerce: true,
-				invalid_type_error: 'Số lượng không hợp lệ',
+	fromUnitId: z
+		.string({ required_error: 'Chưa chọn đơn vị' })
+		.trim()
+		.min(1, 'Chưa chọn đơn vị'),
+	items: z
+		.array(
+			z.object({
+				instanceId: z.string().trim().min(1, 'Chưa nhập ID của trang bị'),
+				quantity: z.number({
+					required_error: 'Chưa nhập số lượng',
+					coerce: true,
+					invalid_type_error: 'Số lượng không hợp lệ',
+				}),
+				notes: z.string().optional(),
 			}),
-			notes: z.string().optional(),
-		}),
-	),
+		)
+		.min(1, 'Danh sách trang bị không được để trống'),
 	notes: z.string().optional(),
 })
 type CreateEquipmentDisposalSchema = z.infer<
