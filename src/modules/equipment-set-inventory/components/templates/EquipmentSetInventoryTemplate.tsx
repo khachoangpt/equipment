@@ -63,6 +63,7 @@ const EquipmentSetInventoryTemplate = () => {
 				data: data?.data?.map((item: any, index: number) => {
 					const children: any[] = []
 					if (item.detailsByStatusAndQuality) {
+						const importingUnitName = item?.instance?.importingUnitId?.name
 						for (const [status, usingUnits] of Object.entries(
 							item.detailsByStatusAndQuality,
 						)) {
@@ -77,7 +78,9 @@ const EquipmentSetInventoryTemplate = () => {
 										_id: `${item?.instance?._id}`,
 										status,
 										usingUnitName:
-											usingUnitName === 'null' ? null : usingUnitName,
+											usingUnitName === 'null'
+												? importingUnitName
+												: usingUnitName,
 										qualityLevelId,
 										quantity,
 										index: undefined,
