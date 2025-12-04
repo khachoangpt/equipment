@@ -976,7 +976,7 @@ export type InstancesWithGroupedDetailsResponseDto = {
 export type InstanceWithGroupedDetailsDto = {
     instance: EquipmentInstance;
     /**
-     * Details grouped by status, then by usingUnitName, then by quality level code with counts. Use "null" string for items without quality level or usingUnitName.
+     * Details grouped by status, then by usingUnitName, then by qualityLevelName with counts. Use "null" string for items without qualityLevelName or usingUnitName.
      */
     detailsByStatusAndQuality: {
         [key: string]: {
@@ -3438,6 +3438,92 @@ export type EquipmentInstancesControllerGetInstancesWithGroupedDetailsData = {
 export type EquipmentInstancesControllerGetInstancesWithGroupedDetailsResponse = (InstancesWithGroupedDetailsResponseDto);
 
 export type EquipmentInstancesControllerGetInstancesWithGroupedDetailsError = unknown;
+
+export type EquipmentInstancesControllerGetDetailsGroupedByInstanceAndUnitData = {
+    query?: {
+        /**
+         * Tìm theo nước sản xuất
+         */
+        countryOfOrigin?: string;
+        /**
+         * Ngày nhập kết thúc (YYYY-MM-DD)
+         */
+        entryDateEnd?: string;
+        /**
+         * Ngày nhập bắt đầu (YYYY-MM-DD)
+         */
+        entryDateStart?: string;
+        /**
+         * Tìm theo số kế hoạch nhập
+         */
+        entryPlanNumber?: string;
+        featureConfiguration?: string;
+        /**
+         * ID của Nhóm loại trang bị
+         */
+        groupId?: string;
+        /**
+         * ID của Đơn vị nhập ban đầu
+         */
+        importingUnitId?: string;
+        /**
+         * Số lượng mục trên mỗi trang
+         */
+        limit?: number;
+        /**
+         * Tìm theo tên trang bị (hỗ trợ tìm kiếm gần đúng)
+         */
+        name?: string;
+        /**
+         * Số trang hiện tại
+         */
+        page?: number;
+        /**
+         * ID của Phân cấp chất lượng
+         */
+        qualityLevelId?: string;
+        /**
+         * Tìm theo số serial (hỗ trợ tìm kiếm gần đúng)
+         */
+        serialNumber?: string;
+        /**
+         * Tìm theo trạng thái (ví dụ: "Trong kho")
+         */
+        status?: string;
+        technicalSpecifications?: string;
+        /**
+         * Tìm theo loại trang bị (ví dụ: "SYNCHRONIZED_EQUIPMENT")
+         */
+        type?: string;
+        /**
+         * ID của Đơn vị sử dụng
+         */
+        usingUnitId?: string;
+    };
+};
+
+export type EquipmentInstancesControllerGetDetailsGroupedByInstanceAndUnitResponse = ({
+    data?: Array<{
+        instanceId?: string;
+        instance?: EquipmentInstance;
+        /**
+         * Grouped by status, then by usingUnitName, then by qualityLevelName with counts
+         */
+        statusGroups?: {
+            [key: string]: {
+                [key: string]: {
+                    [key: string]: (number);
+                };
+            };
+        };
+    }>;
+    total?: number;
+    page?: number;
+    limit?: number;
+    totalPages?: number;
+});
+
+export type EquipmentInstancesControllerGetDetailsGroupedByInstanceAndUnitError = unknown;
 
 export type EquipmentInstancesControllerUpdateInventoryData = {
     body: UpdateInventoryDto;

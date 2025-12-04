@@ -19,6 +19,13 @@ export const columns: ColumnDef<any>[] = [
 	{
 		accessorKey: 'instance.serialNumber',
 		header: 'Mã hiệu serial',
+		cell: ({ row }) => {
+			return (
+				<span className="text-right">
+					{row.original?.instance?.serialNumber}
+				</span>
+			)
+		},
 	},
 	{
 		accessorKey: 'usingUnitId',
@@ -56,7 +63,7 @@ export const columns: ColumnDef<any>[] = [
 				<span className="text-right">
 					{
 						qualityLevels?.find(
-							(item) => item.code === row.original?.qualityLevelId,
+							(item) => item.name === row.original?.qualityLevelId,
 						)?.name
 					}
 				</span>
@@ -82,7 +89,7 @@ export const columns: ColumnDef<any>[] = [
 				}),
 			})
 			const qualityLevel = qualityLevels?.data?.find(
-				(item) => item.code === row.original.qualityLevelId,
+				(item) => item.name === row.original.qualityLevelId,
 			)
 
 			return (

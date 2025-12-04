@@ -1,6 +1,6 @@
 'use client'
 
-import { equipmentInstancesControllerGetInstancesWithGroupedDetailsOptions } from '@/client/@tanstack/react-query.gen'
+import { equipmentInstancesControllerGetDetailsGroupedByInstanceAndUnitOptions } from '@/client/@tanstack/react-query.gen'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
 import DataTable from '@/modules/common/components/organisms/DataTable'
 import { useQuery } from '@tanstack/react-query'
@@ -26,7 +26,7 @@ const EquipmentSetInventoryTemplate = () => {
 		technicalSpecifications: parseAsString.withDefault(''),
 	})
 	const { data: equipmentSets } = useQuery({
-		...equipmentInstancesControllerGetInstancesWithGroupedDetailsOptions({
+		...equipmentInstancesControllerGetDetailsGroupedByInstanceAndUnitOptions({
 			query: {
 				type: 'SYNCHRONIZED_EQUIPMENT',
 				limit: settings?.pagingSize,
@@ -62,10 +62,10 @@ const EquipmentSetInventoryTemplate = () => {
 				...data,
 				data: data?.data?.map((item: any, index: number) => {
 					const children: any[] = []
-					if (item.detailsByStatusAndQuality) {
+					if (item.statusGroups) {
 						const importingUnitName = item?.instance?.importingUnitId?.name
 						for (const [status, usingUnits] of Object.entries(
-							item.detailsByStatusAndQuality,
+							item.statusGroups,
 						)) {
 							for (const [usingUnitName, qualityLevels] of Object.entries(
 								usingUnits as any,

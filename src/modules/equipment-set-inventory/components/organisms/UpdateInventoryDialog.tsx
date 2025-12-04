@@ -1,7 +1,7 @@
 'use client'
 
 import {
-	equipmentInstancesControllerGetInstancesWithGroupedDetailsQueryKey,
+	equipmentInstancesControllerGetDetailsGroupedByInstanceAndUnitQueryKey,
 	equipmentInstancesControllerUpdateInventoryMutation,
 	qualityLevelsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
@@ -105,7 +105,7 @@ const UpdateInventoryDialog = ({
 					toast.success('Cập nhật kiểm kê thành công')
 					queryClient.invalidateQueries({
 						queryKey:
-							equipmentInstancesControllerGetInstancesWithGroupedDetailsQueryKey(),
+							equipmentInstancesControllerGetDetailsGroupedByInstanceAndUnitQueryKey(),
 					})
 					onOpenChange(false)
 					form.reset()
