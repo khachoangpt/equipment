@@ -167,7 +167,7 @@ const useMaintenanceDetailController = ({ id }: Props) => {
 				notes: repairDetail.notes || '',
 				receivedDate: repairDetail.receivedDate
 					? new Date(repairDetail.receivedDate).toISOString()
-					: new Date().toISOString(),
+					: undefined,
 				receiver: repairDetail.receiver || '',
 				result: repairDetail.repairResult || '',
 				comment: repairDetail.comment || '',
