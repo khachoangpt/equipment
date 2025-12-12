@@ -14,7 +14,7 @@ const useSearchEquipmentRepairController = () => {
 		repairDateStart: '',
 		repairDateEnd: '',
 		fromUnitId: '',
-		repairUnitId: '',
+		repairLocation: '',
 	}
 	const form = useForm({
 		defaultValues,
@@ -26,7 +26,7 @@ const useSearchEquipmentRepairController = () => {
 		repairDateStart: parseAsString.withDefault(''),
 		repairDateEnd: parseAsString.withDefault(''),
 		fromUnitId: parseAsString.withDefault(''),
-		repairUnitId: parseAsString.withDefault(''),
+		repairLocation: parseAsString.withDefault(''),
 	})
 
 	useEffect(() => {
@@ -35,7 +35,7 @@ const useSearchEquipmentRepairController = () => {
 		form.setValue('repairDateStart', searchQuery.repairDateStart)
 		form.setValue('repairDateEnd', searchQuery.repairDateEnd)
 		form.setValue('fromUnitId', searchQuery.fromUnitId)
-		form.setValue('repairUnitId', searchQuery.repairUnitId)
+		form.setValue('repairLocation', searchQuery.repairLocation)
 	}, [searchQuery])
 
 	const onSubmit: SubmitHandler<SearchEquipmentRepairSchema> = (data) => {

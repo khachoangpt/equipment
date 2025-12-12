@@ -118,12 +118,12 @@ const SearchEquipmentRepair = ({ onOpenChange, open }: Props) => {
 							/>
 							<FormField
 								control={control}
-								name="repairUnitId"
-								render={({ field: { value, onChange } }) => (
+								name="repairLocation"
+								render={({ field }) => (
 									<FormItem className="flex items-center">
 										<FormLabel className="w-full">Nơi bảo dưỡng</FormLabel>
 										<FormControl>
-											<Select value={value} onValueChange={onChange}>
+											{/* <Select value={value} onValueChange={onChange}>
 												<SelectTrigger
 													className="w-full"
 													onClear={() => onChange('')}
@@ -137,7 +137,8 @@ const SearchEquipmentRepair = ({ onOpenChange, open }: Props) => {
 														</SelectItem>
 													))}
 												</SelectContent>
-											</Select>
+											</Select> */}
+											<Input placeholder="Nơi bảo dưỡng" {...field} />
 										</FormControl>
 									</FormItem>
 								)}

@@ -45,7 +45,7 @@ const useMaintenanceDetailController = ({ id }: Props) => {
 		sender: '',
 		sentDate: new Date().toISOString(),
 		notes: '',
-		receivedDate: new Date().toISOString(),
+		receivedDate: '',
 		receiver: '',
 		result: '',
 		comment: '',

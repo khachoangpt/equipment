@@ -329,7 +329,7 @@ const searchEquipmentRepairSchema = z.object({
 	repairDateStart: z.string().optional(),
 	repairDateEnd: z.string().optional(),
 	fromUnitId: z.string().optional(),
-	repairUnitId: z.string().optional(),
+	repairLocation: z.string().optional(),
 })
 type SearchEquipmentRepairSchema = z.infer<typeof searchEquipmentRepairSchema>
 

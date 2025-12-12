@@ -8,7 +8,6 @@ import {
 	equipmentDisposeControllerUpdateMutation,
 	equipmentInstancesControllerSearchOptions,
 	unitsControllerFindAllOptions,
-	usersControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
 import Combobox from '@/components/custom/combobox/Combobox'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
@@ -78,18 +77,6 @@ const LiquidationDetailForm = ({ id }: Props) => {
 				value: equipment._id,
 				name: equipment.equipmentId.name,
 				serialNumber: equipment?.serialNumber,
-			}))
-		},
-	})
-
-	const { data: accounts } = useQuery({
-		...usersControllerFindAllOptions({
-			query: { limit: 1000000, page: 1 },
-		}),
-		select: (data) => {
-			return data?.map((account) => ({
-				label: account.fullName || account.username,
-				value: account._id,
 			}))
 		},
 	})
@@ -353,15 +340,11 @@ const LiquidationDetailForm = ({ id }: Props) => {
 						<FormField
 							control={control}
 							name="createdBy"
-							render={({ field: { value, onChange } }) => (
-								<FormItem key={value}>
+							render={({ field }) => (
+								<FormItem>
 									<FormLabel>Người lập</FormLabel>
 									<FormControl>
-										<Combobox
-											options={accounts || []}
-											value={value}
-											onChange={onChange}
-										/>
+										<Input placeholder="Người lập" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

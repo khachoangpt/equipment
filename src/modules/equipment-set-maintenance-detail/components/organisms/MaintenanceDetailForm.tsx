@@ -255,7 +255,7 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 									<FormLabel>Ngày nhận</FormLabel>
 									<FormControl>
 										<DatePicker
-											value={new Date(field.value || '')}
+											value={field.value ? new Date(field.value) : undefined}
 											onChange={(e) => field.onChange(e.toString())}
 										/>
 									</FormControl>

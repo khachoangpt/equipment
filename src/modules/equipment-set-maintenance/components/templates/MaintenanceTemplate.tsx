@@ -23,7 +23,7 @@ const MaintenanceTemplate = () => {
 		repairDateStart: parseAsString.withDefault(''),
 		repairDateEnd: parseAsString.withDefault(''),
 		fromUnitId: parseAsString.withDefault(''),
-		repairUnitId: parseAsString.withDefault(''),
+		repairLocation: parseAsString.withDefault(''),
 	})
 
 	useEffect(() => {
@@ -34,7 +34,7 @@ const MaintenanceTemplate = () => {
 		searchQuery.repairDateStart,
 		searchQuery.repairDateEnd,
 		searchQuery.fromUnitId,
-		searchQuery.repairUnitId,
+		searchQuery.repairLocation,
 	])
 	const { data: equipmentRepair } = useQuery({
 		...equipmentRepairControllerSearchOptions({
@@ -54,8 +54,8 @@ const MaintenanceTemplate = () => {
 					? searchQuery.repairDateEnd
 					: undefined,
 				fromUnitId: searchQuery.fromUnitId ? searchQuery.fromUnitId : undefined,
-				repairUnitId: searchQuery.repairUnitId
-					? searchQuery.repairUnitId
+				repairLocation: searchQuery.repairLocation
+					? searchQuery.repairLocation
 					: undefined,
 			},
 		}),
