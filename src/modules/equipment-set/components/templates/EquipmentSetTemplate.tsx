@@ -82,12 +82,13 @@ const EquipmentSetTemplate = () => {
 	const handleExportPDF = async () => {
 		try {
 			const res =
-				await SyncEquipmentsInstancesService.equipmentInstancesControllerGenerateInventoryReport(
+				await SyncEquipmentsInstancesService.equipmentInstancesControllerGetInstancesWithGroupedDetails(
 					{
 						query: {
 							type: 'SYNCHRONIZED_EQUIPMENT',
 							limit: 1000000000,
 							page: 1,
+							exportType: 'pdf',
 							serialNumber: searchQuery.serialNumber
 								? searchQuery.serialNumber
 								: undefined,
