@@ -1,7 +1,7 @@
 import type { EquipmentInstance } from '@/client'
 import {
+	equipmentInstancesControllerGetInstancesWithGroupedDetailsQueryKey,
 	equipmentInstancesControllerRemoveMutation,
-	equipmentInstancesControllerSearchQueryKey,
 } from '@/client/@tanstack/react-query.gen'
 import { queryClient } from '@/configs/query-client'
 import { pageList } from '@/configs/routes'
@@ -80,7 +80,8 @@ export const columns: ColumnDef<EquipmentInstance>[] = [
 							setOpen(false)
 							toast.success('Xóa thành công')
 							queryClient.invalidateQueries({
-								queryKey: equipmentInstancesControllerSearchQueryKey(),
+								queryKey:
+									equipmentInstancesControllerGetInstancesWithGroupedDetailsQueryKey(),
 							})
 						},
 						onError: (error) => {

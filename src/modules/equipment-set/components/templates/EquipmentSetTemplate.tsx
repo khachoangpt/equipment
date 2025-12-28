@@ -1,7 +1,7 @@
 'use client'
 
 import { SyncEquipmentsInstancesService } from '@/client'
-import { equipmentInstancesControllerSearchOptions } from '@/client/@tanstack/react-query.gen'
+import { equipmentInstancesControllerGetInstancesWithGroupedDetailsOptions } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import { pageList } from '@/configs/routes'
 import useGetGeneralSettings from '@/hooks/general-settings/use-get-general-settings'
@@ -33,7 +33,7 @@ const EquipmentSetTemplate = () => {
 		technicalSpecifications: parseAsString.withDefault(''),
 	})
 	const { data: equipmentSets } = useQuery({
-		...equipmentInstancesControllerSearchOptions({
+		...equipmentInstancesControllerGetInstancesWithGroupedDetailsOptions({
 			query: {
 				type: 'SYNCHRONIZED_EQUIPMENT',
 				limit: settings?.pagingSize,
@@ -68,7 +68,7 @@ const EquipmentSetTemplate = () => {
 			return {
 				...data,
 				data: data?.data?.map((item, index) => ({
-					...item,
+					...item.instance,
 					index: settings?.pagingSize
 						? (page - 1) * settings?.pagingSize + index + 1
 						: index + 1,

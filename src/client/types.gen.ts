@@ -1017,6 +1017,10 @@ export type InventoryItemDto = {
      */
     currentQualityLevelId?: string;
     /**
+     * ID của đơn vị hiện tại của các chi tiết cần cập nhật
+     */
+    currentUnitId?: string;
+    /**
      * Trạng thái mới để cập nhật
      */
     newStatus: string;
@@ -1024,6 +1028,10 @@ export type InventoryItemDto = {
      * ID của mức chất lượng mới để cập nhật
      */
     newQualityLevelId?: string;
+    /**
+     * ID của đơn vị mới để cập nhật
+     */
+    newUnitId?: string;
 };
 
 export type LoginDto = {
