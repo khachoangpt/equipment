@@ -105,6 +105,7 @@ export const columns: ColumnDef<any>[] = [
 						equipmentId={row.original._id}
 						currentStatus={row.original.status}
 						currentQualityLevelId={qualityLevel?._id}
+						currentUnitId={row.original.unitId}
 						open={open}
 						onOpenChange={setOpen}
 					/>

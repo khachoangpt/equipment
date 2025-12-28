@@ -50,6 +50,7 @@ type Props = {
 	equipmentId?: string
 	currentStatus?: string
 	currentQualityLevelId?: string
+	currentUnitId?: string
 	open: boolean
 	onOpenChange: (open: boolean) => void
 }
@@ -58,6 +59,7 @@ const UpdateInventoryDialog = ({
 	equipmentId,
 	currentStatus = '',
 	currentQualityLevelId,
+	currentUnitId,
 	open,
 	onOpenChange,
 }: Props) => {
@@ -94,6 +96,7 @@ const UpdateInventoryDialog = ({
 							quantityToUpdate: formData.quantity,
 							currentStatus: currentStatus,
 							currentQualityLevelId: currentQualityLevelId,
+							currentUnitId: currentUnitId,
 							newStatus: formData.status,
 							newQualityLevelId: formData.qualityLevelId,
 						},

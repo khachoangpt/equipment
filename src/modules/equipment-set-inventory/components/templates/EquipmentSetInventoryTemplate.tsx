@@ -64,14 +64,19 @@ const EquipmentSetInventoryTemplate = () => {
 					const children: any[] = []
 					if (item.statusGroups) {
 						const importingUnitName = item?.instance?.importingUnitId?.name
+						const importingUnitId = item?.instance?.importingUnitId?._id
 						for (const [status, usingUnits] of Object.entries(
 							item.statusGroups,
 						)) {
-							for (const [usingUnitName, qualityLevels] of Object.entries(
+							for (const [usingUnitName, unitData] of Object.entries(
 								usingUnits as any,
 							)) {
+								const unitInfo = unitData as {
+									unitId?: string
+									qualityLevels: Record<string, number>
+								}
 								for (const [qualityLevelId, quantity] of Object.entries(
-									qualityLevels as any,
+									unitInfo.qualityLevels,
 								)) {
 									children.push({
 										...item,
@@ -81,6 +86,10 @@ const EquipmentSetInventoryTemplate = () => {
 											usingUnitName === 'null'
 												? importingUnitName
 												: usingUnitName,
+										unitId:
+											usingUnitName === 'null'
+												? importingUnitId
+												: unitInfo.unitId,
 										qualityLevelId,
 										quantity,
 										index: undefined,
