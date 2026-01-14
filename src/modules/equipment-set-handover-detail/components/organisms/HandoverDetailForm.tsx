@@ -52,15 +52,17 @@ const HandoverDetailForm = ({ id }: Props) => {
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions({ query: { limit: 1000000, page: 1 } }),
 	})
+	const fromUnitId = form.watch('fromUnitId')
 	const { data: equipments } = useQuery({
 		...equipmentInstancesControllerSearchOptions({
 			query: {
 				limit: 1000000,
 				page: 1,
-				importingUnitId: form.watch('fromUnitId'),
+				importingUnitId: fromUnitId,
+				...(fromUnitId && { usingUnitId: fromUnitId }),
 			},
 		}),
-		enabled: !!form.watch('fromUnitId'),
+		enabled: !!fromUnitId,
 		select: (data) =>
 			data?.data?.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
