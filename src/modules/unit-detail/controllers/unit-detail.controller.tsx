@@ -53,14 +53,17 @@ const useUnitDetailController = ({ id }: Props) => {
 	}, [id, isPending])
 
 	const onSubmit: SubmitHandler<any> = (data: any) => {
+		const body: { name: string; code: string; parentId?: string } = {
+			name: data.name,
+			code: data.code,
+		}
+		if (data.parentUnitId) {
+			body.parentId = data.parentUnitId
+		}
 		if (!id) {
 			create(
 				{
-					body: {
-						name: data.name,
-						code: data.code,
-						parentId: data.parentUnitId,
-					},
+					body,
 				},
 				{
 					onError: (error) => {
@@ -83,11 +86,7 @@ const useUnitDetailController = ({ id }: Props) => {
 			update(
 				{
 					path: { id: id },
-					body: {
-						name: data.name,
-						code: data.code,
-						parentId: data.parentUnitId,
-					},
+					body,
 				},
 				{
 					onError: (error) => {
