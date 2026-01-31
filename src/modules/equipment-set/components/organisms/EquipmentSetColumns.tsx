@@ -12,7 +12,16 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-export const columns: ColumnDef<EquipmentInstance>[] = [
+/** Row = instance + 1 bản ghi từ detailsByStatusAndQuality (status, đơn vị, chất lượng, số lượng) */
+export type EquipmentSetRow = EquipmentInstance & {
+	status?: string
+	usingUnitName?: string
+	qualityLevelName?: string
+	quantity?: number
+	index?: number
+}
+
+export const columns: ColumnDef<EquipmentSetRow>[] = [
 	{
 		accessorKey: 'index',
 		header: 'STT',
@@ -40,24 +49,38 @@ export const columns: ColumnDef<EquipmentInstance>[] = [
 		header: 'Mã hiệu serial',
 	},
 	{
-		accessorKey: 'usingUnitId',
+		accessorKey: 'usingUnitName',
 		header: 'Đơn vị sử dụng',
 		cell: ({ row }) => {
-			return (
-				<span className="text-right">{row.original.usingUnitId?.name}</span>
-			)
+			const usingUnitName =
+				row.original.usingUnitName ?? row.original.usingUnitId?.name
+			return <span className="text-right">{usingUnitName ?? '—'}</span>
 		},
 	},
 	{
 		accessorKey: 'status',
 		header: 'Tình trạng',
+		cell: ({ row }) => {
+			return <span>{row.original.status ?? '—'}</span>
+		},
 	},
 	{
-		accessorKey: 'qualityLevelId',
+		accessorKey: 'qualityLevelName',
 		header: 'Phân cấp chất lượng',
 		cell: ({ row }) => {
+			const name =
+				row.original.qualityLevelName ?? row.original.qualityLevelId?.name
+			return <span className="text-right">{name ?? '—'}</span>
+		},
+	},
+	{
+		accessorKey: 'quantity',
+		header: 'Số lượng',
+		cell: ({ row }) => {
 			return (
-				<span className="text-right">{row.original.qualityLevelId?.name}</span>
+				<span className="text-right">
+					{row.original.quantity != null ? row.original.quantity : '—'}
+				</span>
 			)
 		},
 	},

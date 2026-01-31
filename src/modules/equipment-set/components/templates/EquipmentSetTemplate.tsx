@@ -65,14 +65,48 @@ const EquipmentSetTemplate = () => {
 			},
 		}),
 		select: (data) => {
+			const rows: any[] = []
+			let rowIndex = 0
+			const items = data?.data ?? []
+			for (const item of items) {
+				const instance = item.instance
+				const detailsByStatusAndQuality = item.detailsByStatusAndQuality ?? {}
+				for (const [status, unitMap] of Object.entries(
+					detailsByStatusAndQuality,
+				)) {
+					if (unitMap && typeof unitMap === 'object') {
+						for (const [usingUnitName, qualityMap] of Object.entries(unitMap)) {
+							if (
+								qualityMap &&
+								typeof qualityMap === 'object' &&
+								!Array.isArray(qualityMap)
+							) {
+								for (const [qualityLevelName, quantity] of Object.entries(
+									qualityMap,
+								)) {
+									rows.push({
+										...instance,
+										status,
+										usingUnitName:
+											usingUnitName === 'null' || usingUnitName === 'N/A'
+												? (instance?.importingUnitId?.name ?? usingUnitName)
+												: usingUnitName,
+										qualityLevelName,
+										quantity: Number(quantity) ?? 0,
+										index: settings?.pagingSize
+											? (page - 1) * settings?.pagingSize + ++rowIndex
+											: ++rowIndex,
+									})
+								}
+							}
+						}
+					}
+				}
+			}
 			return {
 				...data,
-				data: data?.data?.map((item, index) => ({
-					...item.instance,
-					index: settings?.pagingSize
-						? (page - 1) * settings?.pagingSize + index + 1
-						: index + 1,
-				})),
+				data: rows,
+				total: data?.total ?? 0,
 			}
 		},
 		enabled: !isFetchingGeneralSettings,
