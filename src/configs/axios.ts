@@ -4,8 +4,8 @@ import axios from 'axios'
 import { getCookie } from 'cookies-next/client'
 import * as rax from 'retry-axios'
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const defaultConfig: CreateAxiosDefaults<any> = {
+	baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
 	timeout: 30 * 1000, // 30 seconds
 	// withCredentials: true,
 	raxConfig: {
@@ -38,7 +38,6 @@ const defaultConfig: CreateAxiosDefaults<any> = {
 	},
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function isAuthError(error: any) {
 	return error.response?.status === 401 || error.response?.data?.status === 401
 }
@@ -59,7 +58,6 @@ function addResponseInterceptor(instance: AxiosInstance) {
 	)
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 function createAxiosInstance(config: CreateAxiosDefaults<any> = defaultConfig) {
 	const instance = axios.create(config)
 	addResponseInterceptor(instance)

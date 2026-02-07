@@ -1,4 +1,3 @@
-import { equipmentHandoverControllerGenerateAnnualReceptionReportMutation } from '@/client/@tanstack/react-query.gen'
 import { Button } from '@/components/ui/button'
 import {
 	Dialog,
@@ -8,24 +7,16 @@ import {
 	DialogTitle,
 } from '@/components/ui/dialog'
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from '@/components/ui/form'
-import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select'
+import axiosInstance from '@/configs/axios'
 import {} from '@/configs/schema'
 import { useMutation } from '@tanstack/react-query'
-import dayjs from 'dayjs'
-import { type SubmitHandler, useForm } from 'react-hook-form'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 type Props = {
@@ -34,51 +25,82 @@ type Props = {
 }
 
 const DialogStatisticEquipment = ({ onOpenChange, open }: Props) => {
-	const statisticHandoverForm = useForm<{ year: string }>({
-		defaultValues: { year: dayjs().year().toString() },
-	})
-	const { control, handleSubmit } = statisticHandoverForm
-	const { mutate } = useMutation({
-		...equipmentHandoverControllerGenerateAnnualReceptionReportMutation(),
+	const [year, setYear] = useState<string>(new Date().getFullYear().toString())
+
+	const years = Array.from({ length: 101 }, (_, index) => {
+		return (index + 2020).toString()
 	})
 
-	const onSubmit: SubmitHandler<any> = (data: any) => {
-		mutate(
-			{
-				query: {
-					year: data.year,
-				},
-				responseType: 'arraybuffer',
+	const { mutate, isPending } = useMutation({
+		mutationFn: async (selectedYear: string) => {
+			const url = '/api/v1/equipments/instances/search'
+
+			// Tính toán entryDateStart và entryDateEnd dựa trên năm
+			const yearNum = Number.parseInt(selectedYear, 10)
+			const entryDateStart = `${yearNum}-01-01`
+			const entryDateEnd = `${yearNum}-12-31`
+
+			try {
+				const response = await axiosInstance.get(url, {
+					params: {
+						type: 'ASSEMBLED_EQUIPMENT',
+						exportType: 'excel',
+						entryDateStart,
+						entryDateEnd,
+					},
+					responseType: 'arraybuffer',
+				})
+				return { data: response.data, year: selectedYear }
+			} catch (error: any) {
+				console.error('Frontend: Request error:', error)
+				throw error
+			}
+		},
+	})
+
+	const onSubmit = () => {
+		if (!year) {
+			toast.error('Vui lòng chọn năm')
+			return
+		}
+
+		mutate(year, {
+			onError: (error: any) => {
+				console.error('Error generating statistics report:', error)
+				const status = error?.response?.status
+
+				if (status === 404) {
+					toast.error('Không tìm thấy trang bị ở năm đã chọn')
+					return
+				}
+
+				const errorMessage =
+					error?.response?.data?.message || error?.message || 'Đã có lỗi xảy ra'
+				toast.error(errorMessage)
 			},
-			{
-				onError: (error) => {
-					if (error.status === 404) {
-						toast.error('Không có dữ liệu bàn giao trong khoảng thời gian này.')
-						return
-					}
-					toast.error('Đã có lỗi xảy ra')
-				},
-				onSuccess: (res) => {
-					handleDownload(
-						res as string,
-						`Danh_muc_trang_bi_tiep_nhan_${data.year}.xlsx`,
-					)
-					onOpenChange(false)
-				},
+			onSuccess: (result) => {
+				const fileName = `Danh_sach_trang_bi_lap_ghep_${result.year}.xlsx`
+				handleDownload(result.data, fileName)
+				onOpenChange(false)
 			},
-		)
+		})
 	}
 
-	const handleDownload = (pdfContent: string, fileName = 'document.xlsx') => {
-		const blob = new Blob([pdfContent], {
-			type: 'application/vnd.openxmlformats-officedocument.spreadsheetml+xml',
+	const handleDownload = (
+		fileData: ArrayBuffer | string,
+		fileName = 'document.xlsx',
+	) => {
+		const blob = new Blob([fileData], {
+			type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 		})
 		const url = URL.createObjectURL(blob)
 
 		const link = document.createElement('a')
 		link.href = url
 		link.download = fileName
+		document.body.appendChild(link)
 		link.click()
+		document.body.removeChild(link)
 
 		URL.revokeObjectURL(url)
 	}
@@ -87,57 +109,50 @@ const DialogStatisticEquipment = ({ onOpenChange, open }: Props) => {
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Thống kê trang bị tiếp nhận</DialogTitle>
-					<DialogDescription className="hidden" />
+					<DialogTitle>Thống kê trang bị lắp ghép</DialogTitle>
+					<DialogDescription>
+						Xuất danh sách trang bị lắp ghép ra file Excel
+					</DialogDescription>
 				</DialogHeader>
 				<div className="mt-5 space-y-5">
-					<Form {...statisticHandoverForm}>
-						<FormField
-							control={control}
-							name="year"
-							render={({ field: { onChange, value } }) => (
-								<FormItem>
-									<FormLabel>Năm</FormLabel>
-									<FormControl>
-										<Select value={value} onValueChange={onChange}>
-											<SelectTrigger
-												className="w-full"
-												clearable
-												onClear={() => onChange('')}
-											>
-												<SelectValue placeholder="Năm" />
-											</SelectTrigger>
-											<SelectContent>
-												{Array.from(
-													{ length: new Date().getFullYear() - 2020 + 1 },
-													(_, index) => 2020 + index,
-												).map((year) => (
-													<SelectItem key={year} value={year.toString()}>
-														{year}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<div className="flex items-center justify-center gap-x-3">
-							<Button
-								size="lg"
-								type="button"
-								variant="secondary"
-								onClick={() => onOpenChange(false)}
-							>
-								Huỷ
-							</Button>
-							<Button size="lg" type="submit" onClick={handleSubmit(onSubmit)}>
-								Thống kê
-							</Button>
+					<div className="space-y-4">
+						<div className="flex flex-col space-y-2">
+							<label htmlFor="year-select" className="text-sm font-medium">
+								Năm
+							</label>
+							<Select value={year} onValueChange={setYear}>
+								<SelectTrigger id="year-select" className="w-full">
+									<SelectValue placeholder="Chọn năm" />
+								</SelectTrigger>
+								<SelectContent>
+									{years.map((y) => (
+										<SelectItem key={y} value={y}>
+											{y}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 						</div>
-					</Form>
+					</div>
+					<div className="flex items-center justify-center gap-x-3">
+						<Button
+							size="lg"
+							type="button"
+							variant="secondary"
+							onClick={() => onOpenChange(false)}
+							disabled={isPending}
+						>
+							Huỷ
+						</Button>
+						<Button
+							size="lg"
+							type="button"
+							onClick={onSubmit}
+							disabled={isPending}
+						>
+							{isPending ? 'Đang xuất...' : 'Xuất Excel'}
+						</Button>
+					</div>
 				</div>
 			</DialogContent>
 		</Dialog>
