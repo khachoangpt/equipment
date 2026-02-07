@@ -67,10 +67,17 @@ const LiquidationDetailForm = ({ id }: Props) => {
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions({ query: { limit: 1000000, page: 1 } }),
 	})
+	const fromUnitId = form.watch('fromUnitId')
 	const { data: equipments } = useQuery({
 		...equipmentInstancesControllerSearchOptions({
-			query: { limit: 1000000, page: 1 },
+			query: {
+				limit: 1000000,
+				page: 1,
+				usingUnitId: fromUnitId,
+				importingUnitId: fromUnitId,
+			},
 		}),
+		enabled: !!fromUnitId,
 		select: (data) => {
 			return data?.data?.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,

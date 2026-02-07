@@ -45,11 +45,17 @@ const MaintenanceDetailForm = ({ id }: Props) => {
 	const { data: units } = useQuery({
 		...unitsControllerFindAllOptions({ query: { limit: 1000000, page: 1 } }),
 	})
+	const fromUnitId = form.watch('fromUnitId')
 	const { data: equipments } = useQuery({
 		...equipmentInstancesControllerSearchOptions({
-			query: { limit: 1000000, page: 1, usingUnitId: form.watch('fromUnitId') },
+			query: {
+				limit: 1000000,
+				page: 1,
+				usingUnitId: fromUnitId,
+				importingUnitId: fromUnitId,
+			},
 		}),
-		enabled: !!form.watch('fromUnitId'),
+		enabled: !!fromUnitId,
 		select: (data) =>
 			data?.data?.map((equipment) => ({
 				label: `(${equipment.serialNumber}) ${equipment.equipmentId.name}`,
