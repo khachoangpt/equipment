@@ -86,9 +86,7 @@ const UpdateInventoryDialog = ({
 
 	const onSubmit = async (formData: UpdateInventoryForm) => {
 		// Nếu currentStatus là "Mới" thì đổi thành "Trong kho" trước khi call API
-		console.log('currentStatus', currentStatus);
 		const statusToSend = currentStatus === 'Mới' ? 'Trong kho' : currentStatus
-		console.log('statusToSend', statusToSend);
 
 		updateInventory(
 			{
