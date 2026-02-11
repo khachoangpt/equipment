@@ -20,12 +20,17 @@ type Props = {
 const DialogImportHistoryComponent = ({ open, onOpenChange, id }: Props) => {
 	const { data } = useQuery({
 		...activityLogsControllerSearchOptions({
-			query: { activityType: 'Tăng số lượng thiết bị' },
+			query: {
+				activityType: [
+					'Tăng số lượng thiết bị',
+					'Thêm mới số lượng thiết bị',
+				] as any, // Temporary: will be fixed after regenerating SDK
+				componentId: id,
+			},
 		}),
+		enabled: open && !!id,
 		select: (data) => {
-			return data.data.filter((item) => {
-				return item.componentId?._id === id
-			})
+			return data.data
 		},
 	})
 

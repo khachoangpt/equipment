@@ -7,7 +7,7 @@ export type ActivityLog = {
     _id: string;
     instanceId?: EquipmentInstance;
     componentId?: Component;
-    activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị' | 'Cập nhật sửa chữa' | 'Tạo sửa chữa' | 'Xóa sửa chữa' | 'Cập nhật bàn giao' | 'Tạo bàn giao' | 'Xóa bàn giao' | 'Cập nhật kiểm kê' | 'Tạo kiểm kê' | 'Xóa kiểm kê';
+    activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Thêm mới số lượng thiết bị' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị' | 'Cập nhật sửa chữa' | 'Tạo sửa chữa' | 'Xóa sửa chữa' | 'Cập nhật bàn giao' | 'Tạo bàn giao' | 'Xóa bàn giao' | 'Cập nhật kiểm kê' | 'Tạo kiểm kê' | 'Xóa kiểm kê';
     createdBy: User;
     /**
      * Chi tiết hoạt động, cấu trúc thay đổi theo activityType
@@ -20,7 +20,7 @@ export type ActivityLog = {
     updatedAt: string;
 };
 
-export type activityType = 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị' | 'Cập nhật sửa chữa' | 'Tạo sửa chữa' | 'Xóa sửa chữa' | 'Cập nhật bàn giao' | 'Tạo bàn giao' | 'Xóa bàn giao' | 'Cập nhật kiểm kê' | 'Tạo kiểm kê' | 'Xóa kiểm kê';
+export type activityType = 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Thêm mới số lượng thiết bị' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị' | 'Cập nhật sửa chữa' | 'Tạo sửa chữa' | 'Xóa sửa chữa' | 'Cập nhật bàn giao' | 'Tạo bàn giao' | 'Xóa bàn giao' | 'Cập nhật kiểm kê' | 'Tạo kiểm kê' | 'Xóa kiểm kê';
 
 export type AddComponentStockDto = {
     /**
@@ -1017,10 +1017,6 @@ export type InventoryItemDto = {
      */
     currentQualityLevelId?: string;
     /**
-     * ID của đơn vị hiện tại của các chi tiết cần cập nhật
-     */
-    currentUnitId?: string;
-    /**
      * Trạng thái mới để cập nhật
      */
     newStatus: string;
@@ -1028,6 +1024,10 @@ export type InventoryItemDto = {
      * ID của mức chất lượng mới để cập nhật
      */
     newQualityLevelId?: string;
+    /**
+     * ID của đơn vị hiện tại của các chi tiết cần cập nhật
+     */
+    currentUnitId?: string;
     /**
      * ID của đơn vị mới để cập nhật
      */
@@ -2930,6 +2930,10 @@ export type EquipmentRepairControllerSearchData = {
          */
         repairDateStart?: string;
         /**
+         * Nơi sửa chữa
+         */
+        repairLocation?: string;
+        /**
          * ID đơn vị sửa chữa để lọc
          */
         repairUnitId?: string;
@@ -3173,7 +3177,7 @@ export type ActivityLogsControllerSearchData = {
         /**
          * Loại hoạt động cần tìm kiếm (Bắt buộc)
          */
-        activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị' | 'Cập nhật sửa chữa' | 'Tạo sửa chữa' | 'Xóa sửa chữa' | 'Cập nhật bàn giao' | 'Tạo bàn giao' | 'Xóa bàn giao' | 'Cập nhật kiểm kê' | 'Tạo kiểm kê' | 'Xóa kiểm kê';
+        activityType: 'Bàn giao' | 'Sửa chữa' | 'Kiểm kê' | 'Thanh lý' | 'Thêm mới số lượng thiết bị' | 'Tăng số lượng thiết bị' | 'Xóa thiết bị' | 'Cập nhật thông tin trang bị' | 'Tạo trang bị' | 'Cập nhật sửa chữa' | 'Tạo sửa chữa' | 'Xóa sửa chữa' | 'Cập nhật bàn giao' | 'Tạo bàn giao' | 'Xóa bàn giao' | 'Cập nhật kiểm kê' | 'Tạo kiểm kê' | 'Xóa kiểm kê';
         /**
          * ID của linh kiện (nếu có)
          */
@@ -3331,6 +3335,10 @@ export type EquipmentInstancesControllerSearchData = {
          * Tìm theo số kế hoạch nhập
          */
         entryPlanNumber?: string;
+        /**
+         * Xuất file dưới dạng PDF hoặc Excel
+         */
+        exportType?: string;
         featureConfiguration?: string;
         /**
          * ID của Nhóm loại trang bị
@@ -3398,6 +3406,10 @@ export type EquipmentInstancesControllerGetInstancesWithGroupedDetailsData = {
          * Tìm theo số kế hoạch nhập
          */
         entryPlanNumber?: string;
+        /**
+         * Xuất file dưới dạng PDF hoặc Excel
+         */
+        exportType?: string;
         featureConfiguration?: string;
         /**
          * ID của Nhóm loại trang bị
@@ -3465,6 +3477,10 @@ export type EquipmentInstancesControllerGetDetailsGroupedByInstanceAndUnitData =
          * Tìm theo số kế hoạch nhập
          */
         entryPlanNumber?: string;
+        /**
+         * Xuất file dưới dạng PDF hoặc Excel
+         */
+        exportType?: string;
         featureConfiguration?: string;
         /**
          * ID của Nhóm loại trang bị
@@ -3615,6 +3631,10 @@ export type EquipmentInstancesControllerGetInventoryDataData = {
          * Tìm theo số kế hoạch nhập
          */
         entryPlanNumber?: string;
+        /**
+         * Xuất file dưới dạng PDF hoặc Excel
+         */
+        exportType?: string;
         featureConfiguration?: string;
         /**
          * ID của Nhóm loại trang bị
@@ -3682,6 +3702,10 @@ export type EquipmentInstancesControllerGenerateInventoryReportData = {
          * Tìm theo số kế hoạch nhập
          */
         entryPlanNumber?: string;
+        /**
+         * Xuất file dưới dạng PDF hoặc Excel
+         */
+        exportType?: string;
         featureConfiguration?: string;
         /**
          * ID của Nhóm loại trang bị
@@ -3749,6 +3773,10 @@ export type EquipmentInstancesControllerGetGeneralInventoryReportData = {
          * Tìm theo số kế hoạch nhập
          */
         entryPlanNumber?: string;
+        /**
+         * Xuất file dưới dạng PDF hoặc Excel
+         */
+        exportType?: string;
         featureConfiguration?: string;
         /**
          * ID của Nhóm loại trang bị

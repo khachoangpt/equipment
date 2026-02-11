@@ -10,6 +10,10 @@ export const importComponentColumns: ColumnDef<ActivityLog>[] = [
 	{
 		accessorKey: 'details.quantity',
 		header: 'Số lượng',
+		cell: ({ row }) => {
+			const details = row.original.details
+			return details?.quantity ?? details?.quantityInStock ?? '—'
+		},
 	},
 	{ accessorKey: 'details.notes', header: 'Ghi chú' },
 	{
