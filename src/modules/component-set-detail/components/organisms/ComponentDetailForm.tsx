@@ -77,6 +77,19 @@ const ComponentDetailForm = ({ id }: Props) => {
 	})
 
 	const onSubmit = (data: ComponentDetailSchema) => {
+		// Convert time to ISO string, fallback to current date if invalid
+		let timeValue: string
+		if (data?.time) {
+			const date = new Date(data.time)
+			if (!isNaN(date.getTime())) {
+				timeValue = date.toISOString()
+			} else {
+				timeValue = new Date().toISOString()
+			}
+		} else {
+			timeValue = new Date().toISOString()
+		}
+
 		if (!id) {
 			create(
 				{
@@ -85,7 +98,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 						name: data?.name ?? '',
 						unitOfMeasure: data?.unitOfMeasure ?? '',
 						quantityInStock: Number(data?.quantity) ?? 0,
-						time: new Date(data?.time).toISOString(),
+						time: timeValue,
 						supplyingUnitId: data?.supplyUnit ?? '',
 						receivingUnitId: data?.receiverUnit ?? '',
 						evaluatingUnitId: data?.reviewUnit ?? '',
@@ -176,7 +189,7 @@ const ComponentDetailForm = ({ id }: Props) => {
 						name: data?.name ?? '',
 						unitOfMeasure: data?.unitOfMeasure ?? '',
 						quantityInStock: Number(data?.quantity) ?? 0,
-						time: new Date(data?.time).toISOString(),
+						time: timeValue,
 						supplyingUnitId: data?.supplyUnit ?? '',
 						receivingUnitId: data?.receiverUnit ?? '',
 						evaluatingUnitId: data?.reviewUnit ?? '',
@@ -456,7 +469,16 @@ const ComponentDetailForm = ({ id }: Props) => {
 									<FormLabel>Thời gian</FormLabel>
 									<FormControl>
 										<DatePicker
-											onChange={(e) => field.onChange(e.toString())}
+											onChange={(e) => {
+												if (e instanceof Date) {
+													field.onChange(e.toISOString())
+												} else if (typeof e === 'string') {
+													const date = new Date(e)
+													if (!isNaN(date.getTime())) {
+														field.onChange(date.toISOString())
+													}
+												}
+											}}
 											value={new Date(field.value || '')}
 										/>
 									</FormControl>
