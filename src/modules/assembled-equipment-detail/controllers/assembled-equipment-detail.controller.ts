@@ -9,6 +9,7 @@ type Props = {
 
 const useAssembledEquipmentDetailController = ({ id }: Props) => {
 	const defaultValues: any = {
+		buildActivitySummaryId: '',
 		equipmentId: '',
 		name: '',
 		unitOfMeasure: '',
@@ -38,7 +39,7 @@ const useAssembledEquipmentDetailController = ({ id }: Props) => {
 			const equipment = data as any
 
 			form.reset({
-				buildActivityId: equipment?.buildActivityId ?? '',
+				buildActivitySummaryId: equipment?.buildActivitySummaryId ?? equipment?.buildActivityId ?? '',
 				equipmentId: equipment?.equipmentId?._id ?? '',
 				unitOfMeasure: equipment?.unitOfMeasure ?? '',
 				quantity: equipment?.quantity ?? 0,

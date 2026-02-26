@@ -2,11 +2,11 @@
 
 import type { CreateEquipmentInstanceDto } from '@/client'
 import {
-	assembledEquipmentControllerFindAllBuildActivitiesOptions,
 	equipmentInstancesControllerCreateMutation,
 	equipmentInstancesControllerUpdateMutation,
 	unitsControllerFindAllOptions,
 } from '@/client/@tanstack/react-query.gen'
+import axiosInstance from '@/configs/axios'
 import Combobox from '@/components/custom/combobox/Combobox'
 import { DatePicker } from '@/components/custom/date-picker/DatePicker'
 import { Button } from '@/components/ui/button'
@@ -56,16 +56,28 @@ const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 	const { mutate: update } = useMutation({
 		...equipmentInstancesControllerUpdateMutation(),
 	})
+	// Lấy danh sách từ build-activity-summary API
 	const { data: buildActivities } = useQuery({
-		...assembledEquipmentControllerFindAllBuildActivitiesOptions({
-			query: { limit: 1000000, page: 1 },
-		}),
+		queryKey: ['build-activities-summary', { limit: 1000000, page: 1 }],
+		queryFn: async () => {
+			const response = await axiosInstance.get(
+				'/api/v1/assembly-equipments/build-activities-summary',
+				{
+					params: {
+						limit: 1000000,
+						page: 1,
+					},
+				},
+			)
+			return response.data
+		},
 		select: (data) => {
-			return data?.data?.map((e) => ({
+			return data?.data?.map((e: any) => ({
 				value: (e as any)?._id,
 				label: (e?.config as any)?.name,
 				config: e?.config as any,
-				quantity: e?.quantity,
+				quantity: e?.totalQuantity || 0, // Dùng totalQuantity từ summary
+				totalQuantity: e?.totalQuantity || 0,
 				...e,
 			}))
 		},
@@ -74,24 +86,32 @@ const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 	const router = useRouter()
 
 	const onSubmit: SubmitHandler<CreateEquipmentInstanceDto> = async (data) => {
+		// Chuẩn bị body, loại bỏ buildActivityId nếu có buildActivitySummaryId
+		const body: any = {
+			...data,
+			type: 'ASSEMBLED_EQUIPMENT',
+			productionDate: data.productionDate
+				? new Date(data.productionDate).toISOString()
+				: undefined,
+			quantity: Number(data.quantity),
+			evaluatingUnitId: data.evaluatingUnitId
+				? data.evaluatingUnitId
+				: undefined,
+			evaluationResult: data.evaluationResult
+				? data.evaluationResult
+				: undefined,
+			usingUnitId: data.usingUnitId ? data.usingUnitId : undefined,
+		}
+
+		// Nếu có buildActivitySummaryId thì không gửi buildActivityId
+		if (body.buildActivitySummaryId) {
+			delete body.buildActivityId
+		}
+
 		if (!id) {
 			create(
 				{
-					body: {
-						...data,
-						type: 'ASSEMBLED_EQUIPMENT',
-						productionDate: data.productionDate
-							? new Date(data.productionDate).toISOString()
-							: undefined,
-						quantity: Number(data.quantity),
-						evaluatingUnitId: data.evaluatingUnitId
-							? data.evaluatingUnitId
-							: undefined,
-						evaluationResult: data.evaluationResult
-							? data.evaluationResult
-							: undefined,
-						usingUnitId: data.usingUnitId ? data.usingUnitId : undefined,
-					},
+					body,
 				},
 				{
 					onError: (error) => {
@@ -103,8 +123,15 @@ const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 							/>,
 						)
 					},
-					onSuccess: () => {
-						toast.success('Tạo trang bị thành công')
+					onSuccess: (response) => {
+						// Kiểm tra xem có phải là update quantity không (dựa vào response hoặc logic)
+						// Nếu instance đã tồn tại, backend sẽ return instance đã update
+						// Có thể check quantity trong response để xác định
+						const message =
+							response?.quantity && response?.quantity > data.quantity
+								? `Tăng số lượng trang bị thành công (Số lượng mới: ${response.quantity})`
+								: 'Tạo trang bị thành công'
+						toast.success(message)
 						router.push(pageList.assembledEquipment.href)
 					},
 				},
@@ -113,21 +140,7 @@ const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 			update(
 				{
 					path: { id },
-					body: {
-						...data,
-						type: 'ASSEMBLED_EQUIPMENT',
-						productionDate: data.productionDate
-							? new Date(data.productionDate).toISOString()
-							: undefined,
-						quantity: Number(data.quantity),
-						evaluatingUnitId: data.evaluatingUnitId
-							? data.evaluatingUnitId
-							: undefined,
-						evaluationResult: data.evaluationResult
-							? data.evaluationResult
-							: undefined,
-						usingUnitId: data.usingUnitId ? data.usingUnitId : undefined,
-					},
+					body,
 				},
 				{
 					onError: (error) => {
@@ -176,7 +189,7 @@ const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 						<div /> */}
 						<FormField
 							control={form.control}
-							name="buildActivityId"
+							name="buildActivitySummaryId"
 							render={({ field: { value, onChange } }) => (
 								<FormItem>
 									<FormLabel>Tên trang bị</FormLabel>
@@ -199,7 +212,7 @@ const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 														'unitOfMeasure',
 														buildFound?.config?.unitOfMeasure,
 													)
-													form.setValue('quantity', buildFound?.quantity)
+													form.setValue('quantity', buildFound?.totalQuantity || buildFound?.quantity)
 												}}
 											/>
 										) : (
@@ -273,8 +286,8 @@ const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 									<FormControl>
 										{mode !== 'detail' ? (
 											<DatePicker
-												onChange={(e) => field.onChange(e.toString())}
-												value={new Date(field.value || '')}
+												onChange={(e) => field.onChange(e.toISOString())}
+												value={field.value ? new Date(field.value) : undefined}
 											/>
 										) : (
 											<span className="text-muted-foreground">
