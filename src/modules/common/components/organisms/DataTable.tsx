@@ -105,18 +105,19 @@ function DataTable<TData, TValue>({
 	return (
 		<>
 			<Table>
-				<TableHeader className="sticky top-0 z-10 bg-white">
+				<TableHeader className="sticky top-0 z-10 bg-muted/50 shadow-sm">
 					{table.getHeaderGroups().map((headerGroup) => (
-						<TableRow key={headerGroup.id}>
+						<TableRow key={headerGroup.id} className="border-0 hover:bg-transparent">
 							{headerGroup.headers.map((header, index) => (
 								<TableHead
 									key={header.id}
 									className={cn({
-										'rounded-tl-sm': index === 0,
-										'rounded-tr-sm': index === headerGroup.headers.length - 1,
+										'rounded-tl-md': index === 0,
+										'rounded-tr-md': index === headerGroup.headers.length - 1,
 									})}
 									style={{
 										width: header.getSize(),
+										minWidth: (header.column.columnDef as { minSize?: number }).minSize ?? undefined,
 									}}
 								>
 									{header.isPlaceholder
@@ -130,7 +131,7 @@ function DataTable<TData, TValue>({
 						</TableRow>
 					))}
 				</TableHeader>
-				<TableBody className="border-b bg-white">
+				<TableBody>
 					{table.getRowModel().rows?.length ? (
 						table.getRowModel().rows.map((row) => {
 							const depth = row.depth
@@ -143,15 +144,12 @@ function DataTable<TData, TValue>({
 										'bg-gray-50': depth > 0,
 									})}
 								>
-									{row.getVisibleCells().map((cell, cellIndex) => {
+									{row.getVisibleCells().map((cell) => {
+										const minSize = (cell.column.columnDef as { minSize?: number }).minSize
 										return (
 											<TableCell
 												key={cell.id}
-												className={cn({
-													'border-l': cellIndex === 0,
-													'border-r':
-														cellIndex === row.getVisibleCells().length - 1,
-												})}
+												style={minSize != null ? { minWidth: minSize } : undefined}
 											>
 												{flexRender(
 													cell.column.columnDef.cell,

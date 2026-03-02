@@ -49,10 +49,10 @@ export const columns: ColumnDef<any>[] = [
 	// 	accessorKey: 'handoverDocumentNumber',
 	// 	header: 'Số Biên bản bàn giao',
 	// },
-	// {
-	// 	accessorKey: 'storageLocation',
-	// 	header: 'Vị trí lưu trữ',
-	// },
+	{
+		accessorKey: 'storageLocation',
+		header: 'Vị trí lưu trữ',
+	},
 	// {
 	// 	accessorKey: 'technicalFeatures',
 	// 	header: 'Tính năng kỹ thuật',

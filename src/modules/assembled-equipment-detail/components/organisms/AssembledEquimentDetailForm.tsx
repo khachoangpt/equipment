@@ -2,6 +2,7 @@
 
 import type { CreateEquipmentInstanceDto } from '@/client'
 import {
+	activityLogsControllerSearchOptions,
 	equipmentInstancesControllerCreateMutation,
 	equipmentInstancesControllerUpdateMutation,
 	unitsControllerFindAllOptions,
@@ -29,8 +30,11 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { pageList } from '@/configs/routes'
+import DataTable from '@/modules/common/components/organisms/DataTable'
+import { importHistoryColumns } from './importHistoryColumns'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import type { SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import useAssembledEquipmentDetailController from '../../controllers/assembled-equipment-detail.controller'
@@ -83,6 +87,32 @@ const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 		},
 	})
 
+	// Lịch sử nhập kho (chỉ khi xem chi tiết) — có phân trang
+	const [importHistoryPage, setImportHistoryPage] = useState(1)
+	const IMPORT_HISTORY_PAGE_SIZE = 10
+	const { data: importHistoryResponse } = useQuery({
+		...activityLogsControllerSearchOptions({
+			query: {
+				instanceId: id ?? '',
+				activityType: [
+					'Tăng số lượng thiết bị',
+					'Thêm mới số lượng thiết bị',
+				] as any,
+				page: importHistoryPage,
+				limit: IMPORT_HISTORY_PAGE_SIZE,
+			},
+		}),
+		enabled: mode === 'detail' && !!id,
+	})
+	const importHistoryData = importHistoryResponse?.data ?? []
+	const importHistoryPagination = importHistoryResponse
+		? {
+				page: importHistoryResponse.page ?? 1,
+				pageSize: importHistoryResponse.limit ?? IMPORT_HISTORY_PAGE_SIZE,
+				totalCount: importHistoryResponse.total ?? 0,
+			}
+		: undefined
+
 	const router = useRouter()
 
 	const onSubmit: SubmitHandler<CreateEquipmentInstanceDto> = async (data) => {
@@ -94,13 +124,45 @@ const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 				? new Date(data.productionDate).toISOString()
 				: undefined,
 			quantity: Number(data.quantity),
-			evaluatingUnitId: data.evaluatingUnitId
-				? data.evaluatingUnitId
-				: undefined,
-			evaluationResult: data.evaluationResult
-				? data.evaluationResult
-				: undefined,
-			usingUnitId: data.usingUnitId ? data.usingUnitId : undefined,
+			importingUnitId:
+				data.importingUnitId && String(data.importingUnitId).trim() !== ''
+					? data.importingUnitId
+					: undefined,
+			usingUnitId:
+				data.usingUnitId && String(data.usingUnitId).trim() !== ''
+					? data.usingUnitId
+					: undefined,
+			evaluatingUnitId:
+				data.evaluatingUnitId && String(data.evaluatingUnitId).trim() !== ''
+					? data.evaluatingUnitId
+					: undefined,
+			evaluationResult:
+				data.evaluationResult && String(data.evaluationResult).trim() !== ''
+					? String(data.evaluationResult).trim()
+					: undefined,
+			storageLocation:
+				data.storageLocation && String(data.storageLocation).trim() !== ''
+					? String(data.storageLocation).trim()
+					: undefined,
+			notes:
+				data.notes && String(data.notes).trim() !== ''
+					? String(data.notes).trim()
+					: undefined,
+		}
+
+		// Xóa các key có giá trị rỗng/undefined để không gửi "" lên API
+		const optionalKeys = [
+			'importingUnitId',
+			'usingUnitId',
+			'evaluatingUnitId',
+			'evaluationResult',
+			'storageLocation',
+			'notes',
+		] as const
+		for (const key of optionalKeys) {
+			if (body[key] === '' || body[key] === undefined) {
+				delete body[key]
+			}
 		}
 
 		// Nếu có buildActivitySummaryId thì không gửi buildActivityId
@@ -504,6 +566,27 @@ const AssembledEquipmentDetailForm = ({ id, mode = 'create' }: Props) => {
 					)}
 				</Form>
 			</Card>
+
+			{mode === 'detail' && id && (
+				<div className="mt-5">
+					<Card>
+						<h3 className="mb-4 text-lg font-semibold">
+							Lịch sử nhập kho
+						</h3>
+						{/* Padding trái + phải trong vùng cuộn để hai cạnh bảng cách màn bằng nhau */}
+						<div className="min-w-0 overflow-x-auto">
+							<div className="inline-block min-w-max px-5">
+								<DataTable
+									columns={importHistoryColumns}
+									data={importHistoryData}
+									pagination={importHistoryPagination}
+									onChangePage={(page) => setImportHistoryPage(page)}
+								/>
+							</div>
+						</div>
+					</Card>
+				</div>
+			)}
 		</div>
 	)
 }
